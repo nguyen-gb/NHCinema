@@ -1,1 +1,3 @@
 # NHCinema
+
+yarn --> yarn dev
