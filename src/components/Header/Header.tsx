@@ -2,6 +2,7 @@ import { Link, NavLink } from 'react-router-dom'
 import { useContext } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import Popover from '../Popover'
 import { AppContext } from 'src/contexts/app.context'
@@ -12,6 +13,7 @@ import NavHeader from '../NavHeader'
 import { Purchase } from 'src/types/purchase.type'
 
 export default function Header() {
+  const { t } = useTranslation()
   const { isAuthenticated } = useContext(AppContext)
 
   const { data: purchasesInCartData } = useQuery({
@@ -20,7 +22,7 @@ export default function Header() {
     enabled: isAuthenticated
   })
 
-  const purchasesIncart = purchasesInCartData?.data.data
+  const purchasesInCart = purchasesInCartData?.data.data
 
   return (
     <div className='bg-quaternary py-4 text-white'>
@@ -41,7 +43,7 @@ export default function Header() {
               }
             >
               <div className='absolute bottom-0 right-[-5px] top-0 w-[11px] skew-x-[-15deg] bg-inherit'></div>
-              Trang chủ
+              {t('home-page')}
             </NavLink>
             <NavLink
               to='/movie'
@@ -55,7 +57,7 @@ export default function Header() {
               }
             >
               <div className='absolute bottom-0 right-[-5px] top-0 w-[11px] skew-x-[-15deg] bg-inherit'></div>
-              Phim
+              {t('movie')}
             </NavLink>
             <NavLink
               to='/show-times'
@@ -69,10 +71,10 @@ export default function Header() {
               }
             >
               <div className='absolute bottom-0 right-[-5px] top-0 w-[11px] skew-x-[-15deg] bg-inherit'></div>
-              Lịch chiếu
+              {t('showtimes')}
             </NavLink>
             <NavLink
-              to='/ticket-prices'
+              to='/fare'
               className={({ isActive }) =>
                 classNames(
                   'relative justify-self-center p-[10px] text-[14px] uppercase transition-colors hover:bg-primary',
@@ -83,7 +85,7 @@ export default function Header() {
               }
             >
               <div className='absolute bottom-0 right-[-5px] top-0 w-[11px] skew-x-[-15deg] bg-inherit'></div>
-              Giá vé
+              {t('fare')}
             </NavLink>
             <NavLink
               to='/member'
@@ -97,20 +99,20 @@ export default function Header() {
               }
             >
               <div className='absolute bottom-0 right-[-5px] top-0 w-[11px] skew-x-[-15deg] bg-inherit'></div>
-              Thành viên
+              {t('member')}
             </NavLink>
           </div>
           <div className='col-span-1 justify-self-center'>
             <Popover
               renderPopover={
                 <div className='max-w-[400px] rounded-sm border border-gray-200 bg-white text-sm shadow-md'>
-                  {purchasesIncart && (purchasesIncart as Purchase[]).length > 0 ? (
+                  {purchasesInCart && (purchasesInCart as Purchase[]).length > 0 ? (
                     <div>
                       <div className='border-b-[1px] border-quaternary/20 p-2 capitalize text-quaternary'>
-                        Thông báo
+                        {t('notification')}
                       </div>
                       <div className='max-h-[500px] overflow-y-auto'>
-                        {purchasesIncart.map((purchase) => (
+                        {purchasesInCart.map((purchase) => (
                           <Link
                             to={path.home}
                             className='group block border-b-[1px] border-quaternary/20 p-2 text-[12px] text-quaternary'
@@ -151,9 +153,9 @@ export default function Header() {
                   />
                 </svg>
 
-                {purchasesIncart && purchasesIncart.length > 0 && (
+                {purchasesInCart && purchasesInCart.length > 0 && (
                   <span className='absolute right-[-9px] top-[-5px] rounded-full bg-white px-[9px] py-[1px] text-xs text-primary'>
-                    {purchasesIncart?.length}
+                    {purchasesInCart?.length}
                   </span>
                 )}
               </Link>

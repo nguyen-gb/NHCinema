@@ -8,12 +8,12 @@ import { useTranslation } from 'react-i18next'
 
 import authApi from 'src/apis/auth.api'
 import { purchasesStatus } from 'src/constants/purchase'
-import { getAvatarURL } from 'src/utils/utils'
 import { locales } from 'src/i18n/i18n'
 import useSearchProducts from 'src/hooks/useSearchProducts'
+// import { getAvatarURL } from 'src/utils/utils'
 
 export default function NavHeader() {
-  const { i18n } = useTranslation()
+  const { i18n, t } = useTranslation()
   const currentLanguage = locales[i18n.language as keyof typeof locales]
   const queryClient = useQueryClient()
   const { isAuthenticated, setIsAuthenticated, profile, setProfile } = useContext(AppContext)
@@ -49,7 +49,7 @@ export default function NavHeader() {
           <input
             type='text'
             className='flex-grow rounded-full border-none bg-transparent px-3 py-1 text-black outline-none'
-            placeholder='Tìm kiếm'
+            placeholder={t('search')}
             {...register('name')}
           />
           <button className='flex-shrink-0 rounded-full bg-primary px-4 py-1 hover:opacity-90'>
@@ -75,7 +75,7 @@ export default function NavHeader() {
           className='flex cursor-pointer items-center py-1 hover:text-white/70'
           renderPopover={
             <div className='relative rounded-[10px] border border-gray-200 bg-transparent/80 shadow-md'>
-              <div className='flex flex-col py-2 pr-8 text-white'>
+              <div className='flex flex-col py-2 pr-8 text-white transition-all'>
                 <button className='px-4 py-2 text-left hover:text-primary' onClick={() => changeLanguage('vi')}>
                   Tiếng Việt
                 </button>
@@ -116,9 +116,9 @@ export default function NavHeader() {
           <Popover
             className='ml-6 flex cursor-pointer items-center py-1 hover:text-white/70'
             renderPopover={
-              <div className='relative rounded-[10px] border border-gray-200 bg-transparent/80 text-white shadow-md'>
+              <div className='relative rounded-[10px] border  border-gray-200 bg-transparent/80 text-white shadow-md transition-all'>
                 <Link to={path.profile} className='block w-full py-3 pl-4 pr-8 text-left hover:text-primary'>
-                  Thông tin tài khoản
+                  {t('personal-information')}
                 </Link>
                 {/* <Link
                   to={path.historyPurchase}
@@ -127,7 +127,7 @@ export default function NavHeader() {
                   Lịch sử mua vé
                 </Link> */}
                 <button onClick={handleLogout} className='block w-full py-3 pl-4 pr-8 text-left hover:text-primary'>
-                  Đăng xuất
+                  {t('logout')}
                 </button>
               </div>
             }
@@ -159,11 +159,11 @@ export default function NavHeader() {
         {!isAuthenticated && (
           <div className='flex items-center'>
             <Link to={path.register} className='mx-3 capitalize hover:text-white/70'>
-              Đăng ký
+              {t('register')}
             </Link>
             <div className='h-4 border-r-[1px] border-r-white/40 '></div>
             <Link to={path.login} className='mx-3 capitalize hover:text-white/70'>
-              Đăng nhập
+              {t('login')}
             </Link>
           </div>
         )}

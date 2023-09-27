@@ -1,6 +1,3 @@
 {
-  "aside filter": {
-    "all categories": "All categories",
-    "filter search": "Filter search"
-  }
+  "movie-is-showing": "Movie is showing"
 }

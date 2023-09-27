@@ -1,9 +1,13 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
+
+import HEADER_EN from 'src/locales/en/header.json'
+import LOGIN_EN from 'src/locales/en/login.json'
 import HOME_EN from 'src/locales/en/home.json'
-import PRODUCT_EN from 'src/locales/en/product.json'
+
+import HEADER_VN from 'src/locales/vn/header.json'
+import LOGIN_VN from 'src/locales/vn/login.json'
 import HOME_VN from 'src/locales/vn/home.json'
-import PRODUCT_VN from 'src/locales/vn/product.json'
 
 export const locales = {
   en: 'English',
@@ -12,22 +16,24 @@ export const locales = {
 
 export const resources = {
   en: {
-    home: HOME_EN,
-    product: PRODUCT_EN
+    header: HEADER_EN,
+    login: LOGIN_EN,
+    home: HOME_EN
   },
   vi: {
-    home: HOME_VN,
-    product: PRODUCT_VN
+    header: HEADER_VN,
+    login: LOGIN_VN,
+    home: HOME_VN
   }
 }
 
-export const defaultNS = 'home'
+export const defaultNS = 'header'
 
 // eslint-disable-next-line import/no-named-as-default-member
 i18n.use(initReactI18next).init({
   resources,
   lng: 'vi',
-  ns: ['home', 'product'],
+  ns: ['header', 'login', 'home'],
   defaultNS,
   fallbackLng: 'vi',
   interpolation: {

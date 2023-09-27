@@ -76,7 +76,7 @@ export default function useRouteElements() {
           )
         },
         {
-          path: '/ticket-prices',
+          path: '/fare',
           element: (
             <Suspense>
               <TicketPrices />
