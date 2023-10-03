@@ -1,14 +1,17 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+
 import path from 'src/constants/path'
 import { Product as ProductType } from 'src/types/product.type'
-import ProductRating from 'src/components/ProductRating'
-import { formatCurrency, formatNumberToSocialStyle, generateNameId } from 'src/utils/utils'
+import { generateNameId } from 'src/utils/utils'
+// import ProductRating from 'src/components/ProductRating'
 
 interface Props {
   product: ProductType
 }
 
 export default function Product({ product }: Props) {
+  const { t } = useTranslation('product')
   return (
     <div className='group'>
       <div className='relative mx-[20px] cursor-pointer overflow-hidden rounded-xl border border-slate-800 p-[2px] backdrop-blur-3xl hover:shadow-ct'>
@@ -27,7 +30,9 @@ export default function Product({ product }: Props) {
                     SHIN - CẬU BÉ BÚT CHÌ: ĐẠI CHIẾN SIÊU NĂNG LỰC ~SUSHI BAY~ (LỒNG TIẾNG)
                   </div>
                 </div>
-                <div className='mb-6 text-center text-base font-medium text-quaternary'>Khởi chiếu 25/08/2023</div>
+                <div className='mb-6 text-center text-base font-medium text-quaternary'>
+                  {t('premiere')}: 25/08/2023
+                </div>
               </div>
               <Link
                 to={`${path.home}movie/${generateNameId({ name: product.name, id: product._id })}`}
@@ -48,7 +53,7 @@ export default function Product({ product }: Props) {
                       d='M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5'
                     />
                   </svg>
-                  Chi tiết
+                  {t('detail')}
                 </div>
               </Link>
               {/* <div className='mb-4 max-w-fit text-[16px] leading-relaxed'>

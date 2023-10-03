@@ -1,11 +1,11 @@
-import path from 'src/constants/path'
-import Popover from '../Popover'
 import { Link } from 'react-router-dom'
 import { useContext } from 'react'
 import { AppContext } from 'src/contexts/app.context'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
+import path from 'src/constants/path'
+import Popover from '../Popover'
 import authApi from 'src/apis/auth.api'
 import { purchasesStatus } from 'src/constants/purchase'
 import { locales } from 'src/i18n/i18n'
@@ -39,7 +39,7 @@ export default function NavHeader() {
 
   return (
     <div className='flex items-center justify-between'>
-      <Link to='/'>
+      <Link to={path.home}>
         <div className='w-fit bg-gradient-to-r from-primary to-tertiary bg-clip-text text-xl font-bold text-transparent lg:text-2xl'>
           NHCinema
         </div>
@@ -76,10 +76,10 @@ export default function NavHeader() {
           renderPopover={
             <div className='relative rounded-[10px] border border-gray-200 bg-transparent/80 shadow-md'>
               <div className='flex flex-col py-2 pr-8 text-white transition-all'>
-                <button className='px-4 py-2 text-left hover:text-primary' onClick={() => changeLanguage('vi')}>
+                <button className='px-4 py-2 text-left hover:text-primary' onClick={() => changeLanguage('vi-VN')}>
                   Tiếng Việt
                 </button>
-                <button className='mt-2 px-4 py-2 text-left hover:text-primary' onClick={() => changeLanguage('en')}>
+                <button className='mt-2 px-4 py-2 text-left hover:text-primary' onClick={() => changeLanguage('en-EN')}>
                   English
                 </button>
               </div>

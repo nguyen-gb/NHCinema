@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async'
 import { useQuery } from '@tanstack/react-query'
 import { Autoplay, Scrollbar, A11y, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import { useTranslation } from 'react-i18next'
 
 import productApi from 'src/apis/product.api'
 import { ProductListConfig } from 'src/types/product.type'
@@ -15,9 +16,10 @@ import Slider from 'src/components/Slider'
 // import SortProductList from './components/SortProductList'
 
 export default function Home() {
+  const { t } = useTranslation('home')
   const queryConfig: QueryConfig = useQueryConfig()
 
-  const { data: productsData } = useQuery({
+  const { data: productsData, isLoading } = useQuery({
     queryKey: ['products', queryConfig],
     queryFn: () => {
       return productApi.getProducts(queryConfig as ProductListConfig)
@@ -36,8 +38,8 @@ export default function Home() {
   return (
     <div className='bg-secondary'>
       <Helmet>
-        <title>Trang chủ | NHCinema</title>
-        <meta name='description' content='Trang chủ của dự án NHCinema' />
+        <title>{t('home')} | NHCinema</title>
+        <meta name='description' content={t('home-des')} />
       </Helmet>
       <div className='mb-[40px]'>
         <Swiper
@@ -51,7 +53,25 @@ export default function Home() {
           onSwiper={(swiper) => console.log(swiper)}
           onSlideChange={() => console.log('slide change')}
         >
-          {productsData &&
+          {isLoading && (
+            <div className='h-full w-full'>
+              <div role='status' className='animate-pulse shadow'>
+                <div className='mb-4 flex min-h-screen items-center justify-center rounded bg-gray-300 dark:bg-gray-700'>
+                  <svg
+                    className='h-10 w-10 text-gray-200 dark:text-gray-600'
+                    aria-hidden='true'
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='currentColor'
+                    viewBox='0 0 20 18'
+                  >
+                    <path d='M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z' />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          )}
+          {!isLoading &&
+            productsData &&
             productsData.data.data.products.splice(0, 5).map((_, index) => (
               <SwiperSlide key={index}>
                 <div className='w-full'>
@@ -73,11 +93,11 @@ export default function Home() {
               <div className='absolute bottom-0 left-[-15px] top-0 z-[1] w-[30px] skew-x-[-15deg] bg-inherit shadow-ct3d'></div>
               <div className='relative z-[9] flex items-center justify-between bg-primary p-[10px]'>
                 <img src='https://touchcinema.com/images/icons/icon-ticket.png' alt='' />
-                <div className='mx-[15px] text-[18px] uppercase text-white'>Phim đang chiếu</div>
+                <div className='mx-[15px] text-[18px] uppercase text-white'>{t('movie-is-showing')}</div>
               </div>
             </div>
           </div>
-          {productsData && <Slider products={productsData.data.data.products} />}
+          {productsData && <Slider products={productsData.data.data.products} isLoading={isLoading} />}
         </div>
         <div className='mb-[40px]'>
           <div className='flex items-center justify-center pb-[40px]'>
@@ -85,12 +105,12 @@ export default function Home() {
               <div className='absolute bottom-0 right-[-15px] top-0 z-[1] w-[30px] skew-x-[15deg] bg-inherit shadow-ct3d'></div>
               <div className='absolute bottom-0 left-[-15px] top-0 z-[1] w-[30px] skew-x-[15deg] bg-inherit shadow-ct3d'></div>
               <div className='relative z-[9] flex items-center justify-between bg-primary p-[10px]'>
-                <div className='mx-[15px] text-[18px] uppercase text-white'>Phim sắp chiếu</div>
+                <div className='mx-[15px] text-[18px] uppercase text-white'>{t('movie-coming-soon')}</div>
                 <img src='https://touchcinema.com/images/icons/icon-ticket.png' alt='' />
               </div>
             </div>
           </div>
-          {productsData && <Slider products={productsData.data.data.products} />}
+          {productsData && <Slider products={productsData.data.data.products} isLoading={isLoading} />}
         </div>
       </div>
     </div>

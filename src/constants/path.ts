@@ -4,11 +4,18 @@ const path = {
   profile: '/user/profile',
   changePassword: '/user/password',
   historyPurchase: '/user/purchase',
-  productDetail: '/movie/:nameId',
+  historyPoint: '/user/bonus-points',
   login: '/login',
   register: '/register',
+  forgotPass: 'password/reset',
   logout: '/logout',
-  cart: '/cart'
+  movie: '/movie',
+  showtimes: '/show-times',
+  fare: '/fare',
+  member: '/member',
+  movieDetail: '/movie/:nameId',
+  bookTickets: '/book-tickets',
+  payment: '/payment'
 } as const
 
 export default path

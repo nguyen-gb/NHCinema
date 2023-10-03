@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form'
+import { Schema, schema } from 'src/utils/rules'
 import { Link, useNavigate } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
@@ -6,7 +7,6 @@ import { useContext } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 
-import { Schema, schema } from 'src/utils/rules'
 import authApi from 'src/apis/auth.api'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
@@ -18,7 +18,7 @@ import path from 'src/constants/path'
 type FormData = Pick<Schema, 'email' | 'password'>
 const schemaLogin = schema.pick(['email', 'password'])
 
-export default function Login() {
+export default function ForgotPass() {
   const { t } = useTranslation('login')
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
@@ -60,14 +60,14 @@ export default function Login() {
   return (
     <div className='bg-secondary'>
       <Helmet>
-        <title>{t('login')} | NHCinema</title>
-        <meta name='description' content={t('login-des')} />
+        <title>{t('forgot-password')} | NHCinema</title>
+        <meta name='description' content={t('forgot-password-des')} />
       </Helmet>
       <div className='container text-quaternary'>
         <div className='grid grid-cols-1 py-12 lg:grid-cols-10 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-4 lg:col-start-4'>
             <form className='rounded-[15px] bg-white p-10 shadow-ct shadow-white/30' onSubmit={onSubmit} noValidate>
-              <div className='text-2xl'>{t('login')}</div>
+              <div className='text-2xl'>{t('forgot-password')}</div>
               <Input
                 className='mt-8'
                 type='email'
@@ -76,16 +76,6 @@ export default function Login() {
                 register={register}
                 errorMessage={errors.email?.message}
               />
-              <Input
-                className='mt-2'
-                type='password'
-                placeholder={t('password')}
-                name='password'
-                register={register}
-                errorMessage={errors.password?.message}
-                autoComplete='on'
-                classNameEye='absolute right-[5px] top-[12px] h-5 w-5 cursor-pointer'
-              />
               <div className='mt-2'>
                 <Button
                   isLoading={loginMutation.isLoading}
@@ -93,12 +83,12 @@ export default function Login() {
                   type='submit'
                   className='flex w-full items-center justify-center rounded-[15px] bg-primary bg-opacity-70 px-2 py-4 text-center text-sm uppercase text-white hover:cursor-pointer hover:bg-primary'
                 >
-                  {t('login')}
+                  {t('send')}
                 </Button>
               </div>
               <div className='mt-8 flex items-center justify-center'>
-                <Link to='/password/reset' className='text-quaternary/50 hover:text-quaternary'>
-                  {t('forgot-password')}
+                <Link to={path.login} className='text-quaternary/50 hover:text-quaternary'>
+                  {t('login')}
                 </Link>
                 <span className='ml-1 text-quaternary'>/</span>
                 <Link to={path.register} className='ml-1 text-quaternary/50 hover:text-quaternary'>

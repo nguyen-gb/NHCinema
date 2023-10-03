@@ -1,22 +1,22 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { Fragment, useContext, useEffect, useMemo, useState } from 'react'
-import { useForm, Controller, FormProvider, useFormContext } from 'react-hook-form'
+import { useContext, useEffect, useMemo, useState } from 'react'
+import { useForm, Controller } from 'react-hook-form'
+import { toast } from 'react-toastify'
+import { Helmet } from 'react-helmet-async'
+import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+
 import userApi from 'src/apis/user.api'
-import Button from 'src/components/Button'
 import Input from 'src/components/Input'
 import InputNumber from 'src/components/InputNumber'
 import { UserSchema, userSchema } from 'src/utils/rules'
 import DateSelect from '../../components/DateSelect'
-import { toast } from 'react-toastify'
 import { AppContext } from 'src/contexts/app.context'
 import { setProfileToLS } from 'src/utils/auth'
-import { getAvatarURL, isAxiosUnprocessableEntityError } from 'src/utils/utils'
+import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
-import InputFile from 'src/components/InputFile'
-import { Helmet } from 'react-helmet-async'
-import { Link, NavLink } from 'react-router-dom'
-import classNames from 'classnames'
+import path from 'src/constants/path'
 
 type FormData = Pick<UserSchema, 'name' | 'address' | 'avatar' | 'phone' | 'date_of_birth'>
 type FormDataError = Omit<FormData, 'date_of_birth'> & {
@@ -25,10 +25,11 @@ type FormDataError = Omit<FormData, 'date_of_birth'> & {
 const profileSchema = userSchema.pick(['name', 'address', 'avatar', 'phone', 'date_of_birth'])
 
 export default function Profile() {
+  const { t } = useTranslation('user')
   const [file, setFile] = useState<File>()
-  const previewImage = useMemo(() => {
-    return file ? URL.createObjectURL(file) : ''
-  }, [file])
+  // const previewImage = useMemo(() => {
+  //   return file ? URL.createObjectURL(file) : ''
+  // }, [file])
   const { setProfile } = useContext(AppContext)
   const methods = useForm<FormData>({
     defaultValues: {
@@ -104,53 +105,48 @@ export default function Profile() {
     }
   })
 
-  const handleChangeFile = (file?: File) => {
-    setFile(file)
-  }
+  // const handleChangeFile = (file?: File) => {
+  //   setFile(file)
+  // }
 
   return (
     <div className='bg-secondary'>
       <Helmet>
-        <title>Tài khoản của tôi | NHCinema</title>
-        <meta name='description' content='Trang chứa thông tin của người dùng' />
+        <title>{t('my-account')} | NHCinema</title>
+        <meta name='description' content={t('my-account-des')} />
       </Helmet>
       <div className='container text-white'>
         <div className='my-[40px]'>
           <div className='mt-10'>
-            <div
-              id='headlessui-tabs-panel-:re:'
-              role='tabpanel'
-              aria-labelledby='headlessui-tabs-tab-:rb:'
-              data-headlessui-state='selected'
-            >
+            <div>
               <div className='mx-auto max-w-4xl'>
                 <form className='space-y-6 md:grid md:grid-cols-2 md:gap-6 md:space-y-0' onSubmit={onSubmit}>
                   <div className='w-full space-y-2'>
                     <p className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
-                      Họ và tên
+                      {t('full-name')}
                     </p>
                     <Input
                       className='text-quaternary'
                       register={register}
                       name='name'
-                      placeholder='Họ và tên'
+                      placeholder={t('full-name')}
                       errorMessage={errors.name?.message}
                     ></Input>
                   </div>
                   <div className='w-full space-y-2'>
                     <p className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
-                      Email
+                      {t('email')}
                     </p>
                     <input
                       className='w-full rounded-[10px] border border-quaternary/20 p-3 outline-none file:border-0 file:bg-transparent file:text-sm file:font-medium focus:border-quaternary focus:shadow-sm focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
-                      placeholder='Email'
+                      placeholder={t('email')}
                       disabled
                       value={profile?.email}
                     ></input>
                   </div>
                   <div className='w-full space-y-2'>
                     <p className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
-                      Số điện thoại
+                      {t('phone')}
                     </p>
                     <Controller
                       control={control}
@@ -158,7 +154,7 @@ export default function Profile() {
                       render={({ field }) => (
                         <InputNumber
                           classNameInput='w-full text-quaternary rounded-[10px] border border-quaternary/20 p-3 outline-none focus:border-quaternary focus:shadow-sm'
-                          placeholder='Số điện thoại'
+                          placeholder={t('phone')}
                           errorMessage={errors.phone?.message}
                           {...field}
                           onChange={field.onChange}
@@ -168,22 +164,22 @@ export default function Profile() {
                   </div>
                   <div className='w-full space-y-2'>
                     <p className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
-                      Giới tính
+                      {t('gender')}
                     </p>
                     <select
                       className='w-full rounded-[10px] border border-quaternary/20 p-[10px] text-quaternary outline-none focus:border-quaternary focus:shadow-sm'
                       {...register}
                       name='sex'
-                      placeholder='Giới tính'
+                      placeholder={t('gender')}
                     >
-                      <option value='female'>female</option>
-                      <option value='male'>male</option>
-                      <option value='other'>other</option>
+                      <option value='male'>{t('male')}</option>
+                      <option value='female'>{t('female')}</option>
+                      <option value='other'>{t('other')}</option>
                     </select>
                   </div>
                   <div className='w-full space-y-2'>
                     <p className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
-                      Ngày sinh
+                      {t('date-of-birth')}
                     </p>
                     <Controller
                       control={control}
@@ -198,11 +194,14 @@ export default function Profile() {
                     />
                   </div>
                   <div className='col-span-2 flex justify-end gap-4 pt-4'>
-                    <button className='inline-flex h-10 items-center justify-center rounded-full border bg-transparent px-8 py-2 text-sm font-medium transition-colors hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'>
-                      Đổi mật khẩu
-                    </button>
+                    <Link
+                      to={path.changePassword}
+                      className='inline-flex h-10 items-center justify-center rounded-full border bg-transparent px-8 py-2 text-sm font-medium transition-colors hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
+                    >
+                      {t('change-password')}
+                    </Link>
                     <button className='inline-flex h-10 items-center justify-center rounded-full bg-primary px-8 py-2 text-sm font-medium transition duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'>
-                      Lưu thông tin
+                      {t('save-information')}
                     </button>
                   </div>
                 </form>

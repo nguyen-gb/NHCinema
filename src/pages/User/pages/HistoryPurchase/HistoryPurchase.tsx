@@ -2,6 +2,8 @@ import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
 import { Helmet } from 'react-helmet-async'
 import { Link, createSearchParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+
 import purchaseApi from 'src/apis/purchase.api'
 import path from 'src/constants/path'
 import { purchasesStatus } from 'src/constants/purchase'
@@ -19,6 +21,7 @@ const purchaseTabs = [
 ]
 
 export default function HistoryPurchase() {
+  const { t } = useTranslation('user')
   const queryParams: { status?: string } = useQueryParams()
   const status: number = Number(queryParams.status) || purchasesStatus.all
 
@@ -49,8 +52,8 @@ export default function HistoryPurchase() {
   return (
     <div>
       <Helmet>
-        <title>Lịch sử mua vé | NHCinema</title>
-        <meta name='description' content='Trang chứa toàn bộ đơn hàng của người dùng' />
+        <title>{t('history-purchase')} | NHCinema</title>
+        <meta name='description' content={t('history-purchase-des')} />
       </Helmet>
       <div className='container text-white'>
         <div className='my-[40px]'>
@@ -60,16 +63,16 @@ export default function HistoryPurchase() {
                 <thead>
                   <tr>
                     <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
-                      Ngày giao dịch
+                      {t('day-trading')}
                     </th>
                     <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
-                      Tên phim
+                      {t('movie-name')}
                     </th>
                     <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
-                      Số vé
+                      {t('ticket-number')}
                     </th>
                     <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
-                      Số tiền
+                      {t('amount-of-money')}
                     </th>
                   </tr>
                 </thead>
@@ -100,14 +103,14 @@ export default function HistoryPurchase() {
                             scope='col'
                             className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
                           >
-                            180.000đ
+                            180.000{t('vnd')}
                           </th>
                         </tr>
                       )
                     })}
                 </tbody>
 
-                {!purchases && <div className='py-10 text-center text-sm text-gray-500'>Không có dữ liệu</div>}
+                {!purchases && <div className='py-10 text-center text-sm text-gray-500'>{t('no-data')}</div>}
               </table>
             </div>
           </div>

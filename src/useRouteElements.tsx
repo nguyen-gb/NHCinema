@@ -1,20 +1,20 @@
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 import { useContext, lazy, Suspense } from 'react'
 
-import RegisterLayout from './layouts/RegisterLayout'
-import MainLayout from './layouts/MainLayout'
 import { AppContext } from './contexts/app.context'
 import path from './constants/path'
-import CartLayout from './layouts/CartLayout'
+
+import RegisterLayout from './layouts/RegisterLayout'
+import MainLayout from './layouts/MainLayout'
 import UserLayout from './pages/User/layouts/UserLayout'
 
 const Login = lazy(() => import('./pages/Login'))
 const Register = lazy(() => import('./pages/Register'))
+const ForgotPass = lazy(() => import('./pages/ForgotPass'))
 const ProductDetail = lazy(() => import('./pages/ProductDetail'))
-const Cart = lazy(() => import('./components/Cart'))
 const ChangePassword = lazy(() => import('./pages/User/pages/ChangePassword'))
 const HistoryPurchase = lazy(() => import('./pages/User/pages/HistoryPurchase'))
-const RewardPoints = lazy(() => import('./pages/User/pages/RewardPoints'))
+const BonusPoints = lazy(() => import('./pages/User/pages/BonusPoints'))
 const Profile = lazy(() => import('./pages/User/pages/Profile'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const ProductList = lazy(() => import('./pages/ProductList'))
@@ -32,7 +32,7 @@ function ProtectedRoute() {
 
 function RejectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
-  return !isAuthenticated ? <Outlet /> : <Navigate to='/' />
+  return !isAuthenticated ? <Outlet /> : <Navigate to={path.home} />
 }
 
 export default function useRouteElements() {
@@ -52,7 +52,7 @@ export default function useRouteElements() {
         },
         {
           index: true,
-          path: '/movie',
+          path: path.movie,
           element: (
             <Suspense>
               <ProductList />
@@ -60,7 +60,7 @@ export default function useRouteElements() {
           )
         },
         {
-          path: path.productDetail,
+          path: path.movieDetail,
           element: (
             <Suspense>
               <ProductDetail />
@@ -68,7 +68,7 @@ export default function useRouteElements() {
           )
         },
         {
-          path: '/show-times',
+          path: path.showtimes,
           element: (
             <Suspense>
               <ShowTimes />
@@ -76,7 +76,7 @@ export default function useRouteElements() {
           )
         },
         {
-          path: '/fare',
+          path: path.fare,
           element: (
             <Suspense>
               <TicketPrices />
@@ -84,7 +84,7 @@ export default function useRouteElements() {
           )
         },
         {
-          path: '/member',
+          path: path.member,
           element: (
             <Suspense>
               <Member />
@@ -107,17 +107,7 @@ export default function useRouteElements() {
       element: <ProtectedRoute />,
       children: [
         {
-          path: path.cart,
-          element: (
-            <CartLayout>
-              <Suspense>
-                <Cart />
-              </Suspense>
-            </CartLayout>
-          )
-        },
-        {
-          path: '/book-tickets',
+          path: path.bookTickets,
           element: (
             <MainLayout>
               <Suspense>
@@ -127,7 +117,7 @@ export default function useRouteElements() {
           )
         },
         {
-          path: '/payment',
+          path: path.payment,
           element: (
             <MainLayout>
               <Suspense>
@@ -169,10 +159,10 @@ export default function useRouteElements() {
                   )
                 },
                 {
-                  path: 'reward-points',
+                  path: path.historyPoint,
                   element: (
                     <Suspense>
-                      <RewardPoints />
+                      <BonusPoints />
                     </Suspense>
                   )
                 }
@@ -203,6 +193,14 @@ export default function useRouteElements() {
               element: (
                 <Suspense>
                   <Register />
+                </Suspense>
+              )
+            },
+            {
+              path: path.forgotPass,
+              element: (
+                <Suspense>
+                  <ForgotPass />
                 </Suspense>
               )
             }

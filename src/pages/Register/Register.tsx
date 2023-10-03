@@ -14,6 +14,7 @@ import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
 import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button'
+import path from 'src/constants/path'
 
 type FormData = Pick<Schema, 'email' | 'password' | 'confirm_password'>
 const schemaRegister = schema.pick(['email', 'password', 'confirm_password'])
@@ -40,7 +41,7 @@ export default function Register() {
       onSuccess: (data) => {
         setIsAuthenticated(true)
         setProfile(data.data.data.user)
-        navigate('/login')
+        navigate(path.login)
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirm_password'>>>(error)) {
@@ -62,7 +63,7 @@ export default function Register() {
     <div className='bg-secondary'>
       <Helmet>
         <title>{t('register')} | NHCinema</title>
-        <meta name='description' content='Đăng ký tài khoản dự án Shopee Clone' />
+        <meta name='description' content={t('register-des')} />
       </Helmet>
       <div className='container text-quaternary'>
         <div className='grid grid-cols-1 py-12 lg:grid-cols-10 lg:py-32 lg:pr-10'>
@@ -110,7 +111,7 @@ export default function Register() {
                   {t('forgot-password')}
                 </Link>
                 <span className='ml-1 text-quaternary'>/</span>
-                <Link to='/login' className='ml-1 text-quaternary/50 hover:text-quaternary'>
+                <Link to={path.login} className='ml-1 text-quaternary/50 hover:text-quaternary'>
                   {t('login')}
                 </Link>
               </div>

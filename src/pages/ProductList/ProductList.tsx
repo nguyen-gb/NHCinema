@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useQuery } from '@tanstack/react-query'
+import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
+// import { NavLink } from 'react-router-dom'
 
 import productApi from 'src/apis/product.api'
 import { ProductListConfig } from 'src/types/product.type'
-import useQueryConfig, { QueryConfig } from 'src/hooks/useQueryConfig'
-import { NavLink } from 'react-router-dom'
-import classNames from 'classnames'
 import Product from 'src/components/Product'
+// import useQueryConfig, { QueryConfig } from 'src/hooks/useQueryConfig'
 // import Product from './components/Product'
 // import Pagination from 'src/components/Pagination'
 // import categoryApi from 'src/apis/category.api'
@@ -15,11 +16,12 @@ import Product from 'src/components/Product'
 // import SortProductList from './components/SortProductList'
 
 export default function ProductList() {
+  const { t } = useTranslation('home')
   //const queryConfig: QueryConfig = useQueryConfig()
   const [queryConfig, setQueryConfig] = useState({ category: '60afacca6ef5b902180aacaf' })
   const [isComing, setIsComing] = useState(false)
 
-  const { data: productsData } = useQuery({
+  const { data: productsData, isLoading } = useQuery({
     queryKey: ['products', queryConfig],
     queryFn: () => {
       return productApi.getProducts(queryConfig as ProductListConfig)
@@ -40,8 +42,8 @@ export default function ProductList() {
   return (
     <div className='bg-secondary'>
       <Helmet>
-        <title>Các bộ phim đang chiếu, sắp chiếu tại NHCinema | NHCinema</title>
-        <meta name='description' content='Các bộ phim đang chiếu, sắp chiếu tại NHCinema' />
+        <title>{t('product-list-des')} | NHCinema</title>
+        <meta name='description' content={t('product-list-des')} />
       </Helmet>
       <div className='container'>
         <div className='my-[40px]'>
@@ -68,7 +70,7 @@ export default function ProductList() {
                 )}
               >
                 <img src='https://touchcinema.com/images/icons/icon-ticket.png' alt='' />
-                <div className='mx-[15px] text-[18px] uppercase text-white'>Phim đang chiếu</div>
+                <div className='mx-[15px] text-[18px] uppercase text-white'>{t('movie-is-showing')}</div>
               </div>
             </button>
             <button
@@ -89,12 +91,41 @@ export default function ProductList() {
                   'bg-quaternary': !isComing
                 })}
               >
-                <div className='mx-[15px] text-[18px] uppercase text-white'>Phim sắp chiếu</div>
+                <div className='mx-[15px] text-[18px] uppercase text-white'>{t('movie-coming-soon')}</div>
                 <img src='https://touchcinema.com/images/icons/icon-ticket.png' alt='' />
               </div>
             </button>
           </div>
-          {productsData && (
+          {isLoading && (
+            <div className='col-span-10'>
+              <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4'>
+                {Array.from({ length: 8 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className='relative mx-[20px] cursor-pointer overflow-hidden rounded-xl border border-slate-800 p-[2px] backdrop-blur-3xl hover:shadow-ct'
+                  >
+                    <span className='absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#fd0083_50%,#E2CBFF_100%)]' />
+                    <div className='inline-flex h-full w-full items-center justify-center rounded-xl bg-slate-950 p-1 text-sm font-medium text-white backdrop-blur-3xl'>
+                      <div role='status' className='w-full animate-pulse shadow'>
+                        <div className='flex min-h-[375px] w-full items-center justify-center rounded bg-gray-300 dark:bg-gray-700'>
+                          <svg
+                            className='h-10 w-10 text-gray-200 dark:text-gray-600'
+                            aria-hidden='true'
+                            xmlns='http://www.w3.org/2000/svg'
+                            fill='currentColor'
+                            viewBox='0 0 20 18'
+                          >
+                            <path d='M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z' />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {!isLoading && productsData && (
             <div className='col-span-10'>
               <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4'>
                 {productsData.data.data.products.map((product) => (

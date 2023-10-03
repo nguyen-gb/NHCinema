@@ -32,7 +32,7 @@ export default function Header() {
         <div className='grid grid-cols-11 items-center'>
           <div className='col-span-10 flex justify-center'>
             <NavLink
-              to='/'
+              to={path.home}
               className={({ isActive }) =>
                 classNames(
                   'relative justify-self-center p-[10px] text-[14px] uppercase transition-colors hover:bg-primary',
@@ -46,7 +46,7 @@ export default function Header() {
               {t('home-page')}
             </NavLink>
             <NavLink
-              to='/movie'
+              to={path.movie}
               className={({ isActive }) =>
                 classNames(
                   'relative justify-self-center p-[10px] text-[14px] uppercase transition-colors hover:bg-primary',
@@ -60,7 +60,7 @@ export default function Header() {
               {t('movie')}
             </NavLink>
             <NavLink
-              to='/show-times'
+              to={path.showtimes}
               className={({ isActive }) =>
                 classNames(
                   'relative justify-self-center p-[10px] text-[14px] uppercase transition-colors hover:bg-primary',
@@ -74,7 +74,7 @@ export default function Header() {
               {t('showtimes')}
             </NavLink>
             <NavLink
-              to='/fare'
+              to={path.fare}
               className={({ isActive }) =>
                 classNames(
                   'relative justify-self-center p-[10px] text-[14px] uppercase transition-colors hover:bg-primary',
@@ -88,7 +88,7 @@ export default function Header() {
               {t('fare')}
             </NavLink>
             <NavLink
-              to='/member'
+              to={path.member}
               className={({ isActive }) =>
                 classNames(
                   'relative justify-self-center p-[10px] text-[14px] uppercase transition-colors hover:bg-primary',
@@ -137,7 +137,7 @@ export default function Header() {
                 </div>
               }
             >
-              <Link to={path.cart} className='relative'>
+              <Link to={path.home} className='relative'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'

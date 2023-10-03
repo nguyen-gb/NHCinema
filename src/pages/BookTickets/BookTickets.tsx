@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 import { seatArray } from 'src/constants/product'
 import Combo from 'src/components/Combo'
+import path from 'src/constants/path'
 
 interface SeatProps {
   isReserved: boolean
@@ -69,6 +71,7 @@ const mockData: Item[] = [
 ]
 
 const BookTickets: React.FC = () => {
+  const { t } = useTranslation('book-tickets')
   const navigate = useNavigate()
   const rows = 9
   const cols = 9
@@ -96,15 +99,15 @@ const BookTickets: React.FC = () => {
 
   const handlePayment = () => {
     navigate({
-      pathname: '/payment'
+      pathname: path.payment
     })
   }
 
   return (
     <div className='bg-secondary'>
       <Helmet>
-        <title>Đặt vé | NHCinema</title>
-        <meta name='description' content='Nơi đặt vé xem phim tại rạp NHCinema' />
+        <title>{t('book-tickets')} | NHCinema</title>
+        <meta name='description' content={t('book-tickets-des')} />
       </Helmet>
       <div className='container'>
         <div className='mb-[40px]'>
@@ -115,7 +118,7 @@ const BookTickets: React.FC = () => {
                 alt=''
                 className='h-full w-full object-cover'
               />
-              <div className='mb-6 text-center text-lg font-bold text-white'>Phòng chiếu số 2</div>
+              <div className='mb-6 text-center text-lg font-bold text-white'>{t('screening-room-number')} 2</div>
             </div>
             <div className='flex flex-wrap items-start justify-center gap-2'>
               <div className='flex flex-col items-center justify-center'>
@@ -153,19 +156,19 @@ const BookTickets: React.FC = () => {
                 <div className='my-8 flex flex-wrap items-center justify-center gap-4 text-sm text-white md:text-base xl:gap-8'>
                   <div className='flex items-center gap-2'>
                     <div className='flex aspect-square w-4 items-center justify-center rounded-[4px] bg-red-500 sm:w-6 xl:h-8 xl:w-8 xl:rounded-[8px]'></div>
-                    Đã đặt
+                    {t('booked')}
                   </div>
                   <div className='flex items-center gap-2'>
                     <div className='flex aspect-square w-4 items-center justify-center rounded-[4px] bg-primary sm:w-6 xl:h-8 xl:w-8 xl:rounded-[8px]'></div>
-                    Ghế bạn chọn
+                    {t('chair-of-your-choice')}
                   </div>
                   <div className='flex items-center gap-2'>
                     <div className='flex aspect-square w-4 items-center justify-center rounded-[4px] bg-[#252A31] sm:w-6 xl:h-8 xl:w-8 xl:rounded-[8px]'></div>
-                    Ghế thường
+                    {t('regular-chair')}
                   </div>
                   <div className='flex items-center gap-2'>
                     <div className='flex aspect-square w-4 items-center justify-center rounded-[4px] bg-tertiary/80 sm:w-6 xl:h-8 xl:w-8 xl:rounded-[8px]'></div>
-                    Ghế đôi
+                    {t('double-chair')}
                   </div>
                 </div>
               </div>
@@ -185,34 +188,34 @@ const BookTickets: React.FC = () => {
           <div className='mt-8 flex w-full flex-wrap items-center justify-between gap-y-4 text-white'>
             <div>
               <p className='mb-2'>
-                Ghế đã chọn:{' '}
+                {t('selected-seats')}:{' '}
                 <span className='font-semibold'>
                   {selectedSeats.map((s) => seatArray[s.SeatNumber - 1]).join(', ')}
                 </span>
               </p>
               <p className='mb-2'>
-                Combo đã chọn:{' '}
+                {t('selected-combo')}:{' '}
                 <span className='font-semibold'>
                   {combo.map((c) => `${c.name} (Số lượng: ${c.quantity})`).join(', ')}
                 </span>
               </p>
               <p>
-                Tổng tiền: <span className='font-semibold'>0đ</span>
+                {t('total-amount')}: <span className='font-semibold'>0{t('vnd')}</span>
               </p>
             </div>
             <div className='flex w-full items-center justify-center gap-2 xl:w-auto'>
               <Link
-                to='/show-times'
+                to={path.showtimes}
                 className='inline-flex h-10 items-center justify-center rounded-full border bg-transparent px-8 py-2 text-sm font-medium transition-colors hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
               >
-                Quay lại
+                {t('back')}
               </Link>
               <button
                 onClick={handlePayment}
                 disabled={Boolean(!selectedSeats.length)}
                 className='inline-flex h-10 items-center justify-center rounded-full bg-primary px-8 py-2 text-sm font-medium transition duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
               >
-                Thanh toán
+                {t('payment')}
               </button>
             </div>
           </div>
