@@ -43,11 +43,11 @@ export default function ShowTimes() {
       <div className='container'>
         <div className='flex flex-col justify-start bg-white/95 p-[20px]'>
           <div className='mb-[10px] text-lg uppercase text-primary'>{t('schedule')}</div>
-          <div className='mb-[20px] flex items-center justify-start'>
+          <div className='mb-[20px] flex items-center justify-start overflow-x-auto shadow-inner shadow-quaternary'>
             <button
               onClick={() => handleChangeDay(currentDate)}
               className={classNames(
-                'group ml-[10px] flex cursor-pointer flex-col items-center justify-between hover:text-white',
+                'group m-[10px] flex flex-shrink-0 cursor-pointer flex-col items-center justify-between shadow-ct3d shadow-quaternary hover:text-white',
                 {
                   'text-white': isToday,
                   'text-quaternary': isToday
@@ -77,7 +77,7 @@ export default function ShowTimes() {
             <button
               onClick={() => handleChangeDay(tomorrow)}
               className={classNames(
-                'group ml-[10px] flex cursor-pointer flex-col items-center justify-between hover:text-white',
+                'group m-[10px] flex flex-shrink-0 cursor-pointer flex-col items-center justify-between shadow-ct3d shadow-quaternary hover:text-white',
                 {
                   'text-white': isTomorrow,
                   'text-quaternary': !isTomorrow
@@ -105,7 +105,7 @@ export default function ShowTimes() {
             <button
               onClick={() => handleChangeDay(dayAfterTomorrow)}
               className={classNames(
-                'group ml-[10px] flex cursor-pointer flex-col items-center justify-between hover:text-white',
+                'group m-[10px] flex flex-shrink-0 cursor-pointer flex-col items-center justify-between shadow-ct3d shadow-quaternary hover:text-white',
                 {
                   'text-white': isDayAfterTomorrow,
                   'text-quaternary': !isDayAfterTomorrow
@@ -140,7 +140,7 @@ export default function ShowTimes() {
             Array.from({ length: 3 }).map((_, index) => (
               <div
                 key={index}
-                className='relative m-3 flex bg-primary px-[20px] py-[10px] shadow-ct3d shadow-quaternary'
+                className='relative m-3 flex justify-center bg-primary px-[20px] py-[10px] shadow-ct3d shadow-quaternary sm:justify-start'
               >
                 <div
                   role='status'
@@ -173,9 +173,9 @@ export default function ShowTimes() {
             Array.from({ length: 3 }).map((_, index) => (
               <div
                 key={index}
-                className='relative m-3 flex bg-primary px-[20px] py-[10px] shadow-ct3d shadow-quaternary'
+                className='relative m-3 flex flex-wrap justify-center bg-primary px-[20px] py-[10px] shadow-ct3d shadow-quaternary sm:flex-nowrap'
               >
-                <div className='mr-[40px] max-w-[220px] flex-shrink-0'>
+                <div className='mb-[20px] max-w-[220px] flex-shrink-0 shadow-ct3d shadow-quaternary sm:mb-0 sm:mr-[40px]'>
                   <img
                     src='https://touchcinema.com/medias/hinh-phim-2021/the-inseparables-poster-poster.jpg'
                     alt=''
@@ -187,29 +187,29 @@ export default function ShowTimes() {
                     <h3 className='text-xl uppercase text-quaternary'>Tình Bạn Diệu Kỳ (Lồng Tiếng)</h3>
                   </Link>
                   <h3 className='mb-[10px] text-base uppercase text-quaternary'>THE INSEPARABLES</h3>
-                  <div className='mb-[20px] flex max-w-fit rounded-lg bg-secondary px-4 py-2'>
+                  <div className='mb-[20px] hidden max-w-fit rounded-lg bg-secondary px-4 py-2 md:flex'>
                     <AiFillStar color='yellow' className='h-6 w-6' />
                     <AiFillStar color='yellow' className='h-6 w-6' />
                     <AiFillStar color='yellow' className='h-6 w-6' />
                     <AiFillStar color='yellow' className='h-6 w-6' />
                     <AiFillStar color='yellow' className='h-6 w-6' />
                   </div>
-                  <div className='mb-[20px] grid grid-cols-3'>
-                    <span className='col-span-1 flex items-start'>
+                  <div className='mb-[20px] hidden grid-cols-3 gap-4 md:grid'>
+                    <span className='col-span-3 flex items-start lg:col-span-1'>
                       <strong className='mr-1 flex flex-shrink-0 items-center'>
                         <BiTime className='mx-1' />
                         {t('duration')}:
                       </strong>
                       119 {t('minutes')}
                     </span>
-                    <span className='col-span-1 flex items-start'>
+                    <span className='col-span-3 flex items-start lg:col-span-1'>
                       <strong className='mr-1 flex flex-shrink-0 items-center'>
                         <BiCategory className='mx-1' />
                         {t('genre')}:
                       </strong>
                       Hài Hước, Tình Cảm
                     </span>
-                    <span className='col-span-1 flex items-start'>
+                    <span className='col-span-3 flex items-start lg:col-span-1'>
                       <strong className='mr-1 flex flex-shrink-0 items-center'>
                         <BiUser className='mx-1' />
                         {t('director')}:
@@ -253,12 +253,12 @@ export default function ShowTimes() {
                     </div>
                   </div>
                 </div>
-                <div className='absolute right-[100px] top-[-1px]'>
+                <div className='absolute right-[100px] top-[-1px] hidden lg:block'>
                   <div className='max-h-fit rounded-sm bg-secondary px-3 pb-5 pt-4 text-center text-lg text-white shadow-ct3d shadow-quaternary'>
                     T16
                   </div>
                 </div>
-                <div className='absolute right-[40px] top-[-1px]'>
+                <div className='absolute right-[40px] top-[-1px] hidden lg:block'>
                   <div className='rounded-sm bg-tertiary px-3 py-4 text-center text-lg text-white shadow-ct3d shadow-quaternary'>
                     <p className='text-2xl font-semibold underline'>01</p>
                     <p>09</p>

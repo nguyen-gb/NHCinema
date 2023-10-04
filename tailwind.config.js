@@ -28,8 +28,8 @@ module.exports = {
           maxWidth: theme('columns.7xl'),
           marginLeft: 'auto',
           marginRight: 'auto',
-          paddingLeft: theme('spacing.10'),
-          paddingRight: theme('spacing.10')
+          paddingLeft: theme('spacing.6'),
+          paddingRight: theme('spacing.6')
         }
       })
     })

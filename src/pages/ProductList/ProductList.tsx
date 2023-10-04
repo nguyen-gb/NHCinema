@@ -47,7 +47,7 @@ export default function ProductList() {
       </Helmet>
       <div className='container'>
         <div className='my-[40px]'>
-          <div className='flex items-center justify-center gap-6 pb-[40px]'>
+          <div className='flex flex-wrap items-center justify-center gap-6 pb-[40px]'>
             <button
               onClick={handleClickShowing}
               className={classNames(
@@ -98,11 +98,11 @@ export default function ProductList() {
           </div>
           {isLoading && (
             <div className='col-span-10'>
-              <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4'>
+              <div className='mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
                 {Array.from({ length: 8 }).map((_, index) => (
                   <div
                     key={index}
-                    className='relative mx-[20px] cursor-pointer overflow-hidden rounded-xl border border-slate-800 p-[2px] backdrop-blur-3xl hover:shadow-ct'
+                    className='relative mx-[10px] cursor-pointer overflow-hidden rounded-xl border border-slate-800 p-[2px] backdrop-blur-3xl hover:shadow-ct'
                   >
                     <span className='absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#fd0083_50%,#E2CBFF_100%)]' />
                     <div className='inline-flex h-full w-full items-center justify-center rounded-xl bg-slate-950 p-1 text-sm font-medium text-white backdrop-blur-3xl'>
@@ -127,7 +127,7 @@ export default function ProductList() {
           )}
           {!isLoading && productsData && (
             <div className='col-span-10'>
-              <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4'>
+              <div className='mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
                 {productsData.data.data.products.map((product) => (
                   <div className='col-span-1' key={product._id}>
                     <Product product={product} />

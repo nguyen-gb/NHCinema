@@ -174,8 +174,8 @@ export default function ProductDetail() {
                   </svg>
                 </div>
               </div>
-              <div className='relative mt-[-200px] grid grid-cols-12 p-[15px]'>
-                <div className='col-span-3'>
+              <div className='relative grid grid-cols-12 p-[15px] lg:mt-[-200px]'>
+                <div className='col-span-3 hidden xl:block'>
                   <div
                     role='status'
                     className='flex h-[400px] w-full animate-pulse items-center justify-center rounded-lg bg-gray-300 dark:bg-gray-700'
@@ -191,7 +191,7 @@ export default function ProductDetail() {
                     </svg>
                   </div>
                 </div>
-                <div className='col-span-9 bg-transparent p-[15px] text-white'>
+                <div className='col-span-12 bg-transparent p-[15px] text-white xl:col-span-9'>
                   <div role='status' className='max-w-sm animate-pulse'>
                     <div className='mb-4 h-8 w-48 rounded-full bg-gray-200 dark:bg-gray-700'></div>
                     <div className='mb-2.5 h-8 max-w-[360px] rounded-full bg-gray-200 dark:bg-gray-700'></div>
@@ -220,102 +220,7 @@ export default function ProductDetail() {
                 </div>
               </div>
             </div>
-            <div className='col-span-12 my-[20px] p-[15px] text-white'>
-              <div className='mb-[20px] flex items-center justify-between'>
-                <p className='max-w-fit border-b-2 pb-2 pl-2 pr-12 text-left text-2xl font-bold'>{t('showtimes')}</p>
-                <div className='group relative inline-block text-left'>
-                  <div className='min-w-[200px]'>
-                    <span className='rounded-md shadow-sm'>
-                      <button
-                        type='button'
-                        className='inline-flex w-full justify-center rounded-md bg-primary px-6 py-3 text-white'
-                      >
-                        {idCinema}
-                      </button>
-                    </span>
-                  </div>
-                  <div className='absolute right-0 mt-[1px] hidden min-w-fit origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 group-hover:block'>
-                    <div className='py-1'>
-                      <button
-                        onClick={(event) => handleSelectCinema(event)}
-                        value='Cinema Võ Văn Ngân'
-                        className='w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 hover:text-quaternary'
-                      >
-                        Cinema Võ Văn Ngân
-                      </button>
-                      <button
-                        onClick={(event) => handleSelectCinema(event)}
-                        value='Cinema Bình Thạnh'
-                        className='w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 hover:text-quaternary'
-                      >
-                        Cinema Bình Thạnh
-                      </button>
-                      <button
-                        onClick={(event) => handleSelectCinema(event)}
-                        value='Cinema Gò Vấp'
-                        className='w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 hover:text-quaternary'
-                      >
-                        Cinema Gò Vấp
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className='mb-[20px] max-w-fit bg-tertiary px-[20px] py-[8px] font-semibold'>
-                {t('today')},{' '}
-                {currentDate.toLocaleString(i18n.language, {
-                  month: 'long',
-                  day: 'numeric'
-                })}
-              </div>
-              <div className='mb-[12px] flex flex-wrap items-center justify-start'>
-                <div
-                  className={classNames('mb-[8px] mr-[8px] rounded-md border border-white px-[20px] py-[8px]', {
-                    'cursor-not-allowed bg-quaternary': true,
-                    'cursor-pointer bg-primary': false
-                  })}
-                >
-                  13:15
-                </div>
-                <div
-                  className={classNames('mb-[8px] mr-[8px] rounded-md border border-white px-[20px] py-[8px]', {
-                    'cursor-not-allowed bg-quaternary': true,
-                    'cursor-pointer bg-primary': false
-                  })}
-                >
-                  13:35
-                </div>
-              </div>
-              <div className='mb-[20px] max-w-fit bg-tertiary px-[20px] py-[8px] font-semibold'>
-                {tomorrow.toLocaleString(i18n.language, {
-                  month: 'long',
-                  day: 'numeric',
-                  weekday: 'long'
-                })}
-              </div>
-              <div className='mb-[12px] flex flex-wrap items-center justify-start'>
-                <Link
-                  to={path.bookTickets}
-                  className={classNames('mb-[8px] mr-[8px] rounded-md border border-white px-[20px] py-[8px]', {
-                    'cursor-not-allowed bg-quaternary': false,
-                    'cursor-pointer bg-primary': true
-                  })}
-                >
-                  13:35
-                </Link>
-                <Link
-                  to={path.bookTickets}
-                  className={classNames('mb-[8px] mr-[8px] rounded-md border border-white px-[20px] py-[8px]', {
-                    'cursor-not-allowed bg-quaternary': false,
-                    'cursor-pointer bg-primary': true
-                  })}
-                >
-                  15:15
-                </Link>
-              </div>
-            </div>
           </div>
-          <VideoPopup isOpen={isVideoOpen} videoUrl='https://youtu.be/sNQhWlwitr4' onClose={closeVideoPopup} />
         </div>
       </div>
     )
@@ -344,22 +249,25 @@ export default function ProductDetail() {
               />
               <div className='absolute bottom-0 left-0 right-0 top-0 bg-quaternary/70'>
                 <div className='flex h-[80%] w-full items-center justify-center'>
-                  <button className='h-[80px] w-[80px] cursor-pointer rounded-full bg-primary' onClick={openVideoPopup}>
+                  <button
+                    className='h-[60px] w-[60px] cursor-pointer rounded-full bg-primary sm:h-[80px] sm:w-[80px]'
+                    onClick={openVideoPopup}
+                  >
                     <VscDebugStart className='h-full w-full scale-75 text-white' />
                   </button>
                 </div>
               </div>
             </div>
-            <div className='relative mt-[-200px] grid grid-cols-12 p-[15px]'>
-              <div className='col-span-3'>
+            <div className='relative grid grid-cols-12 p-[15px] lg:mt-[-200px]'>
+              <div className='col-span-3 hidden xl:block'>
                 <img
                   src='https://touchcinema.com/uploads/phim-2021/1200x1800-01-poster.jpg'
                   alt=''
                   className='h-full w-full border-2 border-white object-cover'
                 />
               </div>
-              <div className='col-span-9 bg-transparent p-[15px] text-white'>
-                <h1 className='mt-[20px] text-2xl font-semibold uppercase text-primary'>
+              <div className='col-span-12 bg-transparent p-[15px] text-white xl:col-span-9'>
+                <h1 className='text-2xl font-semibold uppercase text-primary lg:mt-[20px]'>
                   Shin - Cậu Bé Bút Chì: Đại Chiến Siêu Năng Lực ~Sushi Bay~ (Lồng Tiếng)
                 </h1>
                 <h2 className='mt-2 text-2xl uppercase'>
@@ -416,9 +324,11 @@ export default function ProductDetail() {
           </div>
           {!isHideShowTimes && (
             <div className='col-span-12 my-[20px] p-[15px] text-white'>
-              <div className='mb-[20px] flex items-center justify-between'>
-                <p className='max-w-fit border-b-2 pb-2 pl-2 pr-12 text-left text-2xl font-bold'>{t('showtimes')}</p>
-                <div className='group relative inline-block text-left'>
+              <div className='mb-[20px] flex flex-wrap items-center justify-between'>
+                <p className='mb-[20px] max-w-fit border-b-2 pb-2 pl-2 pr-12 text-left text-2xl font-bold'>
+                  {t('showtimes')}
+                </p>
+                <div className='group relative mb-[20px] inline-block text-left'>
                   <div className='min-w-[200px]'>
                     <span className='rounded-md shadow-sm'>
                       <button

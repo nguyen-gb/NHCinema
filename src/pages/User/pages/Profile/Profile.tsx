@@ -196,11 +196,11 @@ export default function Profile() {
                   <div className='col-span-2 flex justify-end gap-4 pt-4'>
                     <Link
                       to={path.changePassword}
-                      className='inline-flex h-10 items-center justify-center rounded-full border bg-transparent px-8 py-2 text-sm font-medium transition-colors hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
+                      className='inline-flex h-10 items-center justify-center rounded-full border bg-transparent px-8 py-2 text-center text-sm font-medium transition-colors hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
                     >
                       {t('change-password')}
                     </Link>
-                    <button className='inline-flex h-10 items-center justify-center rounded-full bg-primary px-8 py-2 text-sm font-medium transition duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'>
+                    <button className='inline-flex h-10 items-center justify-center rounded-full bg-primary px-8 py-2 text-center text-sm font-medium transition duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'>
                       {t('save-information')}
                     </button>
                   </div>
