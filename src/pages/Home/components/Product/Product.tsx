@@ -22,7 +22,7 @@ export default function Product({ product }: Props) {
           <div className='invisible absolute bottom-0 left-0 right-0 top-0 z-10 rotate-180 cursor-default bg-white/70 opacity-0 transition-all duration-500 group-hover:visible group-hover:origin-left group-hover:rotate-0 group-hover:opacity-100'>
             <div className='mx-3 my-auto flex h-full flex-col items-center justify-center text-[16px] leading-[40px]'>
               <Link
-                to={`${path.home}movie/${generateNameId({ name: product.name, id: product._id })}`}
+                to={`${path.home}movie/${generateNameId({ name: product.name, id: String(product._id) })}`}
                 className='mb-4 max-w-fit bg-primary px-3 py-1 uppercase'
               >
                 <div className='flex cursor-pointer items-center justify-center'>
@@ -44,7 +44,7 @@ export default function Product({ product }: Props) {
                 </div>
               </Link>
               <Link
-                to={`${path.home}movie/${generateNameId({ name: product.name, id: product._id })}`}
+                to={`${path.home}movie/${generateNameId({ name: product.name, id: String(product._id) })}`}
                 className='mb-4 max-w-fit cursor-pointer bg-secondary px-3 py-1 uppercase'
               >
                 <div className='flex items-center justify-center'>
@@ -72,7 +72,7 @@ export default function Product({ product }: Props) {
       </div>
       <div className='mx-[20px] mb-[16px] p-4'>
         <Link
-          to={`${path.home}${generateNameId({ name: product.name, id: product._id })}`}
+          to={`${path.home}${generateNameId({ name: product.name, id: String(product._id) })}`}
           className='text-[17px] font-normal uppercase text-white hover:underline'
         >
           <div className='mb-2 text-center'>

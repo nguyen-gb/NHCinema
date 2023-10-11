@@ -1,39 +1,28 @@
 import { createSearchParams, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import useQueryConfig, { QueryConfig } from './useQueryConfig'
 import { yupResolver } from '@hookform/resolvers/yup'
-import omit from 'lodash/omit'
-import path from 'src/constants/path'
-import { Schema, schema } from 'src/utils/rules'
 
-type FormData = Pick<Schema, 'name'>
-const nameSchema = schema.pick(['name'])
+import useQueryConfig, { QueryConfig } from './useQueryConfig'
+import path from 'src/constants/path'
+import { MovieSchema, movieSchema } from 'src/utils/rules'
 
 export default function useSearchProducts() {
   const queryConfig: QueryConfig = useQueryConfig()
   const navigate = useNavigate()
-  const { register, handleSubmit } = useForm<FormData>({
+  const { register, handleSubmit } = useForm<MovieSchema>({
     defaultValues: {
-      name: ''
+      movie: ''
     },
-    resolver: yupResolver(nameSchema)
+    resolver: yupResolver(movieSchema)
   })
 
   const onSubmitSearch = handleSubmit((data) => {
-    const config = queryConfig.order
-      ? omit(
-          {
-            ...queryConfig,
-            name: data.name
-          },
-          ['order', 'sort_by']
-        )
-      : {
-          ...queryConfig,
-          name: data.name
-        }
+    const config = {
+      ...queryConfig,
+      key_search: data.movie
+    }
     navigate({
-      pathname: path.home,
+      pathname: path.movie,
       search: createSearchParams(config).toString()
     })
   })

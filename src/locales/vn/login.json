@@ -1,6 +1,8 @@
 {
   "login": "Đăng nhập",
+  "name": "Họ và tên",
   "email": "Email",
+  "phone": "Số điện thoại",
   "password": "Mật khẩu",
   "forgot-password": "Quên mật khẩu",
   "register": "Đăng ký",

@@ -7,20 +7,13 @@ export type QueryConfig = {
   [key in keyof ProductListConfig]: string
 }
 
-export default function useQueryConfig() {
+export default function useQueryConfig(args?: ProductListConfig) {
   const queryParams: QueryConfig = useQueryParams()
   const queryConfig: QueryConfig = omitBy(
     {
-      page: queryParams.page || '1',
-      limit: queryParams.limit || '20',
-      exclude: queryParams.exclude,
-      name: queryParams.name,
-      order: queryParams.order,
-      price_max: queryParams.price_max,
-      price_min: queryParams.price_min,
-      rating_filter: queryParams.rating_filter,
-      sort_by: queryParams.sort_by,
-      category: queryParams.category
+      genre_id: args?.genre_id || queryParams.genre_id,
+      status: args?.status || queryParams.status,
+      key_search: args?.key_search || queryParams.key_search
     },
     isUndefined
   )

@@ -9,6 +9,7 @@ import productApi from 'src/apis/product.api'
 import { ProductListConfig } from 'src/types/product.type'
 import useQueryConfig, { QueryConfig } from 'src/hooks/useQueryConfig'
 import Slider from 'src/components/Slider'
+import bannerApi from 'src/apis/banner.api'
 // import Product from './components/Product'
 // import Pagination from 'src/components/Pagination'
 // import categoryApi from 'src/apis/category.api'
@@ -17,12 +18,30 @@ import Slider from 'src/components/Slider'
 
 export default function Home() {
   const { t } = useTranslation('home')
-  const queryConfig: QueryConfig = useQueryConfig()
+  const queryConfig1: QueryConfig = useQueryConfig({ status: 1 })
+  const queryConfig2: QueryConfig = useQueryConfig({ status: 2 })
 
-  const { data: productsData, isLoading } = useQuery({
-    queryKey: ['products', queryConfig],
+  const { data: dataBanner, isLoading } = useQuery({
+    queryKey: ['banners'],
     queryFn: () => {
-      return productApi.getProducts(queryConfig as ProductListConfig)
+      return bannerApi.getBanners()
+    }
+    // keepPreviousData: true,
+    // staleTime: 3 * 60 * 1000
+  })
+
+  const { data: dataShowing, isLoading: isLoading1 } = useQuery({
+    queryKey: ['products', queryConfig1],
+    queryFn: () => {
+      return productApi.getProducts(queryConfig1 as ProductListConfig)
+    }
+    // keepPreviousData: true,
+    // staleTime: 3 * 60 * 1000
+  })
+  const { data: dataComing, isLoading: isLoading2 } = useQuery({
+    queryKey: ['products', queryConfig2],
+    queryFn: () => {
+      return productApi.getProducts(queryConfig2 as ProductListConfig)
     }
     // keepPreviousData: true,
     // staleTime: 3 * 60 * 1000
@@ -70,16 +89,11 @@ export default function Home() {
               </div>
             </div>
           )}
-          {!isLoading &&
-            productsData &&
-            productsData.data.data.products.splice(0, 5).map((_, index) => (
-              <SwiperSlide key={index}>
+          {dataBanner &&
+            dataBanner.data.data.map((banner) => (
+              <SwiperSlide key={banner._id}>
                 <div className='w-full'>
-                  <img
-                    className='h-full w-full object-cover'
-                    src='https://touchcinema.com/storage/slider-app/1920x1080-1694062369.jpg'
-                    alt=''
-                  />
+                  <img className='h-full w-full object-cover' src={banner.file} alt={banner.title} />
                 </div>
               </SwiperSlide>
             ))}
@@ -97,7 +111,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          {productsData && <Slider products={productsData.data.data.products} isLoading={isLoading} />}
+          {dataShowing && <Slider products={dataShowing.data.data} isLoading={isLoading1} />}
         </div>
         <div className='mb-[40px]'>
           <div className='flex items-center justify-center pb-[40px]'>
@@ -110,7 +124,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          {productsData && <Slider products={productsData.data.data.products} isLoading={isLoading} />}
+          {dataComing && <Slider products={dataComing.data.data} isLoading={isLoading2} />}
         </div>
       </div>
     </div>

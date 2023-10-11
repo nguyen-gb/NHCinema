@@ -14,5 +14,6 @@
   "duration": "Thời lượng",
   "minutes": "phút",
   "genre": "Thể loại",
-  "director": "Đạo diễn"
+  "director": "Đạo diễn",
+  "no-data": "Không có lịch chiếu"
 }

@@ -1,22 +1,39 @@
 import classNames from 'classnames'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { AiFillStar } from 'react-icons/ai'
 import { BiCategory, BiTime, BiUser } from 'react-icons/bi'
-import { Link } from 'react-router-dom'
+import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from '@tanstack/react-query'
+
+import DropdownCinema from 'src/components/DropdownCinema'
+import { AppContext } from 'src/contexts/app.context'
+import showtimesApi from 'src/apis/showtimes.api'
+import { formatDateToString } from 'src/utils/utils'
+import path from 'src/constants/path'
 
 export default function ShowTimes() {
+  const { cinema } = useContext(AppContext)
   const { i18n, t } = useTranslation('show-times')
+  const navigate = useNavigate()
+  const [date, setDate] = useState(new Date())
   const [isToday, setIsToday] = useState(true)
   const [isTomorrow, setIsTomorrow] = useState(false)
   const [isDayAfterTomorrow, setIsDayAfterTomorrow] = useState(false)
 
   const currentDate = new Date()
+  const currentHour = currentDate.getHours()
+  const currentMinute = currentDate.getMinutes()
   const tomorrow = new Date(currentDate)
   tomorrow.setDate(currentDate.getDate() + 1)
   const dayAfterTomorrow = new Date(currentDate)
   dayAfterTomorrow.setDate(currentDate.getDate() + 2)
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['showtimes', date, cinema],
+    queryFn: () => showtimesApi.getShowtimesByDate({ theater_id: cinema._id, time: formatDateToString(date) })
+  })
 
   const handleChangeDay = (day: Date) => {
     if (day === tomorrow) {
@@ -32,6 +49,19 @@ export default function ShowTimes() {
       setIsTomorrow(false)
       setIsDayAfterTomorrow(false)
     }
+    setDate(day)
+  }
+
+  const handleChooseTime = (movie_id: string, time: string) => {
+    const config = {
+      movie_id: movie_id,
+      date: formatDateToString(date),
+      time: time
+    }
+    navigate({
+      pathname: path.bookTickets,
+      search: createSearchParams(config).toString()
+    })
   }
 
   return (
@@ -42,7 +72,10 @@ export default function ShowTimes() {
       </Helmet>
       <div className='container'>
         <div className='flex flex-col justify-start bg-white/95 p-[20px]'>
-          <div className='mb-[10px] text-lg uppercase text-primary'>{t('schedule')}</div>
+          <div className='flex flex-wrap items-center justify-between'>
+            <p className='mb-[20px] max-w-fit text-left text-lg uppercase text-primary'>{t('schedule')}</p>
+            <DropdownCinema />
+          </div>
           <div className='mb-[20px] flex items-center justify-start overflow-x-auto shadow-inner shadow-quaternary'>
             <button
               onClick={() => handleChangeDay(currentDate)}
@@ -136,7 +169,7 @@ export default function ShowTimes() {
         </div>
         <div className='bg-tertiary p-[20px] text-lg uppercase text-white'>{t('movie-schedule')}</div>
         <div className='flex flex-col justify-start bg-white/95'>
-          {false &&
+          {isLoading &&
             Array.from({ length: 3 }).map((_, index) => (
               <div
                 key={index}
@@ -169,24 +202,21 @@ export default function ShowTimes() {
                 </div>
               </div>
             ))}
-          {true &&
-            Array.from({ length: 3 }).map((_, index) => (
+          {!isLoading &&
+            data &&
+            data.data.data.map((product) => (
               <div
-                key={index}
+                key={product._id}
                 className='relative m-3 flex flex-wrap justify-center bg-primary px-[20px] py-[10px] shadow-ct3d shadow-quaternary sm:flex-nowrap'
               >
                 <div className='mb-[20px] max-w-[220px] flex-shrink-0 shadow-ct3d shadow-quaternary sm:mb-0 sm:mr-[40px]'>
-                  <img
-                    src='https://touchcinema.com/medias/hinh-phim-2021/the-inseparables-poster-poster.jpg'
-                    alt=''
-                    className='h-full w-full object-cover'
-                  />
+                  <img src={product.poster} alt={product.name} className='h-full w-full object-cover' />
                 </div>
                 <div className='flex-grow bg-white p-[20px]'>
                   <Link to=''>
-                    <h3 className='text-xl uppercase text-quaternary'>Tình Bạn Diệu Kỳ (Lồng Tiếng)</h3>
+                    <h3 className='text-xl uppercase text-quaternary'>{product.name}</h3>
                   </Link>
-                  <h3 className='mb-[10px] text-base uppercase text-quaternary'>THE INSEPARABLES</h3>
+                  <h3 className='mb-[10px] text-base uppercase text-quaternary'>{product.english_name}</h3>
                   <div className='mb-[20px] hidden max-w-fit rounded-lg bg-secondary px-4 py-2 md:flex'>
                     <AiFillStar color='yellow' className='h-6 w-6' />
                     <AiFillStar color='yellow' className='h-6 w-6' />
@@ -200,72 +230,63 @@ export default function ShowTimes() {
                         <BiTime className='mx-1' />
                         {t('duration')}:
                       </strong>
-                      119 {t('minutes')}
+                      {product.duration} {t('minutes')}
                     </span>
                     <span className='col-span-3 flex items-start lg:col-span-1'>
                       <strong className='mr-1 flex flex-shrink-0 items-center'>
                         <BiCategory className='mx-1' />
                         {t('genre')}:
                       </strong>
-                      Hài Hước, Tình Cảm
+                      {product.genre}
                     </span>
                     <span className='col-span-3 flex items-start lg:col-span-1'>
                       <strong className='mr-1 flex flex-shrink-0 items-center'>
                         <BiUser className='mx-1' />
                         {t('director')}:
                       </strong>
-                      Lee Han
+                      {product.director}
                     </span>
                   </div>
                   <div className='flex flex-wrap text-white'>
-                    <div
-                      className={classNames(
-                        'mb-[8px] mr-[8px] max-w-fit rounded-md border border-tertiary px-[20px] py-[8px]',
-                        {
-                          'cursor-not-allowed bg-quaternary': true,
-                          'cursor-pointer bg-primary': false
-                        }
-                      )}
-                    >
-                      13:15
-                    </div>
-                    <div
-                      className={classNames(
-                        'mb-[8px] mr-[8px] max-w-fit rounded-md border border-tertiary px-[20px] py-[8px]',
-                        {
-                          'cursor-not-allowed bg-quaternary': true,
-                          'cursor-pointer bg-primary': false
-                        }
-                      )}
-                    >
-                      13:35
-                    </div>
-                    <div
-                      className={classNames(
-                        'mb-[8px] mr-[8px] max-w-fit rounded-md border border-tertiary px-[20px] py-[8px]',
-                        {
-                          'cursor-not-allowed bg-quaternary': false,
-                          'cursor-pointer bg-primary': true
-                        }
-                      )}
-                    >
-                      15:15
-                    </div>
+                    {product.times.map((time) => {
+                      const [hour, minute] = time.split(':').map(Number)
+                      const isPastTime = hour < currentHour || (hour === currentHour && minute < currentMinute - 5)
+
+                      return (
+                        <button
+                          onClick={() => handleChooseTime(product._id, time)}
+                          key={time}
+                          className={classNames(
+                            'mb-[8px] mr-[8px] max-w-fit rounded-md border border-tertiary px-[20px] py-[8px]',
+                            {
+                              'cursor-not-allowed bg-quaternary': isPastTime,
+                              'cursor-pointer bg-primary': !isPastTime
+                            }
+                          )}
+                          disabled={!isPastTime}
+                        >
+                          {time}
+                        </button>
+                      )
+                    })}
                   </div>
                 </div>
                 <div className='absolute right-[100px] top-[-1px] hidden lg:block'>
                   <div className='max-h-fit rounded-sm bg-secondary px-3 pb-5 pt-4 text-center text-lg text-white shadow-ct3d shadow-quaternary'>
-                    T16
+                    {product.age}
                   </div>
                 </div>
                 <div className='absolute right-[40px] top-[-1px] hidden lg:block'>
                   <div className='rounded-sm bg-tertiary px-3 py-4 text-center text-lg text-white shadow-ct3d shadow-quaternary'>
-                    <p className='text-2xl font-semibold underline'>01</p>
-                    <p>09</p>
+                    <p className='text-2xl font-semibold underline'>{product.release.substring(8, 10)}</p>
+                    <p>{product.release.substring(5, 7)}</p>
                   </div>
                 </div>
               </div>
             ))}
+          {!isLoading && data && data?.data.data.length <= 0 && (
+            <div className='p-10 text-center text-quaternary'>{t('no-data')}</div>
+          )}
         </div>
       </div>
     </div>

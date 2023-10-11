@@ -3,25 +3,25 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import omit from 'lodash/omit'
-import { useContext } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
+// import { useContext } from 'react'
 
 import { schema, Schema } from 'src/utils/rules'
 import Input from 'src/components/Input'
 import authApi from 'src/apis/auth.api'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
-import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button'
 import path from 'src/constants/path'
+// import { AppContext } from 'src/contexts/app.context'
 
-type FormData = Pick<Schema, 'email' | 'password' | 'confirm_password'>
-const schemaRegister = schema.pick(['email', 'password', 'confirm_password'])
+type FormData = Schema
+const schemaRegister = schema
 
 export default function Register() {
   const { t } = useTranslation('login')
-  const { setIsAuthenticated, setProfile } = useContext(AppContext)
+  // const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
   const {
     register,
@@ -38,9 +38,9 @@ export default function Register() {
   const onSubmit = handleSubmit((data) => {
     const body = omit(data, ['confirm_password'])
     registerAccountMutation.mutate(body, {
-      onSuccess: (data) => {
-        setIsAuthenticated(true)
-        setProfile(data.data.data.user)
+      onSuccess: () => {
+        // setIsAuthenticated(true)
+        // setProfile(data.data.data.user)
         navigate(path.login)
       },
       onError: (error) => {
@@ -72,6 +72,14 @@ export default function Register() {
               <div className='text-2xl'>{t('register')}</div>
               <Input
                 className='mt-6'
+                type='name'
+                placeholder={t('name')}
+                name='name'
+                register={register}
+                errorMessage={errors.name?.message}
+              />
+              <Input
+                className='mt-2'
                 type='email'
                 placeholder={t('email')}
                 name='email'
@@ -79,6 +87,15 @@ export default function Register() {
                 errorMessage={errors.email?.message}
               />
               <Input
+                className='mt-2'
+                type='phone'
+                placeholder={t('phone')}
+                name='phone'
+                register={register}
+                errorMessage={errors.phone?.message}
+              />
+              <Input
+                className='mt-2'
                 classNameInputCustom='pr-[34px]'
                 type='password'
                 placeholder={t('password')}
@@ -89,6 +106,7 @@ export default function Register() {
                 classNameEye='absolute right-[12px] top-[12px] h-5 w-5 cursor-pointer'
               />
               <Input
+                className='mt-2'
                 classNameInputCustom='pr-[34px]'
                 type='password'
                 placeholder={t('confirm-password')}

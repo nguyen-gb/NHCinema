@@ -1,40 +1,36 @@
-import { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+// import { useContext } from 'react'
 
-import { Purchase } from 'src/types/purchase.type'
 import Popover from '../Popover'
 import path from 'src/constants/path'
-import { purchasesStatus } from 'src/constants/purchase'
-import purchaseApi from 'src/apis/purchase.api'
-import { AppContext } from 'src/contexts/app.context'
-import { useTranslation } from 'react-i18next'
+// import { AppContext } from 'src/contexts/app.context'
 
 export default function Notification() {
   const { t } = useTranslation()
-  const { isAuthenticated } = useContext(AppContext)
-  const { data: purchasesInCartData } = useQuery({
-    queryKey: ['purchases', { status: purchasesStatus.inCart }],
-    queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.inCart }),
-    enabled: isAuthenticated
-  })
+  // const { isAuthenticated } = useContext(AppContext)
+  // const { data: notificationsData } = useQuery({
+  //   queryKey: ['purchases', { status: purchasesStatus.inCart }],
+  //   queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.inCart }),
+  //   enabled: isAuthenticated
+  // })
 
-  const purchasesInCart = purchasesInCartData?.data.data
+  const notifications = [1, 2, 3, 4, 5]
   return (
     <Popover
       renderPopover={
         <div className='max-w-[300px] rounded-sm border border-gray-200 bg-white text-sm shadow-md md:max-w-[400px]'>
-          {purchasesInCart && (purchasesInCart as Purchase[]).length > 0 ? (
+          {notifications && notifications.length > 0 ? (
             <div>
               <div className='border-b-[1px] border-quaternary/20 p-2 capitalize text-quaternary'>
                 {t('notification')}
               </div>
               <div className='max-h-[500px] overflow-y-auto'>
-                {purchasesInCart.map((purchase) => (
+                {notifications.map((notification) => (
                   <Link
                     to={path.home}
                     className='group block border-b-[1px] border-quaternary/20 p-2 text-[12px] text-quaternary'
-                    key={purchase._id}
+                    key={notification}
                   >
                     <b className='transition-all group-hover:text-primary'>🦀 Nhà Bà Nữ - Bánh canh cua đủ vị</b>
                     <p className='line-clamp-2'>
@@ -69,9 +65,9 @@ export default function Notification() {
           />
         </svg>
 
-        {purchasesInCart && purchasesInCart.length > 0 && (
+        {notifications && notifications.length > 0 && (
           <span className='absolute right-[-9px] top-[-5px] rounded-full bg-white px-[9px] py-[1px] text-xs text-primary'>
-            {purchasesInCart?.length}
+            {notifications?.length}
           </span>
         )}
       </div>

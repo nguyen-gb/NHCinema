@@ -68,8 +68,8 @@ export default function Slider({ products, isLoading }: Props) {
         ))}
       {!isLoading &&
         products &&
-        products.map((product, index) => (
-          <SwiperSlide key={index}>
+        products.map((product) => (
+          <SwiperSlide key={product._id}>
             <Product product={product} />
           </SwiperSlide>
         ))}

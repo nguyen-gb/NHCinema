@@ -18,17 +18,14 @@ import { getIdFromNameId } from 'src/utils/utils'
 // import ProductRating from 'src/components/ProductRating'
 // import purchaseApi from 'src/apis/purchase.api'
 import path from 'src/constants/path'
-
 import VideoPopup from 'src/components/VideoPopup'
+import DropdownCinema from 'src/components/DropdownCinema'
 
 export default function ProductDetail() {
   // const navigate = useNavigate()
   const { i18n, t } = useTranslation('product')
-  // const queryClient = useQueryClient()
   const [isVideoOpen, setIsVideoOpen] = useState(false)
-  // const [buyCount, setBuyCount] = useState(1)
   const [isHideShowTimes, setIsHideShowTimes] = useState(true)
-  const [idCinema, setIdCinema] = useState('Cinema Võ Văn Ngân')
 
   const { nameId } = useParams()
   const id = getIdFromNameId(nameId as string)
@@ -144,11 +141,6 @@ export default function ProductDetail() {
     })
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleSelectCinema = (event: any) => {
-    setIdCinema(event.target.value)
-  }
-
   if (isLoading)
     return (
       <div className='bg-secondary'>
@@ -244,8 +236,8 @@ export default function ProductDetail() {
             <div className='relative'>
               <img
                 className='w-full object-contain'
-                src='https://touchcinema.com/storage/slider-app/2048x858-01.png'
-                alt=''
+                src={product.thumbnail}
+                alt={i18n.language === 'vi-VN' ? product.name : product.english_name}
               />
               <div className='absolute bottom-0 left-0 right-0 top-0 bg-quaternary/70'>
                 <div className='flex h-[80%] w-full items-center justify-center'>
@@ -260,30 +252,26 @@ export default function ProductDetail() {
             </div>
             <div className='relative grid grid-cols-12 p-[15px] lg:mt-[-200px]'>
               <div className='col-span-3 hidden xl:block'>
-                <img
-                  src='https://touchcinema.com/uploads/phim-2021/1200x1800-01-poster.jpg'
-                  alt=''
-                  className='h-full w-full border-2 border-white object-cover'
-                />
+                <img src={product.poster} alt='' className='h-full w-full border-2 border-white object-cover' />
               </div>
               <div className='col-span-12 bg-transparent p-[15px] text-white xl:col-span-9'>
                 <h1 className='text-2xl font-semibold uppercase text-primary lg:mt-[20px]'>
-                  Shin - Cậu Bé Bút Chì: Đại Chiến Siêu Năng Lực ~Sushi Bay~ (Lồng Tiếng)
+                  {i18n.language === 'vi-VN' ? product.name : product.english_name}
                 </h1>
                 <h2 className='mt-2 text-2xl uppercase'>
-                  CRAYON SHINCHAN: BATTLE OF SUPERNATURAL POWERS ~FLYING SUSHI~
+                  {i18n.language === 'vi-VN' ? product.english_name : product.name}
                 </h2>
                 <p className='mt-2'>
                   <strong className='inline-block w-[140px] text-primary'>{t('duration')}:</strong>
-                  94 {t('minutes')}
+                  {product.duration} {t('minutes')}
                 </p>
                 <p className='mt-2'>
                   <strong className='inline-block w-[140px] text-primary'>{t('launched-from')}:</strong>
-                  25/08/2023
+                  {product.release.split(' ')[0]}
                 </p>
                 <p className='mt-2'>
                   <strong className='inline-block w-[140px] text-primary'>{t('category')}:</strong>
-                  Hoạt Hình
+                  {product.genre_name}
                 </p>
                 <p className='mt-2'>
                   <strong className='inline-block w-[140px] text-primary'>{t('format')}:</strong>
@@ -291,13 +279,11 @@ export default function ProductDetail() {
                 </p>
                 <p className='mt-2'>
                   <strong className='inline-block w-[140px] text-primary'>{t('director')}:</strong>
-                  Hitoshi One
+                  {product.director}
                 </p>
                 <p className='mt-2 flex'>
                   <strong className='inline-block w-[140px] flex-shrink-0 text-primary'>{t('performer')}:</strong>
-                  <span className='line-clamp-1'>
-                    Yumiko Kobayashi, Miki Narahashi, Aoi Morikawa, Satomi Kourogi, Suzuki Mogura
-                  </span>
+                  <span className='line-clamp-1'>{product.performer}</span>
                 </p>
                 <p className='mt-2'>
                   <strong className='inline-block w-[140px] text-primary'>{t('age')}:</strong>
@@ -312,13 +298,7 @@ export default function ProductDetail() {
                 </button>
               </div>
               <div className='col-span-12 my-[20px] bg-primary p-[20px] shadow-ct3d'>
-                <p className='text-base text-white'>
-                  Phim xoay quanh câu chuyện về hai nguồn sáng đặc biệt từ vũ trụ mang theo siêu năng lực đặc biệt tới
-                  Trái Đất. Một nguồn sáng tích cực “nhập” vào nhóc Shin, khiến cặp mông núng nính của cậu trở nên nóng
-                  bỏng và có khả năng điều khiển những đồ vật xung quanh theo ý muốn. Một thanh niên trẻ khác tên
-                  Mitsuru Hiriya cũng nhận được siêu năng lực này. Đồng thời, một nhà khoa học xấu xa khác nhăm nhe ý
-                  định lợi dụng siêu năng lực của Hiriya để trở thành bá chủ.
-                </p>
+                <p className='text-base text-white'>{product.description}</p>
               </div>
             </div>
           </div>
@@ -328,43 +308,7 @@ export default function ProductDetail() {
                 <p className='mb-[20px] max-w-fit border-b-2 pb-2 pl-2 pr-12 text-left text-2xl font-bold'>
                   {t('showtimes')}
                 </p>
-                <div className='group relative mb-[20px] inline-block text-left'>
-                  <div className='min-w-[200px]'>
-                    <span className='rounded-md shadow-sm'>
-                      <button
-                        type='button'
-                        className='inline-flex w-full justify-center rounded-md bg-primary px-6 py-3 text-white'
-                      >
-                        {idCinema}
-                      </button>
-                    </span>
-                  </div>
-                  <div className='absolute right-0 mt-[1px] hidden min-w-fit origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 group-hover:block'>
-                    <div className='py-1'>
-                      <button
-                        onClick={(event) => handleSelectCinema(event)}
-                        value='Cinema Võ Văn Ngân'
-                        className='w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 hover:text-quaternary'
-                      >
-                        Cinema Võ Văn Ngân
-                      </button>
-                      <button
-                        onClick={(event) => handleSelectCinema(event)}
-                        value='Cinema Bình Thạnh'
-                        className='w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 hover:text-quaternary'
-                      >
-                        Cinema Bình Thạnh
-                      </button>
-                      <button
-                        onClick={(event) => handleSelectCinema(event)}
-                        value='Cinema Gò Vấp'
-                        className='w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 hover:text-quaternary'
-                      >
-                        Cinema Gò Vấp
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <DropdownCinema />
               </div>
               <div className='mb-[20px] max-w-fit bg-tertiary px-[20px] py-[8px] font-semibold'>
                 {t('today')},{' '}
@@ -421,7 +365,7 @@ export default function ProductDetail() {
             </div>
           )}
         </div>
-        <VideoPopup isOpen={isVideoOpen} videoUrl='https://youtu.be/sNQhWlwitr4' onClose={closeVideoPopup} />
+        <VideoPopup isOpen={isVideoOpen} videoUrl={product.trailer} onClose={closeVideoPopup} />
       </div>
     </div>
   )

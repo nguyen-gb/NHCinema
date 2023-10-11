@@ -37,6 +37,15 @@ export function formatNumberToSocialStyle(value: number) {
     .toLowerCase()
 }
 
+export function formatDateToString(date: Date) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+
+  const formattedDate = `${year}-${month}-${day}`
+  return formattedDate
+}
+
 export const rateSale = (original: number, sale: number) => Math.round(((original - sale) / original) * 100) + '%'
 
 export const removeSpecialCharacter = (str: string) =>
@@ -44,11 +53,11 @@ export const removeSpecialCharacter = (str: string) =>
   str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, '')
 
 export const generateNameId = ({ name, id }: { name: string; id: string }) => {
-  return removeSpecialCharacter(name).replace(/\s/g, '-') + `-i,${id}`
+  return removeSpecialCharacter(name).replace(/\s/g, '-') + `@${id}`
 }
 
 export const getIdFromNameId = (nameId: string) => {
-  const arr = nameId.split('-i,')
+  const arr = nameId.split('@')
   return arr[arr.length - 1]
 }
 

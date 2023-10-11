@@ -8,8 +8,7 @@ import { useTranslation } from 'react-i18next'
 import productApi from 'src/apis/product.api'
 import { ProductListConfig } from 'src/types/product.type'
 import Product from 'src/components/Product'
-// import useQueryConfig, { QueryConfig } from 'src/hooks/useQueryConfig'
-// import Product from './components/Product'
+import useQueryConfig, { QueryConfig } from 'src/hooks/useQueryConfig'
 // import Pagination from 'src/components/Pagination'
 // import categoryApi from 'src/apis/category.api'
 // import AsideFilter from './components/AsideFilter'
@@ -17,8 +16,8 @@ import Product from 'src/components/Product'
 
 export default function ProductList() {
   const { t } = useTranslation('home')
-  //const queryConfig: QueryConfig = useQueryConfig()
-  const [queryConfig, setQueryConfig] = useState({ category: '60afacca6ef5b902180aacaf' })
+  const [status, setStatus] = useState(1)
+  const queryConfig: QueryConfig = useQueryConfig({ status: status })
   const [isComing, setIsComing] = useState(false)
 
   const { data: productsData, isLoading } = useQuery({
@@ -32,11 +31,11 @@ export default function ProductList() {
 
   const handleClickShowing = () => {
     setIsComing(false)
-    setQueryConfig({ category: '60afacca6ef5b902180aacaf' })
+    setStatus(1)
   }
   const handleClickComing = () => {
     setIsComing(true)
-    setQueryConfig({ category: '60aba4e24efcc70f8892e1c6' })
+    setStatus(2)
   }
 
   return (
@@ -128,8 +127,8 @@ export default function ProductList() {
           {!isLoading && productsData && (
             <div className='col-span-10'>
               <div className='mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-                {productsData.data.data.products.map((product) => (
-                  <div className='col-span-1' key={product._id}>
+                {productsData.data.data.map((product) => (
+                  <div className='col-span-1' key={product.genre_id}>
                     <Product product={product} />
                   </div>
                 ))}

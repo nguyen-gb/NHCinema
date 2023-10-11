@@ -3,8 +3,10 @@ import { useContext, useState } from 'react'
 import { AppContext } from 'src/contexts/app.context'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-
 import { HiBars3 } from 'react-icons/hi2'
+import classNames from 'classnames'
+import { AiOutlineClose } from 'react-icons/ai'
+
 import path from 'src/constants/path'
 import Popover from '../Popover'
 import authApi from 'src/apis/auth.api'
@@ -12,8 +14,6 @@ import { purchasesStatus } from 'src/constants/purchase'
 import { locales } from 'src/i18n/i18n'
 import useSearchProducts from 'src/hooks/useSearchProducts'
 import Notification from '../Notification'
-import classNames from 'classnames'
-import { AiOutlineClose } from 'react-icons/ai'
 // import { getAvatarURL } from 'src/utils/utils'
 
 export default function NavHeader() {
@@ -21,7 +21,8 @@ export default function NavHeader() {
   const currentLanguage = locales[i18n.language as keyof typeof locales]
   const queryClient = useQueryClient()
   const { isAuthenticated, setIsAuthenticated, profile, setProfile } = useContext(AppContext)
-  const { onSubmitSearch, register } = useSearchProducts()
+  const { onSubmitSearch: onSubmitSearch1, register: register1 } = useSearchProducts()
+  const { onSubmitSearch: onSubmitSearch2, register: register2 } = useSearchProducts()
   const [isOpenMenu, setIsOpenMenu] = useState(false)
 
   const logoutMutation = useMutation({
@@ -50,15 +51,15 @@ export default function NavHeader() {
             NHCinema
           </div>
         </Link>
-        <form className='col-span-9 hidden md:block' onSubmit={onSubmitSearch}>
+        <form className='col-span-9 hidden md:block' onSubmit={onSubmitSearch1}>
           <div className='flex rounded-full border-2 border-primary bg-white p-1'>
             <input
               type='text'
               className='flex-grow rounded-full border-none bg-transparent px-3 py-1 text-black outline-none'
               placeholder={t('search')}
-              {...register('name')}
+              {...register1('movie')}
             />
-            <button className='flex-shrink-0 rounded-full bg-primary px-4 py-1 hover:opacity-90'>
+            <button type='submit' className='flex-shrink-0 rounded-full bg-primary px-4 py-1 hover:opacity-90'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 fill='none'
@@ -180,15 +181,15 @@ export default function NavHeader() {
         </div>
       </div>
       <div className='mt-[20px] flex items-center justify-between'>
-        <form className='w-full md:hidden' onSubmit={onSubmitSearch}>
+        <form className='w-full md:hidden' onSubmit={onSubmitSearch2}>
           <div className='flex rounded-full border-2 border-primary bg-white p-1'>
             <input
               type='text'
               className='flex-grow rounded-full border-none bg-transparent px-3 py-1 text-black outline-none'
               placeholder={t('search')}
-              {...register('name')}
+              {...register2('movie')}
             />
-            <button className='flex-shrink-0 rounded-full bg-primary px-4 py-1 hover:opacity-90'>
+            <button type='submit' className='flex-shrink-0 rounded-full bg-primary px-4 py-1 hover:opacity-90'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 fill='none'

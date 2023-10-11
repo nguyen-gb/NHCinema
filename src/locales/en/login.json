@@ -1,6 +1,8 @@
 {
   "login": "Login",
+  "name": "Full name",
   "email": "Email",
+  "phone": "Phone",
   "password": "Password",
   "forgot-password": "Forgot password",
   "register": "Register",
