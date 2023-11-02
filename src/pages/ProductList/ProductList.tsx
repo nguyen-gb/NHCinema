@@ -128,7 +128,7 @@ export default function ProductList() {
             <div className='col-span-10'>
               <div className='mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
                 {productsData.data.data.map((product) => (
-                  <div className='col-span-1' key={product.genre_id}>
+                  <div className='col-span-1' key={product._id}>
                     <Product product={product} />
                   </div>
                 ))}

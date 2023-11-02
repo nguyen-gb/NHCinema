@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useContext, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { convert } from 'html-to-text'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
@@ -10,76 +10,43 @@ import classNames from 'classnames'
 // import DOMPurify from 'dompurify'
 
 import productApi from 'src/apis/product.api'
-import { getIdFromNameId } from 'src/utils/utils'
-// import { Product as ProductType } from 'src/types/product.type'
-// import { purchasesStatus } from 'src/constants/purchase'
-// import Product from '../ProductList/components/Product'
-// import QuantityController from 'src/components/QuantityController'
-// import ProductRating from 'src/components/ProductRating'
-// import purchaseApi from 'src/apis/purchase.api'
-import path from 'src/constants/path'
+import { getIdFromMovieId, isTodayShowTime } from 'src/utils/utils'
 import VideoPopup from 'src/components/VideoPopup'
 import DropdownCinema from 'src/components/DropdownCinema'
+import showtimesApi from 'src/apis/showtimes.api'
+import { AppContext } from 'src/contexts/app.context'
 
 export default function ProductDetail() {
   // const navigate = useNavigate()
   const { i18n, t } = useTranslation('product')
+  const { cinema } = useContext(AppContext)
+  const navigate = useNavigate()
   const [isVideoOpen, setIsVideoOpen] = useState(false)
   const [isHideShowTimes, setIsHideShowTimes] = useState(true)
 
-  const { nameId } = useParams()
-  const id = getIdFromNameId(nameId as string)
+  const { movieId } = useParams()
+  const id = getIdFromMovieId(movieId as string)
   const { data: productDetailData, isLoading } = useQuery({
     queryKey: ['product', id],
-    queryFn: () => productApi.getProductDetail(id as string)
+    queryFn: () => productApi.getProductDetail(id)
+  })
+  const { data: showtimeData } = useQuery({
+    queryKey: ['showtime', cinema._id, id],
+    queryFn: () =>
+      showtimesApi.getShowtimesByMovie({
+        theater_id: cinema._id,
+        movie_id: id
+      })
   })
 
   const currentDate = new Date()
-  const tomorrow = new Date(currentDate)
-  tomorrow.setDate(currentDate.getDate() + 1)
-
-  // const [currentIndexImages, setCurrentIndexImages] = useState([0, 5])
-  // const [activeImage, setActiveImage] = useState('')
+  const currentHour = currentDate.getHours()
+  const currentMinute = currentDate.getMinutes()
 
   const product = productDetailData?.data.data
-  // const currentImages = useMemo(
-  //   () => (product ? product.images.slice(...currentIndexImages) : []),
-  //   [product, currentIndexImages]
-  // )
+  const showtimes = showtimeData?.data.data[0].times
+
   // const imageRef = useRef<HTMLImageElement>(null)
-
-  // const queryConfig: ProductListConfig = { page: '1', limit: '20', category: product?.category._id }
-  // const { data: productsData } = useQuery({
-  //   queryKey: ['products', queryConfig],
-  //   queryFn: () => {
-  //     return productApi.getProducts(queryConfig)
-  //   },
-  //   enabled: Boolean(product),
-  //   staleTime: 3 * 60 * 1000
-  // })
-  // const addToCartMutation = useMutation(purchaseApi.addToCart)
-
-  // useEffect(() => {
-  //   if (product && product.images.length > 0) {
-  //     setActiveImage(product.images[0])
-  //   }
-  // }, [product])
-
-  // const chooseActive = (img: string) => {
-  //   setActiveImage(img)
-  // }
-
-  // const next = () => {
-  //   if (currentIndexImages[1] < (product as ProductType).images.length) {
-  //     setCurrentIndexImages((prev) => [prev[0] + 1, prev[1] + 1])
-  //   }
-  // }
-
-  // const prev = () => {
-  //   if (currentIndexImages[0] > 1) {
-  //     setCurrentIndexImages((prev) => [prev[0] - 1, prev[1] - 1])
-  //   }
-  // }
 
   // const handleZoom = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
   //   const rect = event.currentTarget.getBoundingClientRect()
@@ -113,18 +80,6 @@ export default function ProductDetail() {
   //   setBuyCount(value)
   // }
 
-  // const addToCart = () => {
-  //   addToCartMutation.mutate(
-  //     { buy_count: buyCount, product_id: product?._id as string },
-  //     {
-  //       onSuccess: (data) => {
-  //         toast.success(data.data.message, { autoClose: 2000 })
-  //         queryClient.invalidateQueries({ queryKey: ['purchases', { status: purchasesStatus.inCart }] })
-  //       }
-  //     }
-  //   )
-  // }
-
   const openVideoPopup = () => {
     setIsVideoOpen(true)
   }
@@ -139,6 +94,10 @@ export default function ProductDetail() {
       top: document.body.scrollHeight,
       behavior: 'smooth'
     })
+  }
+
+  const handleChooseTime = (showtime_id: string) => {
+    navigate(`/book-tickets/${showtime_id}`)
   }
 
   if (isLoading)
@@ -271,7 +230,7 @@ export default function ProductDetail() {
                 </p>
                 <p className='mt-2'>
                   <strong className='inline-block w-[140px] text-primary'>{t('category')}:</strong>
-                  {product.genre_name}
+                  {product.genres}
                 </p>
                 <p className='mt-2'>
                   <strong className='inline-block w-[140px] text-primary'>{t('format')}:</strong>
@@ -310,58 +269,50 @@ export default function ProductDetail() {
                 </p>
                 <DropdownCinema />
               </div>
-              <div className='mb-[20px] max-w-fit bg-tertiary px-[20px] py-[8px] font-semibold'>
-                {t('today')},{' '}
-                {currentDate.toLocaleString(i18n.language, {
-                  month: 'long',
-                  day: 'numeric'
-                })}
-              </div>
-              <div className='mb-[12px] flex flex-wrap items-center justify-start'>
-                <div
-                  className={classNames('mb-[8px] mr-[8px] rounded-md border border-white px-[20px] py-[8px]', {
-                    'cursor-not-allowed bg-quaternary': true,
-                    'cursor-pointer bg-primary': false
-                  })}
-                >
-                  13:15
-                </div>
-                <div
-                  className={classNames('mb-[8px] mr-[8px] rounded-md border border-white px-[20px] py-[8px]', {
-                    'cursor-not-allowed bg-quaternary': true,
-                    'cursor-pointer bg-primary': false
-                  })}
-                >
-                  13:35
-                </div>
-              </div>
-              <div className='mb-[20px] max-w-fit bg-tertiary px-[20px] py-[8px] font-semibold'>
-                {tomorrow.toLocaleString(i18n.language, {
-                  month: 'long',
-                  day: 'numeric',
-                  weekday: 'long'
-                })}
-              </div>
-              <div className='mb-[12px] flex flex-wrap items-center justify-start'>
-                <Link
-                  to={path.bookTickets}
-                  className={classNames('mb-[8px] mr-[8px] rounded-md border border-white px-[20px] py-[8px]', {
-                    'cursor-not-allowed bg-quaternary': false,
-                    'cursor-pointer bg-primary': true
-                  })}
-                >
-                  13:35
-                </Link>
-                <Link
-                  to={path.bookTickets}
-                  className={classNames('mb-[8px] mr-[8px] rounded-md border border-white px-[20px] py-[8px]', {
-                    'cursor-not-allowed bg-quaternary': false,
-                    'cursor-pointer bg-primary': true
-                  })}
-                >
-                  15:15
-                </Link>
-              </div>
+              {showtimes &&
+                showtimes.map((showtime) => (
+                  <div key={showtime.time}>
+                    {isTodayShowTime(showtime.time) ? (
+                      <div className='mb-[20px] max-w-fit bg-tertiary px-[20px] py-[8px] font-semibold'>
+                        {t('today')},{' '}
+                        {new Date(showtime.time).toLocaleString(i18n.language, {
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </div>
+                    ) : (
+                      <div className='mb-[20px] max-w-fit bg-tertiary px-[20px] py-[8px] font-semibold'>
+                        {new Date(showtime.time).toLocaleString(i18n.language, {
+                          month: 'long',
+                          day: 'numeric',
+                          weekday: 'long'
+                        })}
+                      </div>
+                    )}
+                    <div className='mb-[12px] flex flex-wrap items-center justify-start'>
+                      {showtime.showtimes.map(({ showtime_id, showtime: time }) => {
+                        const [hour, minute] = time.split(':').map(Number)
+                        const isPastTime = hour < currentHour || (hour === currentHour && minute < currentMinute - 5)
+                        return (
+                          <button
+                            onClick={() => handleChooseTime(showtime_id)}
+                            key={showtime_id}
+                            className={classNames(
+                              'mb-[8px] mr-[8px] rounded-md border border-white px-[20px] py-[8px]',
+                              {
+                                'cursor-not-allowed bg-quaternary': isPastTime && isTodayShowTime(showtime.time),
+                                'cursor-pointer bg-primary': !isPastTime || !isTodayShowTime(showtime.time)
+                              }
+                            )}
+                            disabled={isPastTime && isTodayShowTime(showtime.time)}
+                          >
+                            {time}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                ))}
             </div>
           )}
         </div>

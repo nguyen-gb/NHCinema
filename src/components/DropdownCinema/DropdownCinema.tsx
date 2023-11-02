@@ -1,8 +1,9 @@
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 import { AppContext } from 'src/contexts/app.context'
 import cinemaApi from 'src/apis/cinema.api'
+import { setCinemaToLS } from 'src/utils/cinema'
 
 export default function DropdownCinema() {
   const { cinema, setCinema } = useContext(AppContext)
@@ -14,12 +15,9 @@ export default function DropdownCinema() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSelectCinema = (event: any) => {
     const selectedCinema = cinemaData?.data.data[event.target.value]
+    selectedCinema && setCinemaToLS(selectedCinema)
     selectedCinema && setCinema(selectedCinema)
   }
-
-  useEffect(() => {
-    cinemaData && setCinema(cinemaData.data.data[0])
-  }, [cinemaData, setCinema])
 
   return (
     <div className='group relative mb-[20px] inline-block text-left'>

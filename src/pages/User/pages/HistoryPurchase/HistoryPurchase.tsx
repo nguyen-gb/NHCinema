@@ -9,7 +9,6 @@ import path from 'src/constants/path'
 import { purchasesStatus } from 'src/constants/purchase'
 import useQueryParams from 'src/hooks/useQueryParams'
 import { PurchaseListStatus } from 'src/types/purchase.type'
-import { formatCurrency, generateNameId } from 'src/utils/utils'
 
 const purchaseTabs = [
   { status: purchasesStatus.all, name: 'Tất cả' },
@@ -109,9 +108,8 @@ export default function HistoryPurchase() {
                       )
                     })}
                 </tbody>
-
-                {!purchases && <div className='py-10 text-center text-sm text-gray-500'>{t('no-data')}</div>}
               </table>
+              {!purchases && <div className='py-10 text-center text-sm text-gray-500'>{t('no-data')}</div>}
             </div>
           </div>
         </div>

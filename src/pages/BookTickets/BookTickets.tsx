@@ -1,11 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { toast } from 'react-toastify'
 
+import { AppContext } from 'src/contexts/app.context'
 import { seatArray } from 'src/constants/product'
 import Combo from 'src/components/Combo'
 import path from 'src/constants/path'
+import showtimesApi from 'src/apis/showtimes.api'
+import { SeatType } from 'src/types/seat.type'
+import bookingApi from 'src/apis/booking.api'
+import { Booking } from 'src/types/booking.type'
 
 interface SeatProps {
   isReserved: boolean
@@ -71,36 +78,77 @@ const mockData: Item[] = [
 ]
 
 const BookTickets: React.FC = () => {
+  const { showtimeId } = useParams()
   const { t } = useTranslation('book-tickets')
+  const { cinema } = useContext(AppContext)
   const navigate = useNavigate()
+  const [selectedSeats, setSelectedSeats] = useState<{ seat_number: number; seat_type: number }[]>([])
+  const [combo, setCombo] = useState<Item[]>([])
+
   const rows = 9
   const cols = 9
   const totalSeats = rows * cols
-  const [selectedSeats, setSelectedSeats] = useState<{ SeatNumber: number }[]>([])
-  const [combo, setCombo] = useState<Item[]>([])
-  const reservedSeats = [
-    {
-      SeatNumber: 49
-    },
-    {
-      SeatNumber: 50
-    }
-  ]
 
-  const toggleSeat = (SeatNumber: number) => {
-    const seatIndex = selectedSeats.findIndex((s) => s.SeatNumber === SeatNumber)
+  const { data, refetch } = useQuery({
+    queryKey: ['showtimes', showtimeId],
+    queryFn: () => showtimesApi.getShowtimesById(showtimeId as string)
+  })
+  const createBookingMutation = useMutation({
+    mutationFn: (body: Booking) => bookingApi.createBooking(body),
+    onSuccess: (data) => {
+      if (data.data.status === 200) {
+        refetch()
+        const bookingId = data.data.data._id
+        navigate(`/payment/${bookingId}`)
+      } else {
+        refetch()
+        if (data.data.message === 'Seats have been booked') {
+          toast.warning(t('seat-booked'), {
+            autoClose: 2000
+          })
+        } else {
+          toast.warning(data.data.message, {
+            autoClose: 2000
+          })
+        }
+      }
+    }
+  })
+
+  const reservedSeats =
+    data?.data.data.seat_array.map((seat) => {
+      return {
+        seat_number: Number(seat.seat_number),
+        seat_type: seat.seat_type
+      }
+    }) ?? []
+
+  const toggleSeat = (seat: { seat_number: number; seat_type: SeatType }) => {
+    const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number)
 
     if (seatIndex === -1) {
-      setSelectedSeats([...selectedSeats, { SeatNumber }])
+      setSelectedSeats([...selectedSeats, seat])
     } else {
-      setSelectedSeats(selectedSeats.filter((s) => s.SeatNumber !== SeatNumber))
+      setSelectedSeats(selectedSeats.filter((s) => s.seat_number !== seat.seat_number))
     }
   }
 
   const handlePayment = () => {
-    navigate({
-      pathname: path.payment
+    const selectedSeatsConvert = selectedSeats.map((seat) => {
+      return {
+        seat_number: String(seat.seat_number),
+        seat_type: Number(seat.seat_type)
+      }
     })
+    const body = {
+      theater_name: cinema.name,
+      room_id: data?.data.data.room_id as string,
+      movie_id: data?.data.data.movie_id as string,
+      seats: selectedSeatsConvert,
+      time: data?.data.data.time as string,
+      showtime: data?.data.data.showtime as string
+    }
+    createBookingMutation.mutate(body)
   }
 
   return (
@@ -118,7 +166,9 @@ const BookTickets: React.FC = () => {
                 alt=''
                 className='h-full w-full object-cover'
               />
-              <div className='mb-6 text-center text-lg font-bold text-white'>{t('screening-room-number')} 2</div>
+              <div className='mb-6 text-center text-lg font-bold text-white'>
+                {t('screening-room-number')} {data?.data.data.room_number}
+              </div>
             </div>
             <div className='flex flex-wrap items-start justify-center gap-2'>
               <div className='flex flex-col items-center justify-center'>
@@ -126,12 +176,16 @@ const BookTickets: React.FC = () => {
                   <div key={rowIndex} className='flex'>
                     {Array.from({ length: cols }, (_, colIndex) => {
                       const SeatNumber = rowIndex * cols + colIndex + 1
+                      const seat = {
+                        seat_number: SeatNumber,
+                        seat_type: SeatType.single_chair
+                      }
                       return (
                         <Seat
                           key={colIndex}
-                          isReserved={reservedSeats.some((s) => s.SeatNumber === SeatNumber)}
-                          isSelected={selectedSeats.some((s) => s.SeatNumber === SeatNumber)}
-                          onSelect={() => toggleSeat(SeatNumber)}
+                          isReserved={reservedSeats.some((s) => s.seat_number === SeatNumber)}
+                          isSelected={selectedSeats.some((s) => s.seat_number === SeatNumber)}
+                          onSelect={() => toggleSeat(seat)}
                           SeatNumber={SeatNumber}
                         />
                       )
@@ -141,12 +195,16 @@ const BookTickets: React.FC = () => {
                 <div className='mt-4 flex'>
                   {Array.from({ length: 3 }, (_, index) => {
                     const SeatNumber = totalSeats + index + 1
+                    const seat = {
+                      seat_number: SeatNumber,
+                      seat_type: SeatType.double_chair
+                    }
                     return (
                       <Seat
                         key={index}
-                        isReserved={reservedSeats.some((s) => s.SeatNumber === SeatNumber)}
-                        isSelected={selectedSeats.some((s) => s.SeatNumber === SeatNumber)}
-                        onSelect={() => toggleSeat(SeatNumber)}
+                        isReserved={reservedSeats.some((s) => s.seat_number === SeatNumber)}
+                        isSelected={selectedSeats.some((s) => s.seat_number === SeatNumber)}
+                        onSelect={() => toggleSeat(seat)}
                         isDoubleSeat={true}
                         SeatNumber={SeatNumber}
                       />
@@ -190,7 +248,7 @@ const BookTickets: React.FC = () => {
               <p className='mb-2'>
                 {t('selected-seats')}:{' '}
                 <span className='font-semibold'>
-                  {selectedSeats.map((s) => seatArray[s.SeatNumber - 1]).join(', ')}
+                  {selectedSeats.map((s) => seatArray[s.seat_number - 1]).join(', ')}
                 </span>
               </p>
               <p className='mb-2'>

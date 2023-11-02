@@ -110,6 +110,7 @@ export class Http {
   private handleRefreshToken() {
     return this.instance
       .post<RefreshTokenResponse>(URL_REFRESH_TOKEN, {
+        access_token: this.accessToken,
         refresh_token: this.refreshToken
       })
       .then((res) => {

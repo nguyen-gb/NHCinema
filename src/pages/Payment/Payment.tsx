@@ -1,11 +1,23 @@
 import { Helmet } from 'react-helmet-async'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import path from 'src/constants/path'
+import bookingApi from 'src/apis/booking.api'
+import { useQuery } from '@tanstack/react-query'
+import { formatCurrency } from 'src/utils/utils'
+import { seatArray } from 'src/constants/product'
 
 export default function Payment() {
   const { t } = useTranslation('payment')
+  const { bookingId } = useParams()
+
+  const { data } = useQuery({
+    queryKey: ['booking', bookingId],
+    queryFn: () => bookingApi.getBookingDetail(bookingId as string)
+  })
+  const bookingData = data?.data.data
+
   return (
     <div className='bg-secondary'>
       <Helmet>
@@ -20,32 +32,32 @@ export default function Payment() {
                 <h4 className='font-bold'>{t('movie-inf')}</h4>
                 <div>
                   <p>{t('movie')}</p>
-                  <p className='font-semibold text-primary'>
-                    SHIN - CẬU BÉ BÚT CHÌ: ĐẠI CHIẾN SIÊU NĂNG LỰC ~SUSHI BAY~ (LỒNG TIẾNG)
-                  </p>
+                  <p className='font-semibold text-primary'>{bookingData?.movie_name}</p>
                 </div>
                 <div className='flex items-center gap-10'>
                   <div className='w-1/2'>
                     <p>{t('show-date-and-time')}</p>
                     <div className='flex items-center space-x-2 text-primary'>
-                      <span className='font-bold'>22:25</span>
+                      <span className='font-bold'>{bookingData?.showtime}</span>
                       <span>-</span>
-                      <span className='font-semibold'> 20/09/2023</span>
+                      <span className='font-semibold'>{bookingData?.time}</span>
                     </div>
                   </div>
                   <div>
                     <p>{t('chair')}</p>
-                    <p className='font-semibold text-primary'>I10, I9</p>
+                    <p className='font-semibold text-primary'>
+                      {bookingData?.seats.map((seat) => seatArray[Number(seat.seat_number) - 1]).join(', ')}
+                    </p>
                   </div>
                 </div>
                 <div className='flex items-center gap-10'>
                   <div className='w-1/2'>
                     <p>{t('format')}</p>
-                    <p className='font-semibold text-primary'>2D</p>
+                    <p className='font-semibold text-primary'>{bookingData?.format}</p>
                   </div>
                   <div>
                     <p>{t('cinema-room')}</p>
-                    <p className='font-semibold text-primary'>2</p>
+                    <p className='font-semibold text-primary'>{bookingData?.room_number}</p>
                   </div>
                 </div>
               </div>
@@ -75,8 +87,11 @@ export default function Payment() {
                           <td className='relative py-4 pl-4 pr-3 text-sm sm:pl-6'>
                             <div className='font-medium text-white'>{t('chair')} (I10, I9)</div>
                           </td>
-                          <td className='px-3 py-3.5 text-sm'>2</td>
-                          <td className='px-3 py-3.5 text-sm'>180.000{t('vnd')}</td>
+                          <td className='px-3 py-3.5 text-sm'>{bookingData?.seats.length}</td>
+                          <td className='px-3 py-3.5 text-sm'>
+                            {formatCurrency(bookingData?.total_amount ?? 0)}
+                            {t('vnd')}
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -167,7 +182,10 @@ export default function Payment() {
                 <div>
                   <div className='flex items-center justify-between'>
                     <p>{t('payment')}</p>
-                    <p className='font-bold'>180.000{t('vnd')}</p>
+                    <p className='font-bold'>
+                      {formatCurrency(bookingData?.total_amount ?? 0)}
+                      {t('vnd')}
+                    </p>
                   </div>
                   <div className='flex items-center justify-between'>
                     <p>Fee (0%)</p>
@@ -175,7 +193,10 @@ export default function Payment() {
                   </div>
                   <div className='flex items-center justify-between'>
                     <p>{t('total')}</p>
-                    <p className='font-bold'>180.000{t('vnd')}</p>
+                    <p className='font-bold'>
+                      {formatCurrency(bookingData?.total_amount ?? 0)}
+                      {t('vnd')}
+                    </p>
                   </div>
                 </div>
                 <div className='space-y-3'>

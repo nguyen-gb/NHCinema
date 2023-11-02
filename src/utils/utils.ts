@@ -19,7 +19,7 @@ export function isAxiosUnauthorizedError<UnauthorizedError>(error: unknown): err
 export function isAxiosExpiredTokenError<UnauthorizedError>(error: unknown): error is AxiosError<UnauthorizedError> {
   return (
     isAxiosUnauthorizedError<ErrorResponse<{ name: string; message: string }>>(error) &&
-    error.response?.data.data?.name === 'EXPIRED_TOKEN'
+    error.response?.data.message === 'jwt expired'
   )
 }
 
@@ -56,9 +56,23 @@ export const generateNameId = ({ name, id }: { name: string; id: string }) => {
   return removeSpecialCharacter(name).replace(/\s/g, '-') + `@${id}`
 }
 
-export const getIdFromNameId = (nameId: string) => {
+export const getIdFromMovieId = (nameId: string) => {
   const arr = nameId.split('@')
   return arr[arr.length - 1]
+}
+
+export const isTodayShowTime = (date: string) => {
+  const currentDate = new Date()
+  const targetDate = new Date(date)
+  if (
+    currentDate.getDate() === targetDate.getDate() &&
+    currentDate.getMonth() === targetDate.getMonth() &&
+    currentDate.getFullYear() === targetDate.getFullYear()
+  ) {
+    return true
+  } else {
+    return false
+  }
 }
 
 export const getAvatarURL = (avatarName?: string) =>

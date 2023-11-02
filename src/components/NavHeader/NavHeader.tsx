@@ -14,17 +14,16 @@ import { purchasesStatus } from 'src/constants/purchase'
 import { locales } from 'src/i18n/i18n'
 import useSearchProducts from 'src/hooks/useSearchProducts'
 import Notification from '../Notification'
+import { setLanguageToLS } from 'src/utils/cinema'
 // import { getAvatarURL } from 'src/utils/utils'
 
 export default function NavHeader() {
   const { i18n, t } = useTranslation()
-  const currentLanguage = locales[i18n.language as keyof typeof locales]
-  const queryClient = useQueryClient()
   const { isAuthenticated, setIsAuthenticated, profile, setProfile } = useContext(AppContext)
+  const queryClient = useQueryClient()
   const { onSubmitSearch: onSubmitSearch1, register: register1 } = useSearchProducts()
   const { onSubmitSearch: onSubmitSearch2, register: register2 } = useSearchProducts()
   const [isOpenMenu, setIsOpenMenu] = useState(false)
-
   const logoutMutation = useMutation({
     mutationFn: authApi.logout,
     onSuccess: () => {
@@ -34,13 +33,14 @@ export default function NavHeader() {
     }
   })
 
+  const currentLanguage = locales[i18n.language as keyof typeof locales]
+
   const handleLogout = () => {
     logoutMutation.mutate()
   }
-
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng)
-    console.log(i18n.language)
+    setLanguageToLS(lng)
   }
 
   return (

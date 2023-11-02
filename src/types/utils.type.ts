@@ -6,6 +6,7 @@ export interface ErrorResponse<Data> {
 export interface SuccessResponse<Data> {
   message: string
   data: Data
+  status?: number
 }
 
 export type NoUndefinedField<T> = {

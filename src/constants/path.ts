@@ -13,9 +13,9 @@ const path = {
   showtimes: '/show-times',
   fare: '/fare',
   member: '/member',
-  movieDetail: '/movie/:nameId',
-  bookTickets: '/book-tickets',
-  payment: '/payment'
+  movieDetail: '/movie/:movieId',
+  bookTickets: '/book-tickets/:showtimeId',
+  payment: '/payment/:bookingId'
 } as const
 
 export default path

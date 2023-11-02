@@ -1,8 +1,9 @@
-import { createContext, useState } from 'react'
+import { createContext, useCallback, useMemo, useState } from 'react'
 import { Cinema } from 'src/types/cinema.type'
 import { ExtendedPurchase } from 'src/types/purchase.type'
 import { User } from 'src/types/user.type'
 import { getAccessTokenFromLS, getProfileFromLS } from 'src/utils/auth'
+import { getCinemaFromLS } from 'src/utils/cinema'
 
 interface AppContextInterface {
   isAuthenticated: boolean
@@ -23,11 +24,7 @@ export const getInitialAppContext: () => AppContextInterface = () => ({
   setProfile: () => null,
   extendedPurchases: [],
   setExtendedPurchases: () => null,
-  cinema: {
-    _id: '65203b82210d84d5c627f8b1',
-    name: 'NHCinema Thủ Đức',
-    address: 'Thủ Đức'
-  },
+  cinema: getCinemaFromLS(),
   setCinema: () => null,
   reset: () => null
 })
@@ -48,27 +45,35 @@ export const AppProvider = ({
   const [extendedPurchases, setExtendedPurchases] = useState<ExtendedPurchase[]>(defaultValue.extendedPurchases)
   const [cinema, setCinema] = useState<Cinema>(defaultValue.cinema)
 
-  const reset = () => {
+  const reset = useCallback(() => {
     setIsAuthenticated(false)
     setProfile(null)
     setExtendedPurchases([])
-  }
+  }, [setIsAuthenticated, setProfile, setExtendedPurchases])
 
-  return (
-    <AppContext.Provider
-      value={{
-        isAuthenticated,
-        setIsAuthenticated,
-        profile,
-        setProfile,
-        extendedPurchases,
-        setExtendedPurchases,
-        reset,
-        cinema,
-        setCinema
-      }}
-    >
-      {children}
-    </AppContext.Provider>
-  )
+  const value = useMemo(() => {
+    return {
+      isAuthenticated,
+      setIsAuthenticated,
+      profile,
+      setProfile,
+      extendedPurchases,
+      setExtendedPurchases,
+      cinema,
+      setCinema,
+      reset
+    }
+  }, [
+    isAuthenticated,
+    setIsAuthenticated,
+    profile,
+    setProfile,
+    extendedPurchases,
+    setExtendedPurchases,
+    cinema,
+    setCinema,
+    reset
+  ])
+
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>
 }

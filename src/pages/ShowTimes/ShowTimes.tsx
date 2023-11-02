@@ -3,7 +3,7 @@ import { useContext, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { AiFillStar } from 'react-icons/ai'
 import { BiCategory, BiTime, BiUser } from 'react-icons/bi'
-import { Link, createSearchParams, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 
@@ -11,7 +11,6 @@ import DropdownCinema from 'src/components/DropdownCinema'
 import { AppContext } from 'src/contexts/app.context'
 import showtimesApi from 'src/apis/showtimes.api'
 import { formatDateToString } from 'src/utils/utils'
-import path from 'src/constants/path'
 
 export default function ShowTimes() {
   const { cinema } = useContext(AppContext)
@@ -52,16 +51,8 @@ export default function ShowTimes() {
     setDate(day)
   }
 
-  const handleChooseTime = (movie_id: string, time: string) => {
-    const config = {
-      movie_id: movie_id,
-      date: formatDateToString(date),
-      time: time
-    }
-    navigate({
-      pathname: path.bookTickets,
-      search: createSearchParams(config).toString()
-    })
+  const handleChooseTime = (showtime_id: string) => {
+    navigate(`/book-tickets/${showtime_id}`)
   }
 
   return (
@@ -237,7 +228,7 @@ export default function ShowTimes() {
                         <BiCategory className='mx-1' />
                         {t('genre')}:
                       </strong>
-                      {product.genre}
+                      {product.genres}
                     </span>
                     <span className='col-span-3 flex items-start lg:col-span-1'>
                       <strong className='mr-1 flex flex-shrink-0 items-center'>
@@ -248,22 +239,22 @@ export default function ShowTimes() {
                     </span>
                   </div>
                   <div className='flex flex-wrap text-white'>
-                    {product.times.map((time) => {
+                    {product.times.map(({ time, showtime_id }) => {
                       const [hour, minute] = time.split(':').map(Number)
                       const isPastTime = hour < currentHour || (hour === currentHour && minute < currentMinute - 5)
 
                       return (
                         <button
-                          onClick={() => handleChooseTime(product._id, time)}
-                          key={time}
+                          onClick={() => handleChooseTime(showtime_id)}
+                          key={showtime_id}
                           className={classNames(
                             'mb-[8px] mr-[8px] max-w-fit rounded-md border border-tertiary px-[20px] py-[8px]',
                             {
-                              'cursor-not-allowed bg-quaternary': isPastTime,
-                              'cursor-pointer bg-primary': !isPastTime
+                              'cursor-not-allowed bg-quaternary': isPastTime && isToday,
+                              'cursor-pointer bg-primary': !isPastTime || !isToday
                             }
                           )}
-                          disabled={!isPastTime}
+                          disabled={isPastTime && isToday}
                         >
                           {time}
                         </button>

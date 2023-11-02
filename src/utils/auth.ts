@@ -29,12 +29,3 @@ export const getProfileFromLS = () => {
   const result = localStorage.getItem('profile')
   return result ? JSON.parse(result) : null
 }
-
-// export const setIdCinemaFromLS = (_id: string) => {
-//   localStorage.setItem('id_cinema', JSON.stringify(_id))
-// }
-
-// export const getIdCinemaFromLS = () => {
-//   const result = localStorage.getItem('id_cinema')
-//   return result ? JSON.parse(result) : null
-// }

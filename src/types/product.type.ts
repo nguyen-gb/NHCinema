@@ -2,7 +2,7 @@ export interface Product {
   _id: string
   name: string
   english_name: string
-  genre: string
+  genres: string
   title: string
   format: string
   age: string
@@ -16,9 +16,13 @@ export interface Product {
   trailer: string
   rating: number
   status: number
-  times: string[]
+  times: Time[]
   created_at: string
   updated_at: string
+}
+export interface Time {
+  time: string
+  showtime_id: string
 }
 
 export interface ProductListConfig {
