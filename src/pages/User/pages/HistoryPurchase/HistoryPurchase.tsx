@@ -1,53 +1,23 @@
 import { useQuery } from '@tanstack/react-query'
-import classNames from 'classnames'
 import { Helmet } from 'react-helmet-async'
-import { Link, createSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useContext } from 'react'
 
-import purchaseApi from 'src/apis/purchase.api'
-import path from 'src/constants/path'
-import { purchasesStatus } from 'src/constants/purchase'
-import useQueryParams from 'src/hooks/useQueryParams'
-import { PurchaseListStatus } from 'src/types/purchase.type'
-
-const purchaseTabs = [
-  { status: purchasesStatus.all, name: 'Tất cả' },
-  { status: purchasesStatus.waitForConfirmation, name: 'Chờ xác nhận' },
-  { status: purchasesStatus.waitForGetting, name: 'Chờ lấy hàng' },
-  { status: purchasesStatus.inProgress, name: 'Đang giao' },
-  { status: purchasesStatus.delivered, name: 'Đã giao' },
-  { status: purchasesStatus.cancelled, name: 'Đã huỷ' }
-]
+import userApi from 'src/apis/user.api'
+import { AppContext } from 'src/contexts/app.context'
+import { formatCurrency, formatDateToStringWithTime } from 'src/utils/utils'
 
 export default function HistoryPurchase() {
   const { t } = useTranslation('user')
-  const queryParams: { status?: string } = useQueryParams()
-  const status: number = Number(queryParams.status) || purchasesStatus.all
+  const { profile } = useContext(AppContext)
 
-  const { data: purchasesData } = useQuery({
-    queryKey: ['purchases', { status }],
-    queryFn: () => purchaseApi.getPurchases({ status: status as PurchaseListStatus })
+  const { data: hisBookingsData } = useQuery({
+    queryKey: ['purchases', profile?._id],
+    queryFn: () => userApi.getHistoryBooking(profile?._id as string)
   })
 
-  const purchases = purchasesData?.data.data
+  const hisBookings = hisBookingsData?.data.data
 
-  const purchaseTabsLink = purchaseTabs.map((tab) => (
-    <Link
-      key={tab.status}
-      to={{
-        pathname: path.historyPurchase,
-        search: createSearchParams({
-          status: String(tab.status)
-        }).toString()
-      }}
-      className={classNames('flex flex-1 items-center justify-center border-b-2 bg-white py-4 text-center', {
-        'border-b-primary text-primary': status === tab.status,
-        'border-b-black/10 text-gray-900': status !== tab.status
-      })}
-    >
-      {tab.name}
-    </Link>
-  ))
   return (
     <div>
       <Helmet>
@@ -76,21 +46,21 @@ export default function HistoryPurchase() {
                   </tr>
                 </thead>
                 <tbody>
-                  {purchases &&
-                    purchases.map((_, index) => {
+                  {hisBookings &&
+                    hisBookings.map((hisBooking, index) => {
                       return (
                         <tr key={index}>
                           <th
                             scope='col'
                             className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
                           >
-                            26/09/2023
+                            {formatDateToStringWithTime(new Date(hisBooking.created_at))}
                           </th>
                           <th
                             scope='col'
                             className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
                           >
-                            SHIN - CẬU BÉ BÚT CHÌ: ĐẠI CHIẾN SIÊU NĂNG LỰC ~SUSHI BAY~ (LỒNG TIẾNG)
+                            {hisBooking.movie_name}
                           </th>
                           <th
                             scope='col'
@@ -102,14 +72,14 @@ export default function HistoryPurchase() {
                             scope='col'
                             className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
                           >
-                            180.000{t('vnd')}
+                            {`${formatCurrency(hisBooking.total_amount)} ${t('vnd')}`}
                           </th>
                         </tr>
                       )
                     })}
                 </tbody>
               </table>
-              {!purchases && <div className='py-10 text-center text-sm text-gray-500'>{t('no-data')}</div>}
+              {!hisBookings && <div className='py-10 text-center text-sm text-gray-500'>{t('no-data')}</div>}
             </div>
           </div>
         </div>

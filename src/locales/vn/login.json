@@ -6,9 +6,11 @@
   "password": "Mật khẩu",
   "forgot-password": "Quên mật khẩu",
   "register": "Đăng ký",
+  "verify": "Xác nhận",
   "confirm-password": "Xác nhận mật khẩu",
   "login-des": "Đăng nhập vào dự án NHCinema",
   "register-des": "Đăng ký tài khoản rạp chiếu phim NHCinema",
+  "verify-des": "Xác nhận đăng ký tài khoản rạp chiếu phim Cinema",
   "forgot-password-des": "Lấy lại mật khẩu cho tài khoản rạp chiếu phim NCHinema của bạn",
   "send": "Gửi"
 }

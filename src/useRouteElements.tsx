@@ -10,6 +10,7 @@ import UserLayout from './pages/User/layouts/UserLayout'
 
 const Login = lazy(() => import('./pages/Login'))
 const Register = lazy(() => import('./pages/Register'))
+const Verify = lazy(() => import('./pages/Verify'))
 const ForgotPass = lazy(() => import('./pages/ForgotPass'))
 const ProductDetail = lazy(() => import('./pages/ProductDetail'))
 const ChangePassword = lazy(() => import('./pages/User/pages/ChangePassword'))
@@ -24,6 +25,7 @@ const TicketPrices = lazy(() => import('./pages/TicketPrices'))
 const Member = lazy(() => import('./pages/Member'))
 const BookTickets = lazy(() => import('./pages/BookTickets'))
 const Payment = lazy(() => import('./pages/Payment'))
+const PaymentDetail = lazy(() => import('./pages/PaymentDetail'))
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
@@ -127,6 +129,16 @@ export default function useRouteElements() {
           )
         },
         {
+          path: path.paymentDetail,
+          element: (
+            <MainLayout>
+              <Suspense>
+                <PaymentDetail />
+              </Suspense>
+            </MainLayout>
+          )
+        },
+        {
           path: path.user,
           element: <MainLayout />,
           children: [
@@ -193,6 +205,14 @@ export default function useRouteElements() {
               element: (
                 <Suspense>
                   <Register />
+                </Suspense>
+              )
+            },
+            {
+              path: path.verify,
+              element: (
+                <Suspense>
+                  <Verify />
                 </Suspense>
               )
             },

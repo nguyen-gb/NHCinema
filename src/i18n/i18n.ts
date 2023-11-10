@@ -1,6 +1,8 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
+import { getLanguageFromLS } from 'src/utils/cinema'
+
 import HEADER_EN from 'src/locales/en/header.json'
 import FOOTER_EN from 'src/locales/en/footer.json'
 import LOGIN_EN from 'src/locales/en/login.json'
@@ -12,6 +14,7 @@ import PAYMENT_EN from 'src/locales/en/payment.json'
 import USER_EN from 'src/locales/en/user.json'
 import FARE_EN from 'src/locales/en/ticket-prices.json'
 import MEMBER_EN from 'src/locales/en/member.json'
+import PAYMENT_DETAIL_EN from 'src/locales/en/payment-detail.json'
 
 import HEADER_VN from 'src/locales/vn/header.json'
 import FOOTER_VN from 'src/locales/vn/footer.json'
@@ -24,7 +27,7 @@ import PAYMENT_VN from 'src/locales/vn/payment.json'
 import USER_VN from 'src/locales/vn/user.json'
 import FARE_VN from 'src/locales/vn/ticket-prices.json'
 import MEMBER_VN from 'src/locales/vn/member.json'
-import { getLanguageFromLS } from 'src/utils/cinema'
+import PAYMENT_DETAIL_VN from 'src/locales/vn/payment-detail.json'
 
 export const locales = {
   'en-EN': 'English',
@@ -43,7 +46,8 @@ export const resources = {
     payment: PAYMENT_EN,
     user: USER_EN,
     fare: FARE_EN,
-    member: MEMBER_EN
+    member: MEMBER_EN,
+    'payment-detail': PAYMENT_DETAIL_EN
   },
   'vi-VN': {
     header: HEADER_VN,
@@ -56,7 +60,8 @@ export const resources = {
     payment: PAYMENT_VN,
     user: USER_VN,
     fare: FARE_VN,
-    member: MEMBER_VN
+    member: MEMBER_VN,
+    'payment-detail': PAYMENT_DETAIL_VN
   }
 }
 
@@ -78,7 +83,8 @@ i18n.use(initReactI18next).init({
     'payment',
     'user',
     'fare',
-    'member'
+    'member',
+    'payment-detail'
   ],
   defaultNS,
   fallbackLng: 'vi-VN',

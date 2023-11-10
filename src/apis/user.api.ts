@@ -1,6 +1,9 @@
+import { ConfirmPaymentRes } from 'src/types/payment.type'
 import { User } from 'src/types/user.type'
 import { SuccessResponse } from 'src/types/utils.type'
 import http from 'src/utils/http'
+
+export const USER_API = 'auth/user'
 
 interface BodyUpdateProfile extends Omit<User, '_id' | 'roles' | 'createdAt' | 'updatedAt' | 'email'> {
   password?: string
@@ -8,18 +11,14 @@ interface BodyUpdateProfile extends Omit<User, '_id' | 'roles' | 'createdAt' | '
 }
 
 const userApi = {
-  getProfile() {
-    return http.get<SuccessResponse<User>>('me')
+  getProfile(id: string) {
+    return http.get<SuccessResponse<User>>(`${USER_API}/${id}`)
   },
-  updateProfile(body: BodyUpdateProfile) {
+  updateProfile(body: User) {
     return http.put<SuccessResponse<User>>('user', body)
   },
-  uploadAvatar(body: FormData) {
-    return http.post<SuccessResponse<string>>('user/upload-avatar', body, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+  getHistoryBooking(id: string) {
+    return http.get<SuccessResponse<ConfirmPaymentRes[]>>(`auth/booking/${id}/user`)
   }
 }
 

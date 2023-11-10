@@ -13,6 +13,7 @@ import showtimesApi from 'src/apis/showtimes.api'
 import { SeatType } from 'src/types/seat.type'
 import bookingApi from 'src/apis/booking.api'
 import { Booking } from 'src/types/booking.type'
+import { forEach } from 'lodash'
 
 interface SeatProps {
   isReserved: boolean
@@ -84,6 +85,7 @@ const BookTickets: React.FC = () => {
   const navigate = useNavigate()
   const [selectedSeats, setSelectedSeats] = useState<{ seat_number: number; seat_type: number }[]>([])
   const [combo, setCombo] = useState<Item[]>([])
+  const [total, setTotal] = useState(0)
 
   const rows = 9
   const cols = 9
@@ -125,11 +127,16 @@ const BookTickets: React.FC = () => {
 
   const toggleSeat = (seat: { seat_number: number; seat_type: SeatType }) => {
     const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number)
+    const seatPrice = seat.seat_type === SeatType.single_chair ? 50000 : 100000
 
     if (seatIndex === -1) {
+      console.log(total)
       setSelectedSeats([...selectedSeats, seat])
+      setTotal((pre) => pre + seatPrice)
     } else {
+      console.log(total)
       setSelectedSeats(selectedSeats.filter((s) => s.seat_number !== seat.seat_number))
+      setTotal((pre) => pre - seatPrice)
     }
   }
 
@@ -258,7 +265,7 @@ const BookTickets: React.FC = () => {
                 </span>
               </p>
               <p>
-                {t('total-amount')}: <span className='font-semibold'>0{t('vnd')}</span>
+                {t('total-amount')}: <span className='font-semibold'>{`${total} ${t('vnd')}`}</span>
               </p>
             </div>
             <div className='flex w-full items-center justify-center gap-2 xl:w-auto'>

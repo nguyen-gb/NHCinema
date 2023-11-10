@@ -6,9 +6,11 @@
   "password": "Password",
   "forgot-password": "Forgot password",
   "register": "Register",
+  "verify": "Verify",
   "confirm-password": "Confirm password",
   "login-des": "Log in to the NHCinema project",
   "register-des": "Register an account for NHCinema movie theater",
+  "verify-des": "Confirm Cinema account registration",
   "forgot-password-des": "Retrieve your password for your NCHinema movie theater account",
   "send": "Send"
 }

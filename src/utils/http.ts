@@ -11,7 +11,7 @@ import {
   setRefreshTokenToLS
 } from './auth'
 import config from 'src/constants/config'
-import { URL_LOGIN, URL_LOGOUT, URL_REFRESH_TOKEN, URL_REGISTER } from 'src/apis/auth.api'
+import { URL_LOGIN, URL_LOGOUT, URL_REFRESH_TOKEN, URL_VERIFY } from 'src/apis/auth.api'
 import { isAxiosExpiredTokenError, isAxiosUnauthorizedError } from './utils'
 import { ErrorResponse } from 'src/types/utils.type'
 
@@ -48,7 +48,7 @@ export class Http {
     this.instance.interceptors.response.use(
       (response) => {
         const { url } = response.config
-        if (url === URL_LOGIN || url === URL_REGISTER) {
+        if (url === URL_LOGIN || url === URL_VERIFY) {
           const data = response.data as AuthResponse
           this.accessToken = data.data.access_token
           this.refreshToken = data.data.refresh_token

@@ -10,7 +10,6 @@ import { AiOutlineClose } from 'react-icons/ai'
 import path from 'src/constants/path'
 import Popover from '../Popover'
 import authApi from 'src/apis/auth.api'
-import { purchasesStatus } from 'src/constants/purchase'
 import { locales } from 'src/i18n/i18n'
 import useSearchProducts from 'src/hooks/useSearchProducts'
 import Notification from '../Notification'
@@ -20,7 +19,6 @@ import { setLanguageToLS } from 'src/utils/cinema'
 export default function NavHeader() {
   const { i18n, t } = useTranslation()
   const { isAuthenticated, setIsAuthenticated, profile, setProfile } = useContext(AppContext)
-  const queryClient = useQueryClient()
   const { onSubmitSearch: onSubmitSearch1, register: register1 } = useSearchProducts()
   const { onSubmitSearch: onSubmitSearch2, register: register2 } = useSearchProducts()
   const [isOpenMenu, setIsOpenMenu] = useState(false)
@@ -29,7 +27,6 @@ export default function NavHeader() {
     onSuccess: () => {
       setIsAuthenticated(false)
       setProfile(null)
-      queryClient.removeQueries({ queryKey: ['purchases', { status: purchasesStatus.inCart }] })
     }
   })
 

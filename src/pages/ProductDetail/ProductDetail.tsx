@@ -215,10 +215,14 @@ export default function ProductDetail() {
               </div>
               <div className='col-span-12 bg-transparent p-[15px] text-white xl:col-span-9'>
                 <h1 className='text-2xl font-semibold uppercase text-primary lg:mt-[20px]'>
-                  {i18n.language === 'vi-VN' ? product.name : product.english_name}
+                  {i18n.language === 'vi-VN'
+                    ? product.name || product.english_name
+                    : product.english_name || product.name}
                 </h1>
                 <h2 className='mt-2 text-2xl uppercase'>
-                  {i18n.language === 'vi-VN' ? product.english_name : product.name}
+                  {i18n.language === 'vi-VN'
+                    ? product.english_name || product.name
+                    : product.name || product.english_name}
                 </h2>
                 <p className='mt-2'>
                   <strong className='inline-block w-[140px] text-primary'>{t('duration')}:</strong>

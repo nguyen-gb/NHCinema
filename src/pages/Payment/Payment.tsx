@@ -1,12 +1,13 @@
 import { Helmet } from 'react-helmet-async'
 import { Link, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useMutation, useQuery } from '@tanstack/react-query'
 
 import path from 'src/constants/path'
 import bookingApi from 'src/apis/booking.api'
-import { useQuery } from '@tanstack/react-query'
 import { formatCurrency } from 'src/utils/utils'
 import { seatArray } from 'src/constants/product'
+import paymentApi from 'src/apis/payment.api'
 
 export default function Payment() {
   const { t } = useTranslation('payment')
@@ -17,6 +18,19 @@ export default function Payment() {
     queryFn: () => bookingApi.getBookingDetail(bookingId as string)
   })
   const bookingData = data?.data.data
+
+  const createPaymentUrlMutation = useMutation({
+    mutationFn: paymentApi.createPaymentUrl,
+    onSuccess: (res) => {
+      window.location.href = res.data.data
+    }
+  })
+
+  const handlePayment = () => {
+    createPaymentUrlMutation.mutate({
+      booking_id: bookingId as string
+    })
+  }
 
   return (
     <div className='bg-secondary'>
@@ -85,7 +99,10 @@ export default function Payment() {
                       <tbody>
                         <tr>
                           <td className='relative py-4 pl-4 pr-3 text-sm sm:pl-6'>
-                            <div className='font-medium text-white'>{t('chair')} (I10, I9)</div>
+                            <div className='font-medium text-white'>
+                              {t('chair')} (
+                              {bookingData?.seats.map((seat) => seatArray[Number(seat.seat_number) - 1]).join(', ')})
+                            </div>
                           </td>
                           <td className='px-3 py-3.5 text-sm'>{bookingData?.seats.length}</td>
                           <td className='px-3 py-3.5 text-sm'>
@@ -200,7 +217,10 @@ export default function Payment() {
                   </div>
                 </div>
                 <div className='space-y-3'>
-                  <button className='inline-flex h-10 w-full items-center justify-center rounded-full bg-primary px-8 py-2 text-sm font-medium opacity-50 transition-colors hover:bg-primary hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none'>
+                  <button
+                    onClick={handlePayment}
+                    className='inline-flex h-10 w-full items-center justify-center rounded-full bg-primary px-8 py-2 text-sm font-medium opacity-50 transition-colors hover:bg-primary hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none'
+                  >
                     {t('payment')}
                   </button>
                   <Link

@@ -7,7 +7,7 @@ const URL = 'unauth/movie'
 const productApi = {
   getProducts(params: ProductListConfig) {
     return http.get<SuccessResponse<Product[]>>(URL, {
-      params
+      params: params
     })
   },
   getProductDetail(id: string) {

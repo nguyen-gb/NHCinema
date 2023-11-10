@@ -16,8 +16,8 @@ import Button from 'src/components/Button'
 import path from 'src/constants/path'
 // import { AppContext } from 'src/contexts/app.context'
 
-type FormData = Schema
-const schemaRegister = schema
+type FormData = Pick<Schema, 'name' | 'email' | 'phone' | 'password' | 'confirm_password'>
+const schemaRegister = schema.pick(['name', 'email', 'phone', 'password', 'confirm_password'])
 
 export default function Register() {
   const { t } = useTranslation('login')
@@ -38,10 +38,8 @@ export default function Register() {
   const onSubmit = handleSubmit((data) => {
     const body = omit(data, ['confirm_password'])
     registerAccountMutation.mutate(body, {
-      onSuccess: () => {
-        // setIsAuthenticated(true)
-        // setProfile(data.data.data.user)
-        navigate(path.login)
+      onSuccess: (res) => {
+        navigate(`/verify/${res.data.data._id}`)
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirm_password'>>>(error)) {

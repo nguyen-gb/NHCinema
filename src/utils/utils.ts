@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios'
+
 import config from 'src/constants/config'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
 import { ErrorResponse } from 'src/types/utils.type'
@@ -44,6 +45,17 @@ export function formatDateToString(date: Date) {
 
   const formattedDate = `${year}-${month}-${day}`
   return formattedDate
+}
+
+export function formatDateToStringWithTime(date: Date) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+
+  const formattedDateTime = `${hours}:${minutes} ${year}-${month}-${day}`
+  return formattedDateTime
 }
 
 export const rateSale = (original: number, sale: number) => Math.round(((original - sale) / original) * 100) + '%'

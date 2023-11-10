@@ -19,7 +19,9 @@ export default function Product({ product }: Props) {
         <div className='inline-flex h-full w-full items-center justify-center rounded-xl bg-slate-950 p-1 text-sm font-medium text-white backdrop-blur-3xl'>
           <img
             src={product.poster}
-            alt={i18n.language === 'vi-VN' ? product.name : product.english_name}
+            alt={
+              i18n.language === 'vi-VN' ? product.name || product.english_name : product.english_name || product.name
+            }
             className='object-cover'
           />
           <div className='invisible absolute bottom-0 left-0 right-0 top-0 z-10 rotate-180 cursor-default bg-white/70 opacity-0 transition-all duration-500 group-hover:visible group-hover:origin-left group-hover:rotate-0 group-hover:opacity-100'>
@@ -27,7 +29,9 @@ export default function Product({ product }: Props) {
               <div>
                 <div className='text-lg font-semibold uppercase text-white'>
                   <div className='mb-2 line-clamp-2 text-center font-bold text-primary'>
-                    {i18n.language === 'vi-VN' ? product.name : product.english_name}
+                    {i18n.language === 'vi-VN'
+                      ? product.name || product.english_name
+                      : product.english_name || product.name}
                   </div>
                 </div>
                 <div className='mb-2 text-center text-base font-medium text-tertiary'>

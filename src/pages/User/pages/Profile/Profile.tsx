@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { Helmet } from 'react-helmet-async'
@@ -17,26 +17,25 @@ import { setProfileToLS } from 'src/utils/auth'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
 import path from 'src/constants/path'
+import { User } from 'src/types/user.type'
 
-type FormData = Pick<UserSchema, 'name' | 'address' | 'avatar' | 'phone' | 'date_of_birth'>
-type FormDataError = Omit<FormData, 'date_of_birth'> & {
+type FormData = Pick<UserSchema, 'name' | 'phone' | 'email' | 'date_of_birth' | 'gender'>
+type FormDataError = Omit<FormData, 'date_of_birth' | 'gender'> & {
   date_of_birth?: string
+  gender?: string
 }
-const profileSchema = userSchema.pick(['name', 'address', 'avatar', 'phone', 'date_of_birth'])
+const profileSchema = userSchema.pick(['name', 'phone', 'email', 'date_of_birth', 'gender'])
 
 export default function Profile() {
   const { t } = useTranslation('user')
-  const [file, setFile] = useState<File>()
-  // const previewImage = useMemo(() => {
-  //   return file ? URL.createObjectURL(file) : ''
-  // }, [file])
-  const { setProfile } = useContext(AppContext)
+  const { profile: profileLS, setProfile } = useContext(AppContext)
   const methods = useForm<FormData>({
     defaultValues: {
       name: '',
       phone: '',
-      avatar: '',
-      date_of_birth: new Date(1990, 0, 1)
+      email: '',
+      date_of_birth: new Date(1990, 0, 1),
+      gender: 'male'
     },
     resolver: yupResolver(profileSchema)
   })
@@ -47,45 +46,38 @@ export default function Profile() {
     formState: { errors },
     handleSubmit,
     setValue,
-    watch,
     setError
   } = methods
 
   const { data: profileData, refetch } = useQuery({
-    queryKey: ['profile'],
-    queryFn: userApi.getProfile
+    queryKey: ['profile', profileLS?._id],
+    queryFn: () => userApi.getProfile(profileLS?._id as string)
   })
   const profile = profileData?.data.data
-  const avatar = watch('avatar')
 
   const updateProfileMutation = useMutation(userApi.updateProfile)
-  const uploadAvatarMutation = useMutation(userApi.uploadAvatar)
 
   useEffect(() => {
     if (profile) {
       setValue('name', profile.name)
       setValue('phone', profile.phone)
-      setValue('avatar', profile.avatar)
-      setValue('address', profile.address)
+      setValue('email', profile.email)
+      setValue('gender', profile.gender ? profile.gender : 'male')
       setValue('date_of_birth', profile.date_of_birth ? new Date(profile.date_of_birth) : new Date(1990, 0, 1))
     }
   }, [profile, setValue])
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      let avatarName = avatar
-      if (file) {
-        const form = new FormData()
-        form.append('image', file)
-        const uploadRes = await uploadAvatarMutation.mutateAsync(form)
-        avatarName = uploadRes.data.data
-        setValue('avatar', avatarName)
+      console.log(data)
+      const body = {
+        ...(data as User),
+        date_of_birth: data.date_of_birth?.toISOString() as string,
+        gender: data.gender as string,
+        _id: profileLS?._id as string
       }
-      const res = await updateProfileMutation.mutateAsync({
-        ...data,
-        date_of_birth: data.date_of_birth?.toISOString(),
-        avatar: avatarName
-      })
+      console.log(body)
+      const res = await updateProfileMutation.mutateAsync(body)
       setProfile(res.data.data)
       setProfileToLS(res.data.data)
       refetch()
@@ -104,10 +96,6 @@ export default function Profile() {
       }
     }
   })
-
-  // const handleChangeFile = (file?: File) => {
-  //   setFile(file)
-  // }
 
   return (
     <div className='bg-secondary'>
@@ -168,8 +156,8 @@ export default function Profile() {
                     </p>
                     <select
                       className='w-full rounded-[10px] border border-quaternary/20 p-[10px] text-quaternary outline-none focus:border-quaternary focus:shadow-sm'
-                      {...register}
-                      name='sex'
+                      {...register('gender')}
+                      name='gender'
                       placeholder={t('gender')}
                     >
                       <option value='male'>{t('male')}</option>

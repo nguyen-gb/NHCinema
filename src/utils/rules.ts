@@ -75,6 +75,7 @@ export const schema = yup.object({
     .min(5, 'Độ dài từ 5 - 160 ký tự')
     .max(160, 'Độ dài từ 5 đến 160 ký tự'),
   phone: yup.string().required('Phone là bắt buộc'),
+  otp: yup.string().required('OTP là bắt buộc'),
   password: yup
     .string()
     .required('Password là bắt buộc')
@@ -87,12 +88,19 @@ export const schema = yup.object({
 export const userSchema = yup.object({
   name: yup.string().max(160, 'Độ dài tối đa là 160 ký tự'),
   phone: yup.string().max(20, 'Độ dài tối đa là 20 ký tự'),
+  email: yup
+    .string()
+    .required('Email là bắt buộc')
+    .email('Email không đúng định dạng')
+    .min(5, 'Độ dài từ 5 - 160 ký tự')
+    .max(160, 'Độ dài từ 5 đến 160 ký tự'),
   address: yup.string().max(160, 'Độ dài tối đa là 160 ký tự'),
   avatar: yup.string().max(1000, 'Độ dài tối đa là 1000 ký tự'),
   date_of_birth: yup.date().max(new Date(), 'Hãy chọn một ngày trong quá khứ'),
   password: schema.fields['password'] as yup.StringSchema<string | undefined, yup.AnyObject, undefined, ''>,
   new_password: schema.fields['password'] as yup.StringSchema<string | undefined, yup.AnyObject, undefined, ''>,
-  confirm_password: handleConfirmPasswordYup('new_password')
+  confirm_password: handleConfirmPasswordYup('new_password'),
+  gender: yup.string()
 })
 
 const loginSchema = schema.omit(['confirm_password'])

@@ -7,7 +7,8 @@ const path = {
   historyPoint: '/user/bonus-points',
   login: '/login',
   register: '/register',
-  forgotPass: 'password/reset',
+  verify: '/verify/:userId',
+  forgotPass: '/password/reset',
   logout: '/logout',
   movie: '/movie',
   showtimes: '/show-times',
@@ -15,7 +16,8 @@ const path = {
   member: '/member',
   movieDetail: '/movie/:movieId',
   bookTickets: '/book-tickets/:showtimeId',
-  payment: '/payment/:bookingId'
+  payment: '/payment/:bookingId',
+  paymentDetail: '/payment-detail'
 } as const
 
 export default path

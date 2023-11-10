@@ -9,4 +9,11 @@ export type AuthResponse = SuccessResponse<{
   user: User
 }>
 
+export type RegisterResponse = SuccessResponse<{
+  _id: string
+  name: string
+  phone: string
+  email: string
+}>
+
 export type RefreshTokenResponse = SuccessResponse<{ access_token: string }>
