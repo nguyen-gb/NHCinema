@@ -22,7 +22,7 @@ export default function Input<TFieldValues extends FieldValues = FieldValues>({
   rules,
   errorMessage,
   classNameInputCustom = '',
-  classNameInput = 'w-full rounded-[10px] border border-quaternary/20 p-3 outline-none focus:border-quaternary focus:shadow-sm',
+  classNameInput = 'w-full h-[45px] rounded-[10px] border border-quaternary/20 p-3 outline-none focus:border-quaternary focus:shadow-sm',
   classNameError = 'mt-1 min-h-[1.25rem] text-sm text-red-600',
   classNameEye = 'absolute right-[5px] top-[9px] h-5 w-5 cursor-pointer',
   ...rest
