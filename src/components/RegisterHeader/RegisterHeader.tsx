@@ -20,7 +20,7 @@ export default function RegisterHeader() {
             </div>
           </Link>
           <div className='ml-5 text-xl text-white lg:text-2xl'>
-            {isRegister ? t('register') : isLogin ? t('login') : isVerify ? t('verify') : t('forgot-password')}
+            {isRegister ? t('register') : isLogin ? t('login') : isVerify ? t('forgot-password') : t('forgot-password')}
           </div>
         </nav>
       </div>
