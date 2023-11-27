@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -7,13 +7,14 @@ import { toast } from 'react-toastify'
 
 import { AppContext } from 'src/contexts/app.context'
 import { seatArray } from 'src/constants/product'
-import Combo from 'src/components/Combo'
 import path from 'src/constants/path'
 import showtimesApi from 'src/apis/showtimes.api'
 import { SeatType } from 'src/types/seat.type'
 import bookingApi from 'src/apis/booking.api'
 import { Booking } from 'src/types/booking.type'
-import { forEach } from 'lodash'
+import comboApi from 'src/apis/combo.api'
+import { Combo as ComboInterface, ComboType } from 'src/types/combo.type'
+import Combo from 'src/components/Combo'
 
 interface SeatProps {
   isReserved: boolean
@@ -46,46 +47,15 @@ const Seat: React.FC<SeatProps> = ({ isReserved, isSelected, onSelect, isDoubleS
   )
 }
 
-interface Item {
-  id: string
-  image: string
-  name: string
-  price: string | number
-  quantity: number
-}
-
-const mockData: Item[] = [
-  {
-    id: '1',
-    image: 'https://touchcinema.com/medias/l-poster.PNG',
-    name: '1 Bắp rang bơ, 1 Pepsi',
-    price: '67.000đ',
-    quantity: 99
-  },
-  {
-    id: '2',
-    image: 'https://touchcinema.com/medias/l-poster.PNG',
-    name: '1 Bắp rang bơ, 1 Pepsi',
-    price: '67.000đ',
-    quantity: 99
-  },
-  {
-    id: '3',
-    image: 'https://touchcinema.com/medias/l-poster.PNG',
-    name: '1 Bắp rang bơ, 1 Pepsi',
-    price: '67.000đ',
-    quantity: 99
-  }
-]
-
 const BookTickets: React.FC = () => {
   const { showtimeId } = useParams()
   const { t } = useTranslation('book-tickets')
   const { cinema } = useContext(AppContext)
   const navigate = useNavigate()
   const [selectedSeats, setSelectedSeats] = useState<{ seat_number: number; seat_type: number }[]>([])
-  const [combo, setCombo] = useState<Item[]>([])
+  const [combo, setCombo] = useState<ComboInterface[]>([])
   const [total, setTotal] = useState(0)
+  const [totalCombo, setTotalCombo] = useState(0)
 
   const rows = 9
   const cols = 9
@@ -95,6 +65,14 @@ const BookTickets: React.FC = () => {
     queryKey: ['showtimes', showtimeId],
     queryFn: () => showtimesApi.getShowtimesById(showtimeId as string)
   })
+  const { data: dataCombos } = useQuery({
+    queryKey: ['combo'],
+    queryFn: () => comboApi.getCombos()
+  })
+  const combos = dataCombos?.data.data.filter((combo) => combo.type === ComboType.COMBO) ?? []
+  const drinks = dataCombos?.data.data.filter((combo) => combo.type === ComboType.DRINK) ?? []
+  const popcorns = dataCombos?.data.data.filter((combo) => combo.type === ComboType.POPCORN) ?? []
+
   const createBookingMutation = useMutation({
     mutationFn: (body: Booking) => bookingApi.createBooking(body),
     onSuccess: (data) => {
@@ -130,11 +108,9 @@ const BookTickets: React.FC = () => {
     const seatPrice = seat.seat_type === SeatType.single_chair ? 50000 : 100000
 
     if (seatIndex === -1) {
-      console.log(total)
       setSelectedSeats([...selectedSeats, seat])
       setTotal((pre) => pre + seatPrice)
     } else {
-      console.log(total)
       setSelectedSeats(selectedSeats.filter((s) => s.seat_number !== seat.seat_number))
       setTotal((pre) => pre - seatPrice)
     }
@@ -153,10 +129,22 @@ const BookTickets: React.FC = () => {
       movie_id: data?.data.data.movie_id as string,
       seats: selectedSeatsConvert,
       time: data?.data.data.time as string,
-      showtime: data?.data.data.showtime as string
+      showtime: data?.data.data.showtime as string,
+      combos: combo.map((c) => {
+        return {
+          combo_id: c._id,
+          combo_type: c.type,
+          quantity: c.quantity
+        }
+      })
     }
     createBookingMutation.mutate(body)
   }
+
+  useEffect(() => {
+    const newTotalPrice = combo.reduce((acc, item) => acc + item.price * item.quantity, 0)
+    setTotalCombo(newTotalPrice)
+  }, [combo])
 
   return (
     <div className='bg-secondary'>
@@ -239,13 +227,13 @@ const BookTickets: React.FC = () => {
               </div>
               <div className='m-1'>
                 <div>
-                  <Combo type='Combo' items={mockData} setCombo={setCombo} />
+                  <Combo type='Combo' items={combos as ComboInterface[]} setCombo={setCombo} />
                 </div>
                 <div>
-                  <Combo type='Combo' items={mockData} setCombo={setCombo} />
+                  <Combo type='Combo' items={drinks as ComboInterface[]} setCombo={setCombo} />
                 </div>
                 <div>
-                  <Combo type='Combo' items={mockData} setCombo={setCombo} />
+                  <Combo type='Combo' items={popcorns as ComboInterface[]} setCombo={setCombo} />
                 </div>
               </div>
             </div>
@@ -265,7 +253,7 @@ const BookTickets: React.FC = () => {
                 </span>
               </p>
               <p>
-                {t('total-amount')}: <span className='font-semibold'>{`${total} ${t('vnd')}`}</span>
+                {t('total-amount')}: <span className='font-semibold'>{`${total + totalCombo} ${t('vnd')}`}</span>
               </p>
             </div>
             <div className='flex w-full items-center justify-center gap-2 xl:w-auto'>

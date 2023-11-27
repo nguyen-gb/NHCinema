@@ -3,22 +3,20 @@ import { User } from 'src/types/user.type'
 import { SuccessResponse } from 'src/types/utils.type'
 import http from 'src/utils/http'
 
-export const USER_API = 'auth/user'
-
-interface BodyUpdateProfile extends Omit<User, '_id' | 'roles' | 'createdAt' | 'updatedAt' | 'email'> {
-  password?: string
-  newPassword?: string
-}
+export const USER_URL = 'auth/user'
 
 const userApi = {
   getProfile(id: string) {
-    return http.get<SuccessResponse<User>>(`${USER_API}/${id}`)
+    return http.get<SuccessResponse<User>>(`${USER_URL}/${id}`)
   },
-  updateProfile(body: User) {
-    return http.put<SuccessResponse<User>>('user', body)
+  updateUser(_id: string, body: Omit<User, '_id'>) {
+    return http.post(`${USER_URL}/${_id}/update`, body)
   },
   getHistoryBooking(id: string) {
     return http.get<SuccessResponse<ConfirmPaymentRes[]>>(`auth/booking/${id}/user`)
+  },
+  changePassword(body: { password: string; new_password: string; confirm_password: string }) {
+    return http.post(`auth/user/change-password`, body)
   }
 }
 

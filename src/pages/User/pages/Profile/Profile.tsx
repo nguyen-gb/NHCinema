@@ -34,7 +34,7 @@ export default function Profile() {
       name: '',
       phone: '',
       email: '',
-      date_of_birth: new Date(1990, 0, 1),
+      date_of_birth: new Date(1990, 1, 1),
       gender: 'male'
     },
     resolver: yupResolver(profileSchema)
@@ -55,15 +55,20 @@ export default function Profile() {
   })
   const profile = profileData?.data.data
 
-  const updateProfileMutation = useMutation(userApi.updateProfile)
+  const updateMutation = useMutation({
+    mutationFn: (body: Omit<User, '_id'>) => userApi.updateUser(profile?._id as string, body)
+  })
 
   useEffect(() => {
     if (profile) {
+      const parts = profile.date_of_birth ? profile.date_of_birth.split('/') : '01/01/1999'.split('/')
+      const formattedDate = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]))
+
       setValue('name', profile.name)
       setValue('phone', profile.phone)
       setValue('email', profile.email)
       setValue('gender', profile.gender ? profile.gender : 'male')
-      setValue('date_of_birth', profile.date_of_birth ? new Date(profile.date_of_birth) : new Date(1990, 0, 1))
+      setValue('date_of_birth', formattedDate)
     }
   }, [profile, setValue])
 
@@ -71,17 +76,34 @@ export default function Profile() {
     try {
       console.log(data)
       const body = {
-        ...(data as User),
+        ...(data as Omit<User, '_id'>),
         date_of_birth: data.date_of_birth?.toISOString() as string,
-        gender: data.gender as string,
-        _id: profileLS?._id as string
+        gender: data.gender as string
       }
       console.log(body)
-      const res = await updateProfileMutation.mutateAsync(body)
-      setProfile(res.data.data)
-      setProfileToLS(res.data.data)
-      refetch()
-      toast.success(res.data.message)
+      updateMutation.mutate(body, {
+        onSuccess: (data) => {
+          setProfile(data.data.data)
+          setProfileToLS(data.data.data)
+          refetch()
+          toast.success(data.data.message)
+        },
+        onError: (error) => {
+          if (isAxiosUnprocessableEntityError<ErrorResponse<string[]>>(error)) {
+            const formError = error.response?.data.data
+            if (formError) {
+              Object.entries(formError).forEach(([key, value]) => {
+                setError(key as keyof FormData, {
+                  message: value,
+                  type: 'Server'
+                })
+              })
+            } else {
+              toast.error(error.response?.data.message)
+            }
+          }
+        }
+      })
     } catch (error) {
       if (isAxiosUnprocessableEntityError<ErrorResponse<FormDataError>>(error)) {
         const formError = error.response?.data.data
@@ -160,9 +182,9 @@ export default function Profile() {
                       name='gender'
                       placeholder={t('gender')}
                     >
-                      <option value='male'>{t('male')}</option>
-                      <option value='female'>{t('female')}</option>
-                      <option value='other'>{t('other')}</option>
+                      <option value='Male'>{t('male')}</option>
+                      <option value='Female'>{t('female')}</option>
+                      <option value='Other'>{t('other')}</option>
                     </select>
                   </div>
                   <div className='w-full space-y-2'>

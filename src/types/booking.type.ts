@@ -1,12 +1,14 @@
+import { Combo } from './combo.type'
 import { Seat } from './seat.type'
 
 export interface Booking {
   theater_name: string
   room_id: string
   movie_id: string
-  seats: Seat[]
   time: string
   showtime: string
+  seats: Seat[]
+  combos: { combo_id: string; combo_type: number; quantity: number }[]
 }
 
 export interface BookingDetail {
@@ -26,4 +28,5 @@ export interface BookingDetail {
   payment_status: number
   total_amount: number
   expireAt: string
+  combos: Combo[]
 }

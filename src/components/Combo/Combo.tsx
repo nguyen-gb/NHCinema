@@ -1,40 +1,27 @@
 import classNames from 'classnames'
 import { useState } from 'react'
-
-interface Item {
-  id: string
-  image: string
-  name: string
-  price: string | number
-  quantity: number
-}
+import { Combo as ComboType } from 'src/types/combo.type'
 
 interface PropsItemCombo {
-  item: Item
-  setCombo: React.Dispatch<React.SetStateAction<Item[]>>
-}
-
-interface PropsCombo {
-  type: string
-  items: Item[]
-  setCombo: React.Dispatch<React.SetStateAction<Item[]>>
+  item: ComboType
+  setCombo: React.Dispatch<React.SetStateAction<ComboType[]>>
 }
 
 const ItemCombo = ({ item, setCombo }: PropsItemCombo) => {
   const [quantity, setQuantity] = useState(0)
 
-  const handleAddCombo = (item: Item) => {
+  const handleAddCombo = (item: ComboType) => {
     setQuantity((pre) => {
-      if (pre < item.quantity) {
+      if ((!item.quantity || pre < item.quantity) && pre < 10) {
         return pre + 1
       }
       return pre
     })
     setCombo((pre) => {
-      const existsInArray = pre.some((combo) => combo.id === item.id)
+      const existsInArray = pre.some((combo) => combo._id === item._id)
       if (existsInArray) {
         return pre.map((combo) => {
-          if (item.id === combo.id) {
+          if (item._id === combo._id && combo.quantity < 10) {
             return {
               ...combo,
               quantity: combo.quantity + 1
@@ -54,7 +41,7 @@ const ItemCombo = ({ item, setCombo }: PropsItemCombo) => {
     })
   }
 
-  const handleRemoveCombo = (item: Item) => {
+  const handleRemoveCombo = (item: ComboType) => {
     setQuantity((pre) => {
       if (pre > 0) {
         return pre - 1
@@ -62,10 +49,10 @@ const ItemCombo = ({ item, setCombo }: PropsItemCombo) => {
       return pre
     })
     setCombo((pre) => {
-      const existsInArray = pre.some((combo) => combo.id === item.id && combo.quantity > 1)
+      const existsInArray = pre.some((combo) => combo._id === item._id && combo.quantity > 1)
       if (existsInArray) {
         return pre.map((combo) => {
-          if (item.id === combo.id) {
+          if (item._id === combo._id) {
             return {
               ...combo,
               quantity: combo.quantity - 1
@@ -74,15 +61,15 @@ const ItemCombo = ({ item, setCombo }: PropsItemCombo) => {
           return combo
         })
       } else {
-        return pre.filter((combo) => item.id !== combo.id)
+        return pre.filter((combo) => item._id !== combo._id)
       }
     })
   }
   return (
     <div className='flex w-full items-center px-4 py-2'>
-      <img src={item.image} alt={item.name} className='h-8 w-8 rounded-full object-cover' />
-      <div className='ml-3 flex-1'>
-        <div className='text-base font-medium text-white'>{item.name}</div>
+      {/* <img src={item.image} alt={item.name} className='h-8 w-8 rounded-full object-cover mr-3' /> */}
+      <div className='flex-1'>
+        <div className='text-base font-medium text-white md:max-w-[200px]'>{item.description}</div>
         <div className='text-base text-primary'>{item.price}</div>
       </div>
       <div className='ml-4 flex space-x-4'>
@@ -120,6 +107,12 @@ const ItemCombo = ({ item, setCombo }: PropsItemCombo) => {
       </div>
     </div>
   )
+}
+
+interface PropsCombo {
+  type: string
+  items: ComboType[]
+  setCombo: React.Dispatch<React.SetStateAction<ComboType[]>>
 }
 
 const Combo = ({ type, items, setCombo }: PropsCombo) => {
@@ -168,7 +161,7 @@ const Combo = ({ type, items, setCombo }: PropsCombo) => {
       >
         <div className='w-full py-1' role='none'>
           {items.map((item) => (
-            <ItemCombo key={item.id} item={item} setCombo={setCombo} />
+            <ItemCombo key={item._id} item={item} setCombo={setCombo} />
           ))}
         </div>
       </div>

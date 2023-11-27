@@ -8,6 +8,7 @@ import bookingApi from 'src/apis/booking.api'
 import { formatCurrency } from 'src/utils/utils'
 import { seatArray } from 'src/constants/product'
 import paymentApi from 'src/apis/payment.api'
+import { Seat } from 'src/types/seat.type'
 
 export default function Payment() {
   const { t } = useTranslation('payment')
@@ -106,10 +107,26 @@ export default function Payment() {
                           </td>
                           <td className='px-3 py-3.5 text-sm'>{bookingData?.seats.length}</td>
                           <td className='px-3 py-3.5 text-sm'>
-                            {formatCurrency(bookingData?.total_amount ?? 0)}
+                            {formatCurrency(
+                              (bookingData?.seats as Seat[]).reduce((sum, seat) => sum + (seat.price as number), 0)
+                            )}
                             {t('vnd')}
                           </td>
                         </tr>
+                        {bookingData?.combos.map((combo) => {
+                          return (
+                            <tr key={combo._id}>
+                              <td className='relative py-4 pl-4 pr-3 text-sm sm:pl-6'>
+                                <div className='font-medium text-white'>{combo.description}</div>
+                              </td>
+                              <td className='px-3 py-3.5 text-sm'>{combo.quantity}</td>
+                              <td className='px-3 py-3.5 text-sm'>
+                                {formatCurrency(combo.quantity * combo.price)}
+                                {t('vnd')}
+                              </td>
+                            </tr>
+                          )
+                        })}
                       </tbody>
                     </table>
                   </div>

@@ -9,6 +9,7 @@ const path = {
   register: '/register',
   verify: '/verify/:userId',
   forgotPass: '/password/reset',
+  forgotPassConfirm: '/password/reset/confirm/:_id',
   logout: '/logout',
   movie: '/movie',
   showtimes: '/show-times',

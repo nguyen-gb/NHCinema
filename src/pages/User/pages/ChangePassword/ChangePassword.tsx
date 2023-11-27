@@ -19,6 +19,11 @@ const passwordSchema = userSchema.pick(['password', 'new_password', 'confirm_pas
 
 export default function ChangePassword() {
   const { t } = useTranslation('user')
+  const defaultValues = {
+    password: '',
+    new_password: '',
+    confirm_password: ''
+  }
   const {
     register,
     formState: { errors },
@@ -26,19 +31,15 @@ export default function ChangePassword() {
     setError,
     reset
   } = useForm<FormData>({
-    defaultValues: {
-      password: '',
-      new_password: '',
-      confirm_password: ''
-    },
+    defaultValues,
     resolver: yupResolver(passwordSchema)
   })
 
-  const updateProfileMutation = useMutation(userApi.updateProfile)
+  const changPassMutation = useMutation(userApi.changePassword)
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const res = await updateProfileMutation.mutateAsync(omit(data, ['confirm_password']))
+      const res = await changPassMutation.mutateAsync({ ...defaultValues, ...data })
       toast.success(res.data.message)
       reset()
     } catch (error) {

@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { Schema, schema } from 'src/utils/rules'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
@@ -13,10 +13,11 @@ import Input from 'src/components/Input'
 import Button from 'src/components/Button'
 import path from 'src/constants/path'
 
-type FormData = Pick<Schema, 'email'>
-const schemaLogin = schema.pick(['email'])
+type FormData = Pick<Schema, 'otp' | 'password' | 'confirm_password'>
+const schemaLogin = schema.pick(['otp', 'password', 'confirm_password'])
 
-export default function ForgotPass() {
+export default function ForgotPassConfirm() {
+  const { _id } = useParams()
   const { t } = useTranslation('login')
   const navigate = useNavigate()
   const {
@@ -29,13 +30,13 @@ export default function ForgotPass() {
   })
 
   const forgotPassMutation = useMutation({
-    mutationFn: (body: FormData) => authApi.forgotPass(body)
+    mutationFn: (body: FormData) => authApi.forgotPassConfirm({ ...body, user_id: _id as string })
   })
   const onSubmit = handleSubmit((body) => {
     console.log(body)
     forgotPassMutation.mutate(body, {
-      onSuccess: (data) => {
-        navigate(`/password/reset/confirm/${data.data.data._id}`)
+      onSuccess: () => {
+        navigate(path.login)
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {
@@ -67,10 +68,32 @@ export default function ForgotPass() {
               <Input
                 className='mt-8'
                 type='email'
-                placeholder={t('email')}
-                name='email'
+                placeholder='OTP'
+                name='otp'
                 register={register}
-                errorMessage={errors.email?.message}
+                errorMessage={errors.otp?.message}
+              />
+              <Input
+                className='mt-2'
+                classNameInputCustom='pr-[34px]'
+                type='password'
+                placeholder={t('password')}
+                name='password'
+                register={register}
+                errorMessage={errors.password?.message}
+                autoComplete='on'
+                classNameEye='absolute right-[12px] top-[12px] h-5 w-5 cursor-pointer'
+              />
+              <Input
+                className='mt-2'
+                classNameInputCustom='pr-[34px]'
+                type='password'
+                placeholder={t('confirm-password')}
+                name='confirm_password'
+                register={register}
+                errorMessage={errors.confirm_password?.message}
+                autoComplete='on'
+                classNameEye='absolute right-[12px] top-[12px] h-5 w-5 cursor-pointer'
               />
               <div className='mt-2'>
                 <Button

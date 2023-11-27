@@ -12,6 +12,7 @@ const Login = lazy(() => import('./pages/Login'))
 const Register = lazy(() => import('./pages/Register'))
 const Verify = lazy(() => import('./pages/Verify'))
 const ForgotPass = lazy(() => import('./pages/ForgotPass'))
+const ForgotPassConfirm = lazy(() => import('./pages/ForgotPassConfirm'))
 const ProductDetail = lazy(() => import('./pages/ProductDetail'))
 const ChangePassword = lazy(() => import('./pages/User/pages/ChangePassword'))
 const HistoryPurchase = lazy(() => import('./pages/User/pages/HistoryPurchase'))
@@ -103,7 +104,6 @@ export default function useRouteElements() {
         }
       ]
     },
-
     {
       path: '',
       element: <ProtectedRoute />,
@@ -221,6 +221,14 @@ export default function useRouteElements() {
               element: (
                 <Suspense>
                   <ForgotPass />
+                </Suspense>
+              )
+            },
+            {
+              path: path.forgotPassConfirm,
+              element: (
+                <Suspense>
+                  <ForgotPassConfirm />
                 </Suspense>
               )
             }

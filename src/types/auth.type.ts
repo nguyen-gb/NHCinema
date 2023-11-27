@@ -17,3 +17,10 @@ export type RegisterResponse = SuccessResponse<{
 }>
 
 export type RefreshTokenResponse = SuccessResponse<{ access_token: string }>
+
+export type ForgotPassConfirm = {
+  user_id: string
+  otp: string
+  password: string
+  confirm_password: string
+}
