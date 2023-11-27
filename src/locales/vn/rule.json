@@ -1,10 +1,11 @@
 {
   "required-field": "Trường bắt buộc",
-  "rule-length": "Độ dài từ 5 - 160 ký tự",
+  "rule-length": "Độ dài từ 6 - 160 ký tự",
   "name-length": "Độ dài tối đa là 160 ký tự",
   "phone-length": "Độ dài tối đa là 20 ký tự",
   "rule-email": "Email không đúng định dạng",
   "address-length": "Độ dài tối đa là 160 ký tự",
   "avatar-length": "Độ dài tối đa là 1000 ký tự",
-  "rule-day-of-birth": "Hãy chọn một ngày trong quá khứ"
+  "rule-day-of-birth": "Hãy chọn một ngày trong quá khứ",
+  "rule-confirm-pass": "Nhập lại mật khẩu không khớp"
 }

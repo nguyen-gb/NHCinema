@@ -1,5 +1,6 @@
 import { InputHTMLAttributes, useState } from 'react'
 import { FieldPath, FieldValues, RegisterOptions, UseFormRegister } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 interface Props<TFieldValues extends FieldValues> extends InputHTMLAttributes<HTMLInputElement> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,6 +27,7 @@ export default function Input<TFieldValues extends FieldValues = FieldValues>({
   classNameEye = 'absolute right-[5px] top-[9px] h-5 w-5 cursor-pointer',
   ...rest
 }: Props<TFieldValues>) {
+  const { t } = useTranslation('rule')
   const [openEye, setOpenEye] = useState(false)
   const registerResult = register && name ? register(name, rules) : null
 
@@ -75,7 +77,7 @@ export default function Input<TFieldValues extends FieldValues = FieldValues>({
           />
         </svg>
       )}
-      <div className={classNameError}>{errorMessage}</div>
+      <div className={classNameError}>{t(errorMessage as any)}</div>
     </div>
   )
 }

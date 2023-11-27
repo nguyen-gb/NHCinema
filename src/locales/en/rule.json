@@ -1,10 +1,11 @@
 {
   "required-field": "Mandatory field",
-  "rule-length": "Length must be between 5 - 160 characters",
+  "rule-length": "Length must be between 6 - 160 characters",
   "name-length": "Maximum length is 160 characters",
   "phone-length": "Maximum length is 20 characters",
   "rule-email": "Invalid email format",
   "address-length": "Maximum length is 160 characters",
   "avatar-length": "Maximum length is 1000 characters",
-  "rule-day-of-birth": "Please select a date in the past"
+  "rule-day-of-birth": "Please select a date in the past",
+  "rule-confirm-pass": "Password confirmation does not match"
 }
