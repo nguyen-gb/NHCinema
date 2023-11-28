@@ -77,7 +77,7 @@ export default function ForgotPassConfirm() {
                 className='mt-2'
                 classNameInputCustom='pr-[34px]'
                 type='password'
-                placeholder={t('password')}
+                placeholder={t('new-password')}
                 name='password'
                 register={register}
                 errorMessage={errors.password?.message}
