@@ -7,9 +7,10 @@ export default function RegisterHeader() {
   const { t } = useTranslation('login')
   const loginMatch = useMatch(path.login)
   const registerMatch = useMatch(path.register)
+  const verifyMatch = useMatch(path.verify)
   const isRegister = Boolean(registerMatch)
   const isLogin = Boolean(loginMatch)
-  const isVerify = Boolean(path.verify)
+  const isVerify = Boolean(verifyMatch)
   return (
     <header className='bg-quaternary py-5'>
       <div className='container'>

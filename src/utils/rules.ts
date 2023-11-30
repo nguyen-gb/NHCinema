@@ -67,7 +67,7 @@ const handleConfirmPasswordYup = (refString: string) => {
 export const schema = yup.object({
   name: yup.string().required('required-field'),
   email: yup.string().required('required-field').email('rule-email').min(6, 'rule-length').max(160, 'rule-length'),
-  phone: yup.string().required('required-field'),
+  phone: yup.string().required('required-field').max(20, 'phone-length'),
   otp: yup.string().required('required-field'),
   password: yup.string().required('required-field').min(6, 'rule-length').max(160, 'rule-length'),
   confirm_password: handleConfirmPasswordYup('password'),
