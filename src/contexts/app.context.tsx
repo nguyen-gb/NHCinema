@@ -43,7 +43,7 @@ export const AppProvider = ({
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(defaultValue.isAuthenticated)
   const [profile, setProfile] = useState<User | null>(defaultValue.profile)
   const [extendedPurchases, setExtendedPurchases] = useState<ExtendedPurchase[]>(defaultValue.extendedPurchases)
-  const [cinema, setCinema] = useState<Cinema>(defaultValue.cinema)
+  const [cinema, setCinema] = useState<Cinema>(defaultValue.cinema ?? '65203b82210d84d5c627f8b1')
 
   const reset = useCallback(() => {
     setIsAuthenticated(false)
