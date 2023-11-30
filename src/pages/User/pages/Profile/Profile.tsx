@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next'
 
 import userApi from 'src/apis/user.api'
 import Input from 'src/components/Input'
-import InputNumber from 'src/components/InputNumber'
 import { UserSchema, userSchema } from 'src/utils/rules'
 import DateSelect from '../../components/DateSelect'
 import { AppContext } from 'src/contexts/app.context'
@@ -18,6 +17,7 @@ import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
 import path from 'src/constants/path'
 import { User } from 'src/types/user.type'
+import InputNumber from 'src/components/InputNumber'
 
 type FormData = Pick<UserSchema, 'name' | 'phone' | 'email' | 'date_of_birth' | 'gender'>
 type FormDataError = Omit<FormData, 'date_of_birth' | 'gender'> & {
