@@ -235,6 +235,7 @@ export default function Payment() {
                 </div>
                 <div className='space-y-3'>
                   <button
+                    disabled={createPaymentUrlMutation.isLoading}
                     onClick={handlePayment}
                     className='inline-flex h-10 w-full items-center justify-center rounded-full bg-primary px-8 py-2 text-sm font-medium opacity-50 transition-colors hover:bg-primary hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none'
                   >
