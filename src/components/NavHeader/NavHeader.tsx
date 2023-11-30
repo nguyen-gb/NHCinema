@@ -1,7 +1,7 @@
 import { Link, NavLink } from 'react-router-dom'
 import { useContext, useState } from 'react'
 import { AppContext } from 'src/contexts/app.context'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { HiBars3 } from 'react-icons/hi2'
 import classNames from 'classnames'
