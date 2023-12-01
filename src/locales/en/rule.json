@@ -1,5 +1,5 @@
 {
-  "required-field": "Mandatory field",
+  "required-field": "Required field",
   "rule-length": "Length must be between 6 - 160 characters",
   "name-length": "Maximum length is 160 characters",
   "phone-length": "Maximum length is 20 characters",

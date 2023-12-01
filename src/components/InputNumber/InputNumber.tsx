@@ -1,4 +1,5 @@
 import { InputHTMLAttributes, forwardRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string
@@ -18,6 +19,7 @@ const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(function Inpu
   },
   ref
 ) {
+  const { t } = useTranslation('rule')
   const [localValue, setLocalValue] = useState<string>(value as string)
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target
@@ -35,7 +37,7 @@ const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(function Inpu
         value={value === undefined ? localValue : value}
         ref={ref}
       />
-      <div className={classNameError}>{errorMessage}</div>
+      <div className={classNameError}>{t(errorMessage as any)}</div>
     </div>
   )
 })
