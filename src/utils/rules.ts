@@ -75,8 +75,8 @@ export const schema = yup.object({
 })
 
 export const userSchema = yup.object({
-  name: yup.string().max(160, 'name-length'),
-  phone: yup.string().max(20, 'phone-length'),
+  name: yup.string().required('required-field').max(160, 'name-length'),
+  phone: yup.string().required('required-field').max(20, 'phone-length'),
   email: yup.string().required('required-field').email('rule-email').min(6, 'rule-length').max(160, 'rule-length'),
   address: yup.string().max(160, 'address-length'),
   avatar: yup.string().max(1000, 'avatar-length'),

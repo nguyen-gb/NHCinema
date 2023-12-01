@@ -9,6 +9,7 @@ import { formatCurrency } from 'src/utils/utils'
 import { seatArray } from 'src/constants/product'
 import paymentApi from 'src/apis/payment.api'
 import { Seat } from 'src/types/seat.type'
+import Button from 'src/components/Button'
 
 export default function Payment() {
   const { t } = useTranslation('payment')
@@ -236,13 +237,14 @@ export default function Payment() {
                   </div>
                 </div>
                 <div className='space-y-3'>
-                  <button
+                  <Button
+                    isLoading={createPaymentUrlMutation.isLoading}
                     disabled={createPaymentUrlMutation.isLoading}
                     onClick={handlePayment}
                     className='inline-flex h-10 w-full items-center justify-center rounded-full bg-primary px-8 py-2 text-sm font-medium opacity-50 transition-colors hover:bg-primary hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none'
                   >
                     {t('payment')}
-                  </button>
+                  </Button>
                   <Link
                     to={path.bookTickets}
                     className='inline-flex h-10 w-full items-center justify-center rounded-full border px-8 py-2 text-sm font-medium transition-colors hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'

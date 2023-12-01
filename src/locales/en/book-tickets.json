@@ -12,5 +12,7 @@
   "vnd": "VND",
   "back": "Back",
   "payment": "Payment",
-  "seat-booked": "Seats have been booked"
+  "seat-booked": "Seats have been booked",
+  "drink": "Drink",
+  "popcorn": "Popcorn"
 }

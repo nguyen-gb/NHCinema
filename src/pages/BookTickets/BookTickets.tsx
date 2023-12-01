@@ -15,6 +15,7 @@ import { Booking } from 'src/types/booking.type'
 import comboApi from 'src/apis/combo.api'
 import { Combo as ComboInterface, ComboType } from 'src/types/combo.type'
 import Combo from 'src/components/Combo'
+import Button from 'src/components/Button'
 
 interface SeatProps {
   isReserved: boolean
@@ -230,10 +231,10 @@ const BookTickets: React.FC = () => {
                   <Combo type='Combo' items={combos as ComboInterface[]} setCombo={setCombo} />
                 </div>
                 <div>
-                  <Combo type='Combo' items={drinks as ComboInterface[]} setCombo={setCombo} />
+                  <Combo type={t('drink')} items={drinks as ComboInterface[]} setCombo={setCombo} />
                 </div>
                 <div>
-                  <Combo type='Combo' items={popcorns as ComboInterface[]} setCombo={setCombo} />
+                  <Combo type={t('popcorn')} items={popcorns as ComboInterface[]} setCombo={setCombo} />
                 </div>
               </div>
             </div>
@@ -263,13 +264,14 @@ const BookTickets: React.FC = () => {
               >
                 {t('back')}
               </Link>
-              <button
+              <Button
+                isLoading={createBookingMutation.isLoading}
+                disabled={createBookingMutation.isLoading || Boolean(!selectedSeats.length)}
                 onClick={handlePayment}
-                disabled={Boolean(!selectedSeats.length)}
                 className='inline-flex h-10 items-center justify-center rounded-full bg-primary px-8 py-2 text-sm font-medium transition duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
               >
                 {t('payment')}
-              </button>
+              </Button>
             </div>
           </div>
         </div>

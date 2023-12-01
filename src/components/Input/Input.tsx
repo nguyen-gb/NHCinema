@@ -30,14 +30,16 @@ export default function Input<TFieldValues extends FieldValues = FieldValues>({
   const { t } = useTranslation('rule')
   const [openEye, setOpenEye] = useState(false)
   const registerResult = register && name ? register(name, rules) : null
+  const isPass = rest.type === 'password' ? ' pr-10' : ''
 
   const toggleEye = () => {
     setOpenEye((prev) => !prev)
   }
+
   return (
     <div className={'relative ' + className}>
       <input
-        className={classNameInputCustom + ' ' + classNameInput}
+        className={classNameInputCustom + ' ' + classNameInput + ' ' + isPass}
         {...registerResult}
         {...rest}
         type={rest.type === 'password' && !openEye ? rest.type : 'text'}
