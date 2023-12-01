@@ -9,11 +9,11 @@ interface Props {
 }
 
 export default function DateSelect({ value, onChange, errorMessage }: Props) {
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [date, setDate] = useState({
-    date: value?.getDate() || 1,
-    month: value?.getMonth() || 0,
-    year: value?.getFullYear() || 1990
+    date: value?.getDate() ?? 1,
+    month: value?.getMonth() ?? 0,
+    year: value?.getFullYear() ?? 1990
   })
 
   useEffect(() => {
@@ -81,7 +81,7 @@ export default function DateSelect({ value, onChange, errorMessage }: Props) {
             ))}
           </select>
         </div>
-        <div className='mt-1 min-h-[1.25rem] text-sm text-primary'>{errorMessage}</div>
+        <div className='mt-1 min-h-[1.25rem] text-sm text-primary'>{t(errorMessage as any)}</div>
       </div>
     </div>
   )
