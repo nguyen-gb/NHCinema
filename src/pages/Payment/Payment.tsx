@@ -106,12 +106,14 @@ export default function Payment() {
                             </div>
                           </td>
                           <td className='px-3 py-3.5 text-sm'>{bookingData?.seats.length}</td>
-                          <td className='px-3 py-3.5 text-sm'>
-                            {formatCurrency(
-                              (bookingData?.seats as Seat[]).reduce((sum, seat) => sum + (seat.price as number), 0)
-                            )}
-                            {t('vnd')}
-                          </td>
+                          {bookingData?.seats && (
+                            <td className='px-3 py-3.5 text-sm'>
+                              {formatCurrency(
+                                (bookingData.seats as Seat[]).reduce((sum, seat) => sum + (seat.price as number), 0)
+                              )}
+                              {t('vnd')}
+                            </td>
+                          )}
                         </tr>
                         {bookingData?.combos.map((combo) => {
                           return (
