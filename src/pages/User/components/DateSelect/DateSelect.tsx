@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function DateSelect({ value, onChange, errorMessage }: Props) {
-  const { t, i18n } = useTranslation()
+  const { t, i18n } = useTranslation('rule')
   const [date, setDate] = useState({
     date: value?.getDate() ?? 1,
     month: value?.getMonth() ?? 0,
