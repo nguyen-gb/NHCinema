@@ -1,9 +1,8 @@
 import { Helmet } from 'react-helmet-async'
-import { Link, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
-import path from 'src/constants/path'
 import bookingApi from 'src/apis/booking.api'
 import { formatCurrency } from 'src/utils/utils'
 import { seatArray } from 'src/constants/product'
@@ -14,6 +13,8 @@ import Button from 'src/components/Button'
 export default function Payment() {
   const { t } = useTranslation('payment')
   const { bookingId } = useParams()
+
+  const navigate = useNavigate()
 
   const { data } = useQuery({
     queryKey: ['booking', bookingId],
@@ -245,12 +246,12 @@ export default function Payment() {
                   >
                     {t('payment')}
                   </Button>
-                  <Link
-                    to={path.bookTickets}
+                  <Button
+                    onClick={() => navigate(-1)}
                     className='inline-flex h-10 w-full items-center justify-center rounded-full border px-8 py-2 text-sm font-medium transition-colors hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
                   >
                     {t('back')}
-                  </Link>
+                  </Button>
                   <div className='mx-auto mt-4 text-center text-sm text-red-500'>
                     <b>{t('note')}:</b> {t('note-des')}
                   </div>
