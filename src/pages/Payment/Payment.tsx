@@ -241,7 +241,7 @@ export default function Payment() {
                     isLoading={createPaymentUrlMutation.isLoading}
                     disabled={createPaymentUrlMutation.isLoading}
                     onClick={handlePayment}
-                    className='inline-flex h-10 w-full items-center justify-center rounded-full bg-primary px-8 py-2 text-sm font-medium opacity-50 transition-colors hover:bg-primary hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none'
+                    className='inline-flex h-10 w-full items-center justify-center rounded-full bg-primary px-8 py-2 text-sm font-medium transition-all hover:scale-105 hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none'
                   >
                     {t('payment')}
                   </Button>
