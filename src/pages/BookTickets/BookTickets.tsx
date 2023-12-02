@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
@@ -263,12 +263,12 @@ const BookTickets: React.FC = () => {
               </p>
             </div>
             <div className='flex w-full items-center justify-center gap-2 xl:w-auto'>
-              <Link
-                to={path.showtimes}
+              <Button
+                onClick={() => navigate(-1)}
                 className='inline-flex h-10 items-center justify-center rounded-full border bg-transparent px-8 py-2 text-sm font-medium transition-colors hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
               >
                 {t('back')}
-              </Link>
+              </Button>
               <Button
                 isLoading={createBookingMutation.isLoading}
                 disabled={createBookingMutation.isLoading || Boolean(!selectedSeats.length)}
