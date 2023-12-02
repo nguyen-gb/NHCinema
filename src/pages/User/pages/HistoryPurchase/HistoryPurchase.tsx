@@ -66,7 +66,7 @@ export default function HistoryPurchase() {
                             scope='col'
                             className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
                           >
-                            2
+                            {hisBooking.seats.length}
                           </th>
                           <th
                             scope='col'
