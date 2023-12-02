@@ -105,11 +105,9 @@ export default function useRouteElements() {
         {
           path: path.bookTickets,
           element: (
-            <MainLayout>
-              <Suspense>
-                <BookTickets />
-              </Suspense>
-            </MainLayout>
+            <Suspense>
+              <BookTickets />
+            </Suspense>
           )
         }
       ]
