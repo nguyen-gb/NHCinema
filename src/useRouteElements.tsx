@@ -101,13 +101,7 @@ export default function useRouteElements() {
               <NotFound />
             </Suspense>
           )
-        }
-      ]
-    },
-    {
-      path: '',
-      element: <ProtectedRoute />,
-      children: [
+        },
         {
           path: path.bookTickets,
           element: (
@@ -117,7 +111,13 @@ export default function useRouteElements() {
               </Suspense>
             </MainLayout>
           )
-        },
+        }
+      ]
+    },
+    {
+      path: '',
+      element: <ProtectedRoute />,
+      children: [
         {
           path: path.payment,
           element: (

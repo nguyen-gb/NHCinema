@@ -51,7 +51,7 @@ const Seat: React.FC<SeatProps> = ({ isReserved, isSelected, onSelect, isDoubleS
 const BookTickets: React.FC = () => {
   const { showtimeId } = useParams()
   const { t } = useTranslation('book-tickets')
-  const { cinema } = useContext(AppContext)
+  const { isAuthenticated, cinema } = useContext(AppContext)
   const navigate = useNavigate()
   const [selectedSeats, setSelectedSeats] = useState<{ seat_number: number; seat_type: number }[]>([])
   const [combo, setCombo] = useState<ComboInterface[]>([])
@@ -118,6 +118,11 @@ const BookTickets: React.FC = () => {
   }
 
   const handlePayment = () => {
+    if (!isAuthenticated) {
+      navigate(path.login)
+      return
+    }
+
     const selectedSeatsConvert = selectedSeats.map((seat) => {
       return {
         seat_number: String(seat.seat_number),
