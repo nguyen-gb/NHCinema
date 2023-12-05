@@ -50,7 +50,7 @@ export default function Product({ product }: Props) {
                   </div>
                   <div className='flex items-center justify-center text-secondary'>
                     <b className='flex-shrink-0 capitalize'>{t('format')}:</b>
-                    <span className='line-clamp-1'>2D</span>
+                    <span className='line-clamp-1'>{product.format}</span>
                   </div>
                 </div>
               </div>

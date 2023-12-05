@@ -39,7 +39,12 @@ export default function Login() {
       onSuccess: (data) => {
         setIsAuthenticated(true)
         setProfile(data.data.data.user)
-        navigate(path.home)
+        const pathname = window.location.href
+        if (pathname === '/login') {
+          navigate(path.home)
+        } else {
+          navigate(window.location.href.split('=')[1])
+        }
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {

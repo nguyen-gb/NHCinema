@@ -14,5 +14,7 @@
   "T18": "Not for persons under 18 years of age",
   "book-tickets": "Book tickets",
   "showtimes": "Showtimes",
-  "today": "Today"
+  "today": "Today",
+  "not-yet-released": "Not yet released",
+  "no-showtimes": "No showtimes"
 }

@@ -16,6 +16,7 @@ import comboApi from 'src/apis/combo.api'
 import { Combo as ComboInterface, ComboType } from 'src/types/combo.type'
 import Combo from 'src/components/Combo'
 import Button from 'src/components/Button'
+import { formatCurrency } from 'src/utils/utils'
 
 interface SeatProps {
   isReserved: boolean
@@ -105,6 +106,11 @@ const BookTickets: React.FC = () => {
     }) ?? []
 
   const toggleSeat = (seat: { seat_number: number; seat_type: SeatType }) => {
+    if (!isAuthenticated) {
+      navigate(`${path.login}?redirect_after_login=${window.location.pathname}`)
+      return
+    }
+
     const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number)
     const seatPrice = seat.seat_type === SeatType.single_chair ? 50000 : 100000
 
@@ -119,7 +125,7 @@ const BookTickets: React.FC = () => {
 
   const handlePayment = () => {
     if (!isAuthenticated) {
-      navigate(path.login)
+      navigate(`${path.login}?redirect_after_login=${window.location.pathname}`)
       return
     }
 
@@ -233,13 +239,13 @@ const BookTickets: React.FC = () => {
               </div>
               <div className='m-1'>
                 <div>
-                  <Combo type='Combo' items={combos as ComboInterface[]} setCombo={setCombo} />
+                  <Combo type='Combo' items={combos} setCombo={setCombo} />
                 </div>
                 <div>
-                  <Combo type={t('drink')} items={drinks as ComboInterface[]} setCombo={setCombo} />
+                  <Combo type={t('drink')} items={drinks} setCombo={setCombo} />
                 </div>
                 <div>
-                  <Combo type={t('popcorn')} items={popcorns as ComboInterface[]} setCombo={setCombo} />
+                  <Combo type={t('popcorn')} items={popcorns} setCombo={setCombo} />
                 </div>
               </div>
             </div>
@@ -259,7 +265,8 @@ const BookTickets: React.FC = () => {
                 </span>
               </p>
               <p>
-                {t('total-amount')}: <span className='font-semibold'>{`${total + totalCombo} ${t('vnd')}`}</span>
+                {t('total-amount')}:{' '}
+                <span className='font-semibold'>{`${formatCurrency(total + totalCombo)} ${t('vnd')}`}</span>
               </p>
             </div>
             <div className='flex w-full items-center justify-center gap-2 xl:w-auto'>

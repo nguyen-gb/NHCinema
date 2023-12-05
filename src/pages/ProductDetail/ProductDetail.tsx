@@ -6,6 +6,7 @@ import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 import { VscDebugStart } from 'react-icons/vsc'
 import classNames from 'classnames'
+import moment from 'moment'
 // import { toast } from 'react-toastify'
 // import DOMPurify from 'dompurify'
 
@@ -46,40 +47,6 @@ export default function ProductDetail() {
   const product = productDetailData?.data.data
   const showtimes = showtimeData?.data.data[0].times
 
-  // const imageRef = useRef<HTMLImageElement>(null)
-
-  // const handleZoom = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-  //   const rect = event.currentTarget.getBoundingClientRect()
-
-  //   const image = imageRef.current as HTMLImageElement
-  //   const { naturalHeight, naturalWidth } = image
-
-  //   //Cách 1: Lấy offsetX, offsetY đơn giản khi xử lý được bubble event
-  //   const { offsetX, offsetY } = event.nativeEvent
-
-  //   //Cách 2: Lấy offsetX, offsetY khi chúng ta không xử lý được bubble event
-  //   //const offsetX = event.pageX - (rect.x + window.scrollX)
-  //   //const offsetY = event.pageY - (rect.y + window.scrollY)
-
-  //   const top = offsetY * (1 - naturalWidth / rect.width)
-  //   const left = offsetX * (1 - naturalHeight / rect.height)
-
-  //   image.style.width = naturalWidth + 'px'
-  //   image.style.height = naturalHeight + 'px'
-  //   image.style.width = 'unset'
-
-  //   image.style.top = top + 'px'
-  //   image.style.left = left + 'px'
-  // }
-
-  // const handleRemoveZoom = () => {
-  //   imageRef.current?.removeAttribute('style')
-  // }
-
-  // const handleBuyCount = (value: number) => {
-  //   setBuyCount(value)
-  // }
-
   const openVideoPopup = () => {
     setIsVideoOpen(true)
   }
@@ -89,11 +56,13 @@ export default function ProductDetail() {
   }
 
   const handleShowShowTimes = () => {
-    setIsHideShowTimes(false)
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: 'smooth'
-    })
+    if (product && moment(product.release, 'DD/MM/YYYY').isBefore(moment())) {
+      setIsHideShowTimes(false)
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+      })
+    }
   }
 
   const handleChooseTime = (showtime_id: string) => {
@@ -230,7 +199,7 @@ export default function ProductDetail() {
                 </p>
                 <p className='mt-2'>
                   <strong className='inline-block w-[140px] text-primary'>{t('launched-from')}:</strong>
-                  {product.release.split(' ')[0]}
+                  {product.release}
                 </p>
                 <p className='mt-2'>
                   <strong className='inline-block w-[140px] text-primary'>{t('category')}:</strong>
@@ -254,10 +223,16 @@ export default function ProductDetail() {
                 </p>
                 <button
                   onClick={handleShowShowTimes}
-                  className='mt-4 flex max-w-fit cursor-pointer items-center justify-center bg-primary px-4 py-2 text-xl uppercase opacity-80 shadow-ct3d transition-all hover:opacity-100'
+                  className={classNames(
+                    'mt-4 flex max-w-fit items-center justify-center bg-primary px-4 py-2 text-xl uppercase opacity-80 shadow-ct3d transition-all',
+                    {
+                      'cursor-pointer hover:opacity-100': moment(product.release, 'DD/MM/YYYY').isBefore(moment()),
+                      'cursor-not-allowed': !moment(product.release, 'DD/MM/YYYY').isBefore(moment())
+                    }
+                  )}
                 >
                   <img src='https://touchcinema.com/images/icons/icon-ticket.png' alt='' className='mr-2 h-6' />
-                  {t('book-tickets')}
+                  {moment(product.release, 'DD/MM/YYYY').isBefore(moment()) ? t('book-tickets') : t('not-yet-released')}
                 </button>
               </div>
               <div className='col-span-12 my-[20px] bg-primary p-[20px] shadow-ct3d'>
@@ -273,7 +248,7 @@ export default function ProductDetail() {
                 </p>
                 <DropdownCinema />
               </div>
-              {showtimes &&
+              {showtimes && showtimes?.length > 0 ? (
                 showtimes.map((showtime) => (
                   <div key={showtime.time}>
                     {isTodayShowTime(showtime.time) ? (
@@ -316,7 +291,10 @@ export default function ProductDetail() {
                       })}
                     </div>
                   </div>
-                ))}
+                ))
+              ) : (
+                <span className='text-lg italic'>{t('no-showtimes')}</span>
+              )}
             </div>
           )}
         </div>

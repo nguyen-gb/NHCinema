@@ -71,6 +71,7 @@ export default function PaymentDetail() {
                     <p className='mb-1'>{t('movie-name')}:</p>
                     <p className='mb-1'>{t('showtime')}:</p>
                     <p className='mb-1'>{t('seat')}:</p>
+                    <p className='mb-1'>Combo:</p>
                     <p className='mb-1'>{t('total')}:</p>
                   </div>
                   <div className='col-span-1 flex flex-col text-left'>
@@ -82,6 +83,9 @@ export default function PaymentDetail() {
                     <strong className='mb-1'>{`${data.data.data.showtime} ${data.data.data.time}`}</strong>
                     <strong className='mb-1'>
                       {data.data.data.seats.map((s) => seatArray[Number(s.seat_number) - 1]).join(', ')}
+                    </strong>
+                    <strong className='mb-1'>
+                      {data.data.data.combos.map((combo) => `${combo.name} (${combo.quantity})`).join(', ')}
                     </strong>
                     <strong className='mb-1'>
                       {formatCurrency(data.data.data.total_amount)} {t('vnd')}

@@ -14,5 +14,7 @@
   "T18": "Không dành cho người dưới 18 tuổi",
   "book-tickets": "Đặt vé",
   "showtimes": "Lịch chiếu",
-  "today": "Hôm nay"
+  "today": "Hôm nay",
+  "not-yet-released": "Chưa công chiếu",
+  "no-showtimes": "Không có lịch chiếu"
 }

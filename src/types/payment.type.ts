@@ -1,3 +1,4 @@
+import { Combo } from './combo.type'
 import { Seat } from './seat.type'
 
 export interface PaymentParams {
@@ -26,6 +27,7 @@ export interface ConfirmPaymentRes {
   movie_id: string
   movie_name: string
   seats: Seat[]
+  combos: Combo[]
   time: string
   showtime: string
   total_amount: number

@@ -1,6 +1,12 @@
 import classNames from 'classnames'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+
+import { AppContext } from 'src/contexts/app.context'
+import path from 'src/constants/path'
 import { Combo as ComboType } from 'src/types/combo.type'
+import { formatCurrency } from 'src/utils/utils'
 
 interface PropsItemCombo {
   item: ComboType
@@ -8,9 +14,17 @@ interface PropsItemCombo {
 }
 
 const ItemCombo = ({ item, setCombo }: PropsItemCombo) => {
+  const { t } = useTranslation('book-tickets')
+  const { isAuthenticated } = useContext(AppContext)
+  const navigate = useNavigate()
   const [quantity, setQuantity] = useState(0)
 
   const handleAddCombo = (item: ComboType) => {
+    if (!isAuthenticated) {
+      navigate(`${path.login}?redirect_after_login=${window.location.pathname}`)
+      return
+    }
+
     setQuantity((pre) => {
       if ((!item.quantity || pre < item.quantity) && pre < 10) {
         return pre + 1
@@ -70,7 +84,7 @@ const ItemCombo = ({ item, setCombo }: PropsItemCombo) => {
       {/* <img src={item.image} alt={item.name} className='h-8 w-8 rounded-full object-cover mr-3' /> */}
       <div className='flex-1'>
         <div className='text-base font-medium text-white md:max-w-[200px]'>{item.description}</div>
-        <div className='text-base text-primary'>{item.price}</div>
+        <div className='text-base text-primary'>{`${formatCurrency(item.price)} ${t('vnd')}`}</div>
       </div>
       <div className='ml-4 flex space-x-4'>
         <button
