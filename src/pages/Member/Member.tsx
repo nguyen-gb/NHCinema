@@ -12,7 +12,9 @@ export default function Member() {
       </Helmet>
       <div className='container'>
         <div className='flex flex-col justify-start bg-white/95 p-[20px] leading-[1.6] transition-all'>
-          <div className='mb-4 text-3xl text-primary'>{t('member-title')}</div>
+          <div className='mb-4 text-3xl text-primary'>
+            {t('member-title')} <span className='font-semibold italic text-red-500'>{t('develop-in-the-future')}</span>
+          </div>
           <strong className='mb-2 uppercase text-primary'>{t('member-rule')}</strong>
           <strong className='mb-2 text-primary'>{t('member-1')}</strong>
           <ul className='mb-2'>
