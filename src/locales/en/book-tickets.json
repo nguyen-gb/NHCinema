@@ -14,5 +14,9 @@
   "payment": "Payment",
   "seat-booked": "Seats have been booked",
   "drink": "Drink",
-  "popcorn": "Popcorn"
+  "popcorn": "Popcorn",
+  "note": "Note",
+  "note-des": "Do not buy tickets for children under 13 years old for movie screenings that end after 10:00 p.m. and do not buy tickets for children under 16 years old for movie screenings that end after 11:00 p.m.",
+  "showtime": "Showtime",
+  "seat-selection-time": "Seat selection time"
 }

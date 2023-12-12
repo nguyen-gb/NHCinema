@@ -27,7 +27,7 @@ export default function HistoryPurchase() {
       <div className='container text-white'>
         <div className='my-[40px]'>
           <div className='mt-10'>
-            <div className='mt-4 ring-1 ring-gray-700 sm:mx-0 sm:rounded-xl'>
+            <div className='mt-4 min-w-full overflow-x-auto ring-1 ring-gray-700 sm:mx-0 sm:rounded-xl'>
               <table className='min-w-full divide-y divide-gray-600'>
                 <thead>
                   <tr>
@@ -36,6 +36,9 @@ export default function HistoryPurchase() {
                     </th>
                     <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
                       {t('movie-name')}
+                    </th>
+                    <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
+                      {t('showtime')}
                     </th>
                     <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
                       {t('ticket-number')}
@@ -61,6 +64,12 @@ export default function HistoryPurchase() {
                             className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
                           >
                             {hisBooking.movie_name}
+                          </th>
+                          <th
+                            scope='col'
+                            className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
+                          >
+                            {`${hisBooking.showtime} ${hisBooking.time}`}
                           </th>
                           <th
                             scope='col'

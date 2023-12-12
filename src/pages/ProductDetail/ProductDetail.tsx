@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { convert } from 'html-to-text'
 import { Helmet } from 'react-helmet-async'
@@ -24,6 +24,7 @@ export default function ProductDetail() {
   const navigate = useNavigate()
   const [isVideoOpen, setIsVideoOpen] = useState(false)
   const [isHideShowTimes, setIsHideShowTimes] = useState(true)
+  const [currentDate, setCurrentDate] = useState(new Date())
 
   const { movieId } = useParams()
   const id = getIdFromMovieId(movieId as string)
@@ -40,7 +41,6 @@ export default function ProductDetail() {
       })
   })
 
-  const currentDate = new Date()
   const currentHour = currentDate.getHours()
   const currentMinute = currentDate.getMinutes()
 
@@ -66,8 +66,12 @@ export default function ProductDetail() {
   }
 
   const handleChooseTime = (showtime_id: string) => {
-    navigate(`/book-tickets/${showtime_id}`)
+    navigate(`/book-tickets/${showtime_id}?format=${product?.format}`)
   }
+
+  useEffect(() => {
+    setTimeout(() => setCurrentDate(new Date()), 60 * 1000)
+  }, [currentDate])
 
   if (isLoading)
     return (
@@ -207,7 +211,7 @@ export default function ProductDetail() {
                 </p>
                 <p className='mt-2'>
                   <strong className='inline-block w-[140px] text-primary'>{t('format')}:</strong>
-                  2D
+                  {product.format}
                 </p>
                 <p className='mt-2'>
                   <strong className='inline-block w-[140px] text-primary'>{t('director')}:</strong>

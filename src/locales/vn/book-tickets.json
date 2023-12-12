@@ -14,5 +14,9 @@
   "payment": "Thanh toán",
   "seat-booked": "Ghế đã được đặt",
   "drink": "Nước",
-  "popcorn": "Bắp"
+  "popcorn": "Bắp",
+  "note": "Lưu ý",
+  "note-des": "Không mua vé cho trẻ em dưới 13 tuổi đối với các suất chiếu phim kết thúc sau 22h00 và không mua vé cho trẻ em dưới 16 tuổi đối với các suất chiếu phim kết thúc sau 23h00.",
+  "showtime": "Giờ chiếu",
+  "seat-selection-time": "Thời gian chọn ghế"
 }

@@ -20,6 +20,7 @@ export default function ShowTimes() {
   const [isToday, setIsToday] = useState(true)
   const [isTomorrow, setIsTomorrow] = useState(false)
   const [isDayAfterTomorrow, setIsDayAfterTomorrow] = useState(false)
+  const [isDayAfterTwoDays, setIsDayAfterTwoDays] = useState(false)
 
   const currentDate = new Date()
   const currentHour = currentDate.getHours()
@@ -28,6 +29,8 @@ export default function ShowTimes() {
   tomorrow.setDate(currentDate.getDate() + 1)
   const dayAfterTomorrow = new Date(currentDate)
   dayAfterTomorrow.setDate(currentDate.getDate() + 2)
+  const dayAfterTwoDays = new Date(currentDate)
+  dayAfterTwoDays.setDate(currentDate.getDate() + 3)
 
   const { data, isLoading } = useQuery({
     queryKey: ['showtimes', date, cinema],
@@ -39,20 +42,28 @@ export default function ShowTimes() {
       setIsToday(false)
       setIsTomorrow(true)
       setIsDayAfterTomorrow(false)
+      setIsDayAfterTwoDays(false)
     } else if (day === dayAfterTomorrow) {
       setIsToday(false)
       setIsTomorrow(false)
       setIsDayAfterTomorrow(true)
+      setIsDayAfterTwoDays(false)
+    } else if (day === dayAfterTwoDays) {
+      setIsToday(false)
+      setIsTomorrow(false)
+      setIsDayAfterTomorrow(false)
+      setIsDayAfterTwoDays(true)
     } else {
       setIsToday(true)
       setIsTomorrow(false)
       setIsDayAfterTomorrow(false)
+      setIsDayAfterTwoDays(false)
     }
     setDate(day)
   }
 
-  const handleChooseTime = (showtime_id: string) => {
-    navigate(`/book-tickets/${showtime_id}`)
+  const handleChooseTime = (showtime_id: string, format: string) => {
+    navigate(`/book-tickets/${showtime_id}?format=${format}`)
   }
 
   return (
@@ -156,6 +167,36 @@ export default function ShowTimes() {
                 </div>
               </div>
             </button>
+            <button
+              onClick={() => handleChangeDay(dayAfterTwoDays)}
+              className={classNames(
+                'group m-[10px] flex flex-shrink-0 cursor-pointer flex-col items-center justify-between shadow-ct3d shadow-quaternary hover:text-white',
+                {
+                  'text-white': isDayAfterTwoDays,
+                  'text-quaternary': !isDayAfterTwoDays
+                }
+              )}
+            >
+              <div
+                className={classNames('w-full px-8 py-[1px] text-lg group-hover:bg-primary', {
+                  'bg-primary': isDayAfterTwoDays,
+                  'bg-white': !isDayAfterTwoDays
+                })}
+              >
+                {dayAfterTwoDays.toLocaleString(i18n.language, { weekday: 'long' })}
+              </div>
+              <div
+                className={classNames('w-full px-6 py-2 group-hover:bg-secondary', {
+                  'bg-secondary': isDayAfterTwoDays,
+                  'bg-white': !isDayAfterTwoDays
+                })}
+              >
+                <div className='text-center text-[50px] font-semibold'>{dayAfterTwoDays.getDate()}</div>
+                <div className='text-center text-lg'>
+                  {dayAfterTwoDays.toLocaleString(i18n.language, { month: 'long' })}
+                </div>
+              </div>
+            </button>
           </div>
         </div>
         <div className='bg-tertiary p-[20px] text-lg uppercase text-white'>{t('movie-schedule')}</div>
@@ -245,7 +286,7 @@ export default function ShowTimes() {
 
                       return (
                         <button
-                          onClick={() => handleChooseTime(showtime_id)}
+                          onClick={() => handleChooseTime(showtime_id, product.format)}
                           key={showtime_id}
                           className={classNames(
                             'mb-[8px] mr-[8px] max-w-fit rounded-md border border-tertiary px-[20px] py-[8px]',

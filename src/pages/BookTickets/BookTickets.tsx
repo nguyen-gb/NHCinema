@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
+import moment from 'moment'
 
 import { AppContext } from 'src/contexts/app.context'
 import { seatArray } from 'src/constants/product'
@@ -16,7 +17,7 @@ import comboApi from 'src/apis/combo.api'
 import { Combo as ComboInterface, ComboType } from 'src/types/combo.type'
 import Combo from 'src/components/Combo'
 import Button from 'src/components/Button'
-import { formatCurrency } from 'src/utils/utils'
+import { calculateTicketPrice, formatCurrency } from 'src/utils/utils'
 
 interface SeatProps {
   isReserved: boolean
@@ -27,7 +28,9 @@ interface SeatProps {
 }
 
 const Seat: React.FC<SeatProps> = ({ isReserved, isSelected, onSelect, isDoubleSeat = false, SeatNumber }) => {
-  const seatClasses = `${isDoubleSeat ? 'w-24 mx-4' : 'w-[2.5rem]'} h-[2.5rem] m-1 rounded-md text-white ${
+  const seatClasses = `${
+    isDoubleSeat ? 'w-24 mx-4' : 'w-[2rem] sm:w-[2.5rem]'
+  } h-[2rem] sm:h-[2.5rem] m-1 rounded-md text-white ${
     isReserved
       ? 'bg-red-500 cursor-not-allowed'
       : isSelected
@@ -58,6 +61,9 @@ const BookTickets: React.FC = () => {
   const [combo, setCombo] = useState<ComboInterface[]>([])
   const [total, setTotal] = useState(0)
   const [totalCombo, setTotalCombo] = useState(0)
+  const [countdownTime, setCountdownTime] = useState<number>(300)
+
+  const formattedTime = moment.utc(countdownTime * 1000).format('mm:ss')
 
   const rows = 9
   const cols = 9
@@ -112,7 +118,7 @@ const BookTickets: React.FC = () => {
     }
 
     const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number)
-    const seatPrice = seat.seat_type === SeatType.single_chair ? 50000 : 100000
+    const seatPrice = calculateTicketPrice(seat.seat_type)
 
     if (seatIndex === -1) {
       setSelectedSeats([...selectedSeats, seat])
@@ -154,6 +160,14 @@ const BookTickets: React.FC = () => {
   }
 
   useEffect(() => {
+    if (countdownTime <= 0) {
+      navigate(-1)
+    } else if (countdownTime > 0 && isAuthenticated) {
+      setTimeout(() => setCountdownTime((prevTime) => prevTime - 1), 1000)
+    }
+  }, [countdownTime, navigate, isAuthenticated])
+
+  useEffect(() => {
     const newTotalPrice = combo.reduce((acc, item) => acc + item.price * item.quantity, 0)
     setTotalCombo(newTotalPrice)
   }, [combo])
@@ -166,6 +180,21 @@ const BookTickets: React.FC = () => {
       </Helmet>
       <div className='container'>
         <div className='mb-[40px]'>
+          <div className='mx-4 mt-4 text-center text-sm text-red-500 md:px-6 lg:mx-auto'>
+            <b>{t('note')}:</b> {t('note-des')}
+          </div>
+          <div className='my-5 flex items-center justify-around text-white'>
+            <div className='self-end text-sm md:text-base'>
+              {t('showtime')}: <span className='font-bold text-primary'>{data?.data.data.showtime}</span>
+            </div>
+            <div className='hidden rounded-xl border border-primary p-2 text-sm md:text-base xl:block'>
+              {t('seat-selection-time')}:{' '}
+              <span className={`${countdownTime <= 60 ? 'text-red-500' : 'text-primary'} font-semibold`}>
+                {formattedTime}
+              </span>
+            </div>
+            <p className='block text-sm md:text-base xl:hidden'>{formattedTime}</p>
+          </div>
           <div className='flex flex-col items-center justify-center'>
             <div className='max-w-fit'>
               <img

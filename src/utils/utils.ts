@@ -1,7 +1,8 @@
 import axios, { AxiosError } from 'axios'
 
-import config from 'src/constants/config'
+import { DayOfWeek } from 'src/constants/date'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
+import { SeatType } from 'src/types/seat.type'
 import { ErrorResponse } from 'src/types/utils.type'
 
 export function isAxiosError<T>(error: unknown): error is AxiosError<T> {
@@ -87,7 +88,42 @@ export const isTodayShowTime = (date: string) => {
   }
 }
 
-export const getAvatarURL = (avatarName?: string) =>
-  avatarName
-    ? `${config.baseUrl}images/${avatarName}`
-    : 'https://img6.thuthuatphanmem.vn/uploads/2022/11/18/anh-avatar-don-gian-ma-dep_081757969.jpg'
+export function getCurrentDayOfWeek(): DayOfWeek {
+  return new Date().getDay() as DayOfWeek
+}
+
+export function calculateTicketPrice(seatType: SeatType): number {
+  const currentUrl = window.location.href
+  const url = new URL(currentUrl)
+  const format = url.searchParams.get('format')
+
+  const dayOfWeek = getCurrentDayOfWeek()
+
+  const regularSeatPrices = {
+    0: 80000,
+    1: format === '2D' ? 60000 : 70000,
+    2: format === '2D' ? 55000 : 60000,
+    3: format === '2D' ? 60000 : 70000,
+    4: format === '2D' ? 60000 : 70000,
+    5: 80000,
+    6: 80000
+  }
+
+  const doubleSeatPrices = {
+    0: format === '2D' ? 175000 : 180000,
+    1: format === '2D' ? 135000 : 160000,
+    2: format === '2D' ? 120000 : 140000,
+    3: format === '2D' ? 135000 : 160000,
+    4: format === '2D' ? 135000 : 160000,
+    5: format === '2D' ? 175000 : 180000,
+    6: format === '2D' ? 175000 : 180000
+  }
+
+  if (seatType === SeatType.single_chair) {
+    return regularSeatPrices[dayOfWeek]
+  } else if (seatType === SeatType.double_chair) {
+    return doubleSeatPrices[dayOfWeek]
+  } else {
+    throw new Error('Invalid seat type')
+  }
+}

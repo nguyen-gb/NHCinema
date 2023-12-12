@@ -53,7 +53,7 @@ export default function TicketPrices() {
             >
               {t('3D-ticket-price')}
             </button>
-            <button
+            {/* <button
               onClick={() => handleChangeType(3)}
               className={classNames(
                 'mr-1 cursor-pointer rounded-md px-6  text-xl uppercase text-white transition-all',
@@ -64,7 +64,7 @@ export default function TicketPrices() {
               )}
             >
               {t('holiday')}
-            </button>
+            </button> */}
           </div>
           <div className='my-2 h-[1px] w-full bg-gradient-to-r from-primary to-tertiary'></div>
           {is2D && (
