@@ -34,7 +34,9 @@ export default function ShowTimes() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['showtimes', date, cinema],
-    queryFn: () => showtimesApi.getShowtimesByDate({ theater_id: cinema._id, time: formatDateToString(date) })
+    queryFn: () => showtimesApi.getShowtimesByDate({ theater_id: cinema._id, time: formatDateToString(date) }),
+    keepPreviousData: true,
+    staleTime: 3 * 60 * 1000
   })
 
   const handleChangeDay = (day: Date) => {

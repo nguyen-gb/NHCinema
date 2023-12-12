@@ -24,9 +24,9 @@ export default function ProductList() {
     queryKey: ['products', queryConfig],
     queryFn: () => {
       return productApi.getProducts(queryConfig as ProductListConfig)
-    }
-    // keepPreviousData: true,
-    // staleTime: 3 * 60 * 1000
+    },
+    keepPreviousData: true,
+    staleTime: 3 * 60 * 1000
   })
 
   const handleClickShowing = () => {

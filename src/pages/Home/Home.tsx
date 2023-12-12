@@ -10,11 +10,6 @@ import { ProductListConfig } from 'src/types/product.type'
 import useQueryConfig, { QueryConfig } from 'src/hooks/useQueryConfig'
 import Slider from 'src/components/Slider'
 import bannerApi from 'src/apis/banner.api'
-// import Product from './components/Product'
-// import Pagination from 'src/components/Pagination'
-// import categoryApi from 'src/apis/category.api'
-// import AsideFilter from './components/AsideFilter'
-// import SortProductList from './components/SortProductList'
 
 export default function Home() {
   const { t } = useTranslation('home')
@@ -25,34 +20,27 @@ export default function Home() {
     queryKey: ['banners'],
     queryFn: () => {
       return bannerApi.getBanners()
-    }
-    // keepPreviousData: true,
-    // staleTime: 3 * 60 * 1000
+    },
+    keepPreviousData: true,
+    staleTime: 3 * 60 * 1000
   })
 
   const { data: dataShowing, isLoading: isLoading1 } = useQuery({
     queryKey: ['products', queryConfig1],
     queryFn: () => {
       return productApi.getProducts(queryConfig1 as ProductListConfig)
-    }
-    // keepPreviousData: true,
-    // staleTime: 3 * 60 * 1000
+    },
+    keepPreviousData: true,
+    staleTime: 3 * 60 * 1000
   })
   const { data: dataComing, isLoading: isLoading2 } = useQuery({
     queryKey: ['products', queryConfig2],
     queryFn: () => {
       return productApi.getProducts(queryConfig2 as ProductListConfig)
-    }
-    // keepPreviousData: true,
-    // staleTime: 3 * 60 * 1000
+    },
+    keepPreviousData: true,
+    staleTime: 3 * 60 * 1000
   })
-
-  // const { data: categoriesData } = useQuery({
-  //   queryKey: ['categories'],
-  //   queryFn: () => {
-  //     return categoryApi.getCategories()
-  //   }
-  // })
 
   return (
     <div className='bg-secondary'>
