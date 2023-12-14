@@ -46,6 +46,9 @@ export default function HistoryPurchase() {
                     <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
                       {t('amount-of-money')}
                     </th>
+                    <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
+                      {t('status')}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -82,6 +85,12 @@ export default function HistoryPurchase() {
                             className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
                           >
                             {`${formatCurrency(hisBooking.total_amount)} ${t('vnd')}`}
+                          </th>
+                          <th
+                            scope='col'
+                            className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
+                          >
+                            {Number(hisBooking.payment_status) === 1 ? t('paid') : t('unpaid')}
                           </th>
                         </tr>
                       )

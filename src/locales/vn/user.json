@@ -33,5 +33,8 @@
   "confirm-new-password": "Xác nhận mật khẩu mới",
   "back": "Quay lại",
   "save": "Lưu",
-  "vnd": "đ"
+  "vnd": "đ",
+  "status": "Trạng thái",
+  "paid": "Đã thanh toán",
+  "unpaid": "Chưa thanh toán"
 }
