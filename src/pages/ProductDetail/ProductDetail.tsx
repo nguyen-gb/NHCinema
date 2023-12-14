@@ -167,7 +167,7 @@ export default function ProductDetail() {
           <div className='relative col-span-12'>
             <div className='relative'>
               <img
-                className='w-full object-contain'
+                className='h-[250px] w-full object-cover md:h-[300px] xl:h-[473px]'
                 src={product.thumbnail}
                 alt={i18n.language === 'vi-VN' ? product.name : product.english_name}
               />
