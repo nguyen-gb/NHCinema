@@ -85,7 +85,9 @@ export default function PaymentDetail() {
                       {data.data.data.seats.map((s) => seatArray[Number(s.seat_number) - 1]).join(', ')}
                     </strong>
                     <strong className='mb-1'>
-                      {data.data.data.combos.map((combo) => `${combo.name} (${combo.quantity})`).join(', ')}
+                      {data.data.data.combos.length > 0
+                        ? data.data.data.combos.map((combo) => `${combo.name} (${combo.quantity})`).join(', ')
+                        : '-'}
                     </strong>
                     <strong className='mb-1'>
                       {formatCurrency(data.data.data.total_amount)} {t('vnd')}
