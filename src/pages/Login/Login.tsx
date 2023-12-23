@@ -39,12 +39,7 @@ export default function Login() {
       onSuccess: (data) => {
         setIsAuthenticated(true)
         setProfile(data.data.data.user)
-        const pathname = window.location.href
-        if (pathname === '/login') {
-          navigate(path.home)
-        } else {
-          navigate(window.location.href.split('=')[1])
-        }
+        navigate(window.location.href.split('=')[1])
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {
@@ -106,7 +101,10 @@ export default function Login() {
                   {t('forgot-password')}
                 </Link>
                 <span className='ml-1 text-quaternary'>/</span>
-                <Link to={path.register} className='ml-1 text-quaternary/50 hover:text-quaternary'>
+                <Link
+                  to={`${path.register}?${window.location.href.split('?')[1]}`}
+                  className='ml-1 text-quaternary/50 hover:text-quaternary'
+                >
                   {t('register')}
                 </Link>
               </div>

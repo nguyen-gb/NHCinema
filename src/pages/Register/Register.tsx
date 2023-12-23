@@ -39,7 +39,7 @@ export default function Register() {
     const body = omit(data, ['confirm_password'])
     registerAccountMutation.mutate(body, {
       onSuccess: (res) => {
-        navigate(`/verify/${res.data.data._id}`)
+        navigate(`/verify/${res.data.data._id}?${window.location.href.split('?')[1]}`)
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirm_password'>>>(error)) {

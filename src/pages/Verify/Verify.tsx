@@ -12,7 +12,6 @@ import { ErrorResponse } from 'src/types/utils.type'
 import Input from 'src/components/Input'
 import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button'
-import path from 'src/constants/path'
 import { schema } from 'src/utils/rules'
 
 type FormData = {
@@ -51,7 +50,7 @@ export default function Verify() {
       onSuccess: (data) => {
         setIsAuthenticated(true)
         setProfile(data.data.data.user)
-        navigate(path.home)
+        navigate(window.location.href.split('=')[1])
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {

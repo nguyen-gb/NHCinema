@@ -10,7 +10,8 @@ import { useQuery } from '@tanstack/react-query'
 import DropdownCinema from 'src/components/DropdownCinema'
 import { AppContext } from 'src/contexts/app.context'
 import showtimesApi from 'src/apis/showtimes.api'
-import { formatDateToString } from 'src/utils/utils'
+import { formatDateToString, generateNameId } from 'src/utils/utils'
+import path from 'src/constants/path'
 
 export default function ShowTimes() {
   const { cinema } = useContext(AppContext)
@@ -247,7 +248,7 @@ export default function ShowTimes() {
                   <img src={product.poster} alt={product.name} className='h-full w-full object-cover' />
                 </div>
                 <div className='flex-grow bg-white p-[20px]'>
-                  <Link to=''>
+                  <Link to={`${path.home}movie/${generateNameId({ name: product.name, id: String(product._id) })}`}>
                     <h3 className='text-xl uppercase text-quaternary'>{product.name}</h3>
                   </Link>
                   <h3 className='mb-[10px] text-base uppercase text-quaternary'>{product.english_name}</h3>
