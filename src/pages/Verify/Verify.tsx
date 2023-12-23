@@ -13,6 +13,7 @@ import Input from 'src/components/Input'
 import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button'
 import { schema } from 'src/utils/rules'
+import path from 'src/constants/path'
 
 type FormData = {
   otp: string
@@ -50,7 +51,7 @@ export default function Verify() {
       onSuccess: (data) => {
         setIsAuthenticated(true)
         setProfile(data.data.data.user)
-        navigate(window.location.href.split('=')[1])
+        navigate(window.location.href.split('=')[1] ? window.location.href.split('=')[1] : path.home)
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {

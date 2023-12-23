@@ -39,7 +39,11 @@ export default function Register() {
     const body = omit(data, ['confirm_password'])
     registerAccountMutation.mutate(body, {
       onSuccess: (res) => {
-        navigate(`/verify/${res.data.data._id}?${window.location.href.split('?')[1]}`)
+        navigate(
+          `/verify/${res.data.data._id}${
+            window.location.href.split('?')[1] ? '?' + window.location.href.split('?')[1] : ''
+          }`
+        )
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirm_password'>>>(error)) {
@@ -123,11 +127,21 @@ export default function Register() {
                 {t('register')}
               </Button>
               <div className='mt-6 flex items-center justify-center'>
-                <Link to='/password/reset' className='text-quaternary/50 hover:text-quaternary'>
+                <Link
+                  to={`/password/reset${
+                    window.location.href.split('?')[1] ? '?' + window.location.href.split('?')[1] : ''
+                  }`}
+                  className='text-quaternary/50 hover:text-quaternary'
+                >
                   {t('forgot-password')}
                 </Link>
                 <span className='ml-1 text-quaternary'>/</span>
-                <Link to={path.login} className='ml-1 text-quaternary/50 hover:text-quaternary'>
+                <Link
+                  to={`${path.login}${
+                    window.location.href.split('?')[1] ? '?' + window.location.href.split('?')[1] : ''
+                  }`}
+                  className='ml-1 text-quaternary/50 hover:text-quaternary'
+                >
                   {t('login')}
                 </Link>
               </div>

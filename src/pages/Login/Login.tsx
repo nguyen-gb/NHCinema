@@ -39,7 +39,7 @@ export default function Login() {
       onSuccess: (data) => {
         setIsAuthenticated(true)
         setProfile(data.data.data.user)
-        navigate(window.location.href.split('=')[1])
+        navigate(window.location.href.split('=')[1] ? window.location.href.split('=')[1] : path.home)
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {
@@ -97,12 +97,19 @@ export default function Login() {
                 </Button>
               </div>
               <div className='mt-8 flex items-center justify-center'>
-                <Link to='/password/reset' className='text-quaternary/50 hover:text-quaternary'>
+                <Link
+                  to={`/password/reset${
+                    window.location.href.split('?')[1] ? '?' + window.location.href.split('?')[1] : ''
+                  }`}
+                  className='text-quaternary/50 hover:text-quaternary'
+                >
                   {t('forgot-password')}
                 </Link>
                 <span className='ml-1 text-quaternary'>/</span>
                 <Link
-                  to={`${path.register}?${window.location.href.split('?')[1]}`}
+                  to={`${path.register}${
+                    window.location.href.split('?')[1] ? '?' + window.location.href.split('?')[1] : ''
+                  }`}
                   className='ml-1 text-quaternary/50 hover:text-quaternary'
                 >
                   {t('register')}

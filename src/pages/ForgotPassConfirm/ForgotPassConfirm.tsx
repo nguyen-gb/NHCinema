@@ -36,7 +36,7 @@ export default function ForgotPassConfirm() {
     console.log(body)
     forgotPassMutation.mutate(body, {
       onSuccess: () => {
-        navigate(path.login)
+        navigate(window.location.href.split('=')[1] ? window.location.href.split('=')[1] : path.home)
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {
@@ -106,11 +106,21 @@ export default function ForgotPassConfirm() {
                 </Button>
               </div>
               <div className='mt-8 flex items-center justify-center'>
-                <Link to={path.login} className='text-quaternary/50 hover:text-quaternary'>
+                <Link
+                  to={`${path.login}${
+                    window.location.href.split('?')[1] ? '?' + window.location.href.split('?')[1] : ''
+                  }`}
+                  className='text-quaternary/50 hover:text-quaternary'
+                >
                   {t('login')}
                 </Link>
                 <span className='ml-1 text-quaternary'>/</span>
-                <Link to={path.register} className='ml-1 text-quaternary/50 hover:text-quaternary'>
+                <Link
+                  to={`${path.register}${
+                    window.location.href.split('?')[1] ? '?' + window.location.href.split('?')[1] : ''
+                  }`}
+                  className='ml-1 text-quaternary/50 hover:text-quaternary'
+                >
                   {t('register')}
                 </Link>
               </div>
