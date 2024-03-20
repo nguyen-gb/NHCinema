@@ -104,16 +104,6 @@ export default function useRouteElements() {
           )
         },
         {
-          path: path.paymentDetailNoLogin,
-          element: (
-            <MainLayout>
-              <Suspense>
-                <PaymentDetailNoLogin />
-              </Suspense>
-            </MainLayout>
-          )
-        },
-        {
           path: '*',
           element: (
             <Suspense>
@@ -122,6 +112,14 @@ export default function useRouteElements() {
           )
         }
       ]
+    },
+    {
+      path: path.paymentDetailNoLogin,
+      element: (
+        <Suspense>
+          <PaymentDetailNoLogin />
+        </Suspense>
+      )
     },
     {
       path: '',
