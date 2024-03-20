@@ -30,7 +30,7 @@ export default function PaymentDetail() {
     vnp_SecureHash: searchParams.get('vnp_SecureHash') ?? ''
   }
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['payment', { ...params }],
     queryFn: () => paymentApi.confirmPayment(params)
   })
@@ -95,6 +95,14 @@ export default function PaymentDetail() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+        {!isLoading && isError && (
+          <div className='flex flex-col items-center justify-center bg-white py-20'>
+            <div className='flex flex-col items-center justify-center gap-6 bg-black p-4 text-white'>
+              <span className='text-center text-xl font-bold uppercase text-red-600'>{t('unfortunate')}</span>
+              <span className='text-center text-red-600'>{t('unfortunate-des')}</span>
             </div>
           </div>
         )}

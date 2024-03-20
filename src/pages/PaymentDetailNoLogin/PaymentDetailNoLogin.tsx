@@ -30,7 +30,7 @@ export default function PaymentDetailNoLogin() {
     vnp_SecureHash: searchParams.get('vnp_SecureHash') ?? ''
   }
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['payment', { ...params }],
     queryFn: () => paymentApi.confirmPayment(params)
   })
@@ -46,7 +46,7 @@ export default function PaymentDetailNoLogin() {
       </Helmet>
       <div className='container'>
         {isLoading && (
-          <div className='flex flex-col items-center justify-center gap-6 py-[40px]'>
+          <div className='flex flex-col items-center justify-center gap-6 py-20'>
             <div className='inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]'>
               <span className='!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]'>
                 Loading...
@@ -57,7 +57,7 @@ export default function PaymentDetailNoLogin() {
           </div>
         )}
         {!isLoading && data && (
-          <div className='flex flex-col items-center justify-center bg-white p-10'>
+          <div className='flex flex-col items-center justify-center bg-white py-20'>
             <div className='flex flex-col items-center justify-center gap-6 bg-primary p-4 text-white'>
               <span className='text-center text-xl font-bold uppercase'>{t('congratulation')}</span>
               <span className='text-center'>{t('congratulation-des')}</span>
@@ -95,6 +95,14 @@ export default function PaymentDetailNoLogin() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+        {!isLoading && isError && (
+          <div className='flex flex-col items-center justify-center bg-white py-20'>
+            <div className='flex flex-col items-center justify-center gap-6 bg-black p-4 text-white'>
+              <span className='text-center text-xl font-bold uppercase text-red-600'>{t('unfortunate')}</span>
+              <span className='text-center text-red-600'>{t('unfortunate-des')}</span>
             </div>
           </div>
         )}

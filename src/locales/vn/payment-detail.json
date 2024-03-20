@@ -36,5 +36,7 @@
   "total": "Tổng cộng",
   "vnd": "vnđ",
   "congratulation": "Chúc mừng bạn!",
-  "congratulation-des": "Việc mua vé online của bạn đã thành công. NHCinema xin chân thành cảm ơn bạn đã chọn chúng tôi để phục vụ nhu cầu giải trí của bạn. Bạn vui lòng xem thông tin đặt vé dưới đây."
+  "unfortunate": "Tiếc rằng thanh toán của bạn không thành công.",
+  "congratulation-des": "Việc mua vé online của bạn đã thành công. NHCinema xin chân thành cảm ơn bạn đã chọn chúng tôi để phục vụ nhu cầu giải trí của bạn. Bạn vui lòng xem thông tin đặt vé dưới đây.",
+  "unfortunate-des": "NHCinema xin thông báo rằng giao dịch của bạn không thể hoàn tất. Vui lòng kiểm tra lại thông tin thanh toán của bạn và thử lại sau. Đơn vé của bạn sẽ bị huỷ sau 5 phút nếu không được thanh toán. Xin lỗi vì sự bất tiện này và cảm ơn bạn đã quan tâm đến dịch vụ của chúng tôi."
 }
