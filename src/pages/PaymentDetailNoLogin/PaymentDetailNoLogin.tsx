@@ -64,7 +64,6 @@ export default function PaymentDetailNoLogin() {
               <div className='flex w-full items-center justify-center bg-white p-6 text-quaternary'>
                 <div className='grid grid-cols-2 gap-10'>
                   <div className='col-span-1 text-left'>
-                    <p className='mb-1'>{t('booking_id')}:</p>
                     <p className='mb-1'>{t('orderer')}:</p>
                     <p className='mb-1'>{t('cinema')}:</p>
                     <p className='mb-1'>{t('room')}:</p>
@@ -75,7 +74,6 @@ export default function PaymentDetailNoLogin() {
                     <p className='mb-1'>{t('total')}:</p>
                   </div>
                   <div className='col-span-1 flex flex-col text-left'>
-                    <strong className='mb-1'>{data.data.data._id}</strong>
                     <strong className='mb-1'>{data.data.data.user_name}</strong>
                     <strong className='mb-1'>{data.data.data.theater_name}</strong>
                     <strong className='mb-1'>{data.data.data.room_number}</strong>
