@@ -32,7 +32,6 @@ export default function ForgotPass() {
     mutationFn: (body: FormData) => authApi.forgotPass(body)
   })
   const onSubmit = handleSubmit((body) => {
-    console.log(body)
     forgotPassMutation.mutate(body, {
       onSuccess: (data) => {
         navigate(

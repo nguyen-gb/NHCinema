@@ -81,7 +81,6 @@ const ItemCombo = ({ item, setCombo }: PropsItemCombo) => {
   }
   return (
     <div className='flex w-full items-center px-4 py-2'>
-      {/* <img src={item.image} alt={item.name} className='h-8 w-8 rounded-full object-cover mr-3' /> */}
       <div className='flex-1'>
         <div className='text-base font-medium text-white md:max-w-[200px]'>{item.description}</div>
         <div className='text-base text-primary'>{`${formatCurrency(item.price)} ${t('vnd')}`}</div>
