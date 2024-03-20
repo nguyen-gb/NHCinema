@@ -35,9 +35,9 @@ export default function PaymentDetailNoLogin() {
     queryFn: () => paymentApi.confirmPayment(params)
   })
 
-  // if (data && !data.data.data) {
-  //   navigate(path.home)
-  // }
+  if (data && !data.data.data) {
+    navigate(path.home)
+  }
   return (
     <div className='bg-white'>
       <Helmet>
