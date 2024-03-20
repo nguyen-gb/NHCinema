@@ -18,7 +18,8 @@ const path = {
   movieDetail: '/movie/:movieId',
   bookTickets: '/book-tickets/:showtimeId',
   payment: '/payment/:bookingId',
-  paymentDetail: '/payment-detail'
+  paymentDetail: '/payment-detail',
+  paymentDetailNoLogin: '/payment-detail-no-login'
 } as const
 
 export default path
