@@ -3,9 +3,10 @@
   "book-tickets-des": "Nơi đặt vé xem phim tại rạp NHCinema",
   "screening-room-number": "Phòng chiếu số",
   "booked": "Đã đặt",
-  "chair-of-your-choice": "Ghế bạn chọn",
-  "regular-chair": "Ghế thường",
-  "double-chair": "Ghế đôi",
+  "reserved-seat.": "Ghế đang giữ",
+  "your-chosen-seat": "Ghế bạn chọn",
+  "regular-seat": "Ghế thường",
+  "double-seat": "Ghế đôi",
   "selected-seats": "Ghế đã chọn",
   "selected-combo": "Combo đã chọn",
   "total-amount": "Tổng tiền",
@@ -18,5 +19,10 @@
   "note": "Lưu ý",
   "note-des": "Không mua vé cho trẻ em dưới 13 tuổi đối với các suất chiếu phim kết thúc sau 22h00 và không mua vé cho trẻ em dưới 16 tuổi đối với các suất chiếu phim kết thúc sau 23h00.",
   "showtime": "Giờ chiếu",
-  "seat-selection-time": "Thời gian chọn ghế"
+  "seat-selection-time": "Thời gian chọn ghế",
+  "empty-left-seat": "Vẫn còn ghế trống bên trái không thể mua ghế vừa chọn.",
+  "empty-right-seat": "Vẫn còn ghế trống bên phải không thể mua ghế vừa chọn.",
+  "empty-left-seat-cancel": "Sẽ tạo ghế trống ở bên trái. Quý khách nên hủy ghế lần lượt theo thứ tự.",
+  "empty-right-seat-cancel": "Sẽ tạo ghế trống ở bên phải. Quý khách nên hủy ghế lần lượt theo thứ tự.",
+  "empty-between-seat-cancel": "Sẽ tạo ghế trống ở giữa hai ghế. Quý khách nên hủy ghế lần lượt theo thứ tự."
 }

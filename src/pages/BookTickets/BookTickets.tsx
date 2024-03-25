@@ -121,9 +121,72 @@ const BookTickets: React.FC = () => {
     const seatPrice = calculateTicketPrice(seat.seat_type)
 
     if (seatIndex === -1) {
+      const number = parseInt(seatArray[seat.seat_number - 1].substring(1))
+      if (number === 2 && seat.seat_type === SeatType.single_chair) {
+        const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number - 1)
+        if (seatIndex === -1) {
+          toast.warn(t('empty-left-seat'), {
+            position: 'top-center'
+          })
+          return
+        }
+      } else if (number === 8 && seat.seat_type === SeatType.single_chair) {
+        const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + 1)
+        if (seatIndex === -1) {
+          toast.warn(t('empty-right-seat'), {
+            position: 'top-center'
+          })
+          return
+        }
+      }
+      const leftSeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number - 1)
+      const left2SeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number - 2)
+      const rightSeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + 1)
+      const right2SeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + 2)
+      if (left2SeatIndex !== -1 && leftSeatIndex === -1) {
+        toast.warn(t('empty-left-seat'), {
+          position: 'top-center'
+        })
+        return
+      }
+      if (right2SeatIndex !== -1 && rightSeatIndex === -1) {
+        toast.warn(t('empty-right-seat'), {
+          position: 'top-center'
+        })
+        return
+      }
+
       setSelectedSeats([...selectedSeats, seat])
       setTotal((pre) => pre + seatPrice)
     } else {
+      const number = parseInt(seatArray[seat.seat_number - 1].substring(1))
+      if (number === 1 && seat.seat_type === SeatType.single_chair) {
+        const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + 1)
+        if (seatIndex !== -1) {
+          toast.warn(t('empty-left-seat-cancel'), {
+            position: 'top-center'
+          })
+          return
+        }
+      } else if (number === 9 && seat.seat_type === SeatType.single_chair) {
+        const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number - 1)
+        if (seatIndex !== -1) {
+          toast.warn(t('empty-right-seat-cancel'), {
+            position: 'top-center'
+          })
+          return
+        }
+      }
+
+      const leftSeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number - 1)
+      const rightSeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + 1)
+      if (leftSeatIndex !== -1 && rightSeatIndex !== -1) {
+        toast.warn(t('empty-between-seat-cancel'), {
+          position: 'top-center'
+        })
+        return
+      }
+
       setSelectedSeats(selectedSeats.filter((s) => s.seat_number !== seat.seat_number))
       setTotal((pre) => pre - seatPrice)
     }
@@ -254,15 +317,15 @@ const BookTickets: React.FC = () => {
                   </div>
                   <div className='flex items-center gap-2'>
                     <div className='flex aspect-square w-4 items-center justify-center rounded-[4px] bg-primary sm:w-6 xl:h-8 xl:w-8 xl:rounded-[8px]'></div>
-                    {t('chair-of-your-choice')}
+                    {t('your-chosen-seat')}
                   </div>
                   <div className='flex items-center gap-2'>
                     <div className='flex aspect-square w-4 items-center justify-center rounded-[4px] bg-[#252A31] sm:w-6 xl:h-8 xl:w-8 xl:rounded-[8px]'></div>
-                    {t('regular-chair')}
+                    {t('regular-seat')}
                   </div>
                   <div className='flex items-center gap-2'>
                     <div className='flex aspect-square w-4 items-center justify-center rounded-[4px] bg-tertiary/80 sm:w-6 xl:h-8 xl:w-8 xl:rounded-[8px]'></div>
-                    {t('double-chair')}
+                    {t('double-seat')}
                   </div>
                 </div>
               </div>

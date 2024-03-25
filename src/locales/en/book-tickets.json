@@ -3,9 +3,10 @@
   "book-tickets-des": "Place to book movie tickets at NHCinema",
   "screening-room-number": "Screening Room Number",
   "booked": "Booked",
-  "chair-of-your-choice": "Chair of Your Choice",
-  "regular-chair": "Regular Chair",
-  "double-chair": "Double Chair",
+  "reserved-seat.": "Reserved seat",
+  "your-chosen-seat": "Your chosen seat",
+  "regular-seat": "Regular seat",
+  "double-seat": "Double seat",
   "selected-seats": "Selected Seats",
   "selected-combo": "Selected Combo",
   "total-amount": "Total Amount",
@@ -18,5 +19,10 @@
   "note": "Note",
   "note-des": "Do not buy tickets for children under 13 years old for movie screenings that end after 10:00 p.m. and do not buy tickets for children under 16 years old for movie screenings that end after 11:00 p.m.",
   "showtime": "Showtime",
-  "seat-selection-time": "Seat selection time"
+  "seat-selection-time": "Seat selection time",
+  "empty-left-seat": "The empty seat on the left still cannot be purchased after choosing the seat.",
+  "empty-right-seat": "The empty seat on the right still cannot be purchased after choosing the seat.",
+  "empty-left-seat-cancel": "Will create an empty seat on the left side. You should cancel the seats one by one in order.",
+  "empty-right-seat-cancel": "Will create an empty seat on the right side. You should cancel the seats one by one in order.",
+  "empty-between-seat-cancel": "Will create an empty seat between two seats. You should cancel the seats one by one in order."
 }
