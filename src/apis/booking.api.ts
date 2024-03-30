@@ -12,7 +12,7 @@ const bookingApi = {
     return http.get<SuccessResponse<BookingDetail>>(`${URL}/${id}`)
   },
   usePoint(body: UsePoint) {
-    return http.post<SuccessResponse<BookingDetail>>(`${URL}/use-point`, body)
+    return http.post<SuccessResponse<null>>(`${URL}/use-point`, body)
   }
 }
 

@@ -12,10 +12,12 @@ import { SeatExchangePoint, SeatType } from 'src/types/seat.type'
 import Button from 'src/components/Button'
 import path from 'src/constants/path'
 import { Combo } from 'src/types/combo.type'
+import classNames from 'classnames'
 
 export default function Payment() {
   const { t } = useTranslation('payment')
   const { bookingId } = useParams()
+  const [totalAmount, setTotalAmount] = useState(0)
   const [totalPointRegularSeat, setTotalPointRegularSeat] = useState(0)
   const [totalPointDoubleSeat, setTotalPointDoubleSeat] = useState(0)
   const [totalPointCombo, setTotalPointCombo] = useState(0)
@@ -83,6 +85,7 @@ export default function Payment() {
       setRegularSeatExchange((pre) => [...pre, { seat_number: String(seat_number) }])
       setTotalPointRegularSeat((pre) => pre + SeatExchangePoint.single_seat)
       setTotalAmountRegularSeat((pre) => pre - (regularSeat[regularSeatExchange.length].price as number))
+      setTotalAmount((pre) => pre - (regularSeat[regularSeatExchange.length].price as number))
     }
   }
 
@@ -94,6 +97,7 @@ export default function Payment() {
       })
       setTotalPointRegularSeat((pre) => pre - SeatExchangePoint.single_seat)
       setTotalAmountRegularSeat((pre) => pre + (regularSeat[regularSeatExchange.length - 1].price as number))
+      setTotalAmount((pre) => pre + (regularSeat[regularSeatExchange.length - 1].price as number))
     }
   }
 
@@ -106,6 +110,7 @@ export default function Payment() {
       setDoubleSeatExchange((pre) => [...pre, { seat_number: String(seat_number) }])
       setTotalPointDoubleSeat((pre) => pre + SeatExchangePoint.double_seat)
       setTotalAmountDoubleSeat((pre) => pre - (doubleSeat[doubleSeatExchange.length].price as number))
+      setTotalAmount((pre) => pre - (doubleSeat[doubleSeatExchange.length].price as number))
     }
   }
 
@@ -117,6 +122,7 @@ export default function Payment() {
       })
       setTotalPointDoubleSeat((pre) => pre - SeatExchangePoint.double_seat)
       setTotalAmountDoubleSeat((pre) => pre + (doubleSeat[doubleSeatExchange.length - 1].price as number))
+      setTotalAmount((pre) => pre + (doubleSeat[doubleSeatExchange.length - 1].price as number))
     }
   }
 
@@ -149,6 +155,7 @@ export default function Payment() {
         }
       })
       setTotalPointCombo((pre) => pre + item.exchange_point)
+      setTotalAmount((pre) => pre - item.price)
     }
   }
 
@@ -171,6 +178,7 @@ export default function Payment() {
         }
       })
       setTotalPointCombo((pre) => pre - item.exchange_point)
+      setTotalAmount((pre) => pre + item.price)
     }
   }
 
@@ -214,8 +222,15 @@ export default function Payment() {
 
   useEffect(() => {
     setTotalAmountRegularSeat(regularSeat.reduce((sum, seat) => sum + (seat.price as number), 0))
+  }, [regularSeat])
+
+  useEffect(() => {
     setTotalAmountDoubleSeat(doubleSeat.reduce((sum, seat) => sum + (seat.price as number), 0))
-  }, [regularSeat, doubleSeat])
+  }, [doubleSeat])
+
+  useEffect(() => {
+    setTotalAmount(bookingData?.total_amount ?? 0)
+  }, [bookingData])
 
   return (
     <div className='bg-secondary'>
@@ -280,6 +295,9 @@ export default function Payment() {
                             {t('total-amount')}
                           </th>
                           <th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-white'>
+                            {t('exchange-point')}
+                          </th>
+                          <th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-white'>
                             {t('quantity-converted-by-point')}
                           </th>
                           <th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-white'>
@@ -301,11 +319,14 @@ export default function Payment() {
                               {formatCurrency(totalAmountRegularSeat)}
                               {t('vnd')}
                             </td>
+                            <td className='px-3 py-3.5 text-sm'>{SeatExchangePoint.single_seat}</td>
                             <td className='px-3 py-3.5 text-sm'>
                               <div className='flex space-x-4'>
                                 <button
                                   type='button'
-                                  className='rounded-sm bg-primary text-white'
+                                  className={classNames('rounded-sm bg-primary text-white', {
+                                    'cursor-not-allowed': regularSeatExchange.length === 0
+                                  })}
                                   onClick={handleRemoveRegularSeatExchange}
                                 >
                                   <svg
@@ -322,7 +343,15 @@ export default function Payment() {
                                 <span className='font-bold text-white'>{regularSeatExchange.length}</span>
                                 <button
                                   type='button'
-                                  className='rounded-sm bg-primary text-white'
+                                  className={classNames('rounded-sm bg-primary text-white', {
+                                    'cursor-not-allowed':
+                                      userPoint <
+                                        totalPointRegularSeat +
+                                          totalPointDoubleSeat +
+                                          totalPointCombo +
+                                          SeatExchangePoint.single_seat ||
+                                      regularSeatExchange.length === regularSeat.length
+                                  })}
                                   onClick={handleAddRegularSeatExchange}
                                 >
                                   <svg
@@ -356,11 +385,14 @@ export default function Payment() {
                               {formatCurrency(totalAmountDoubleSeat)}
                               {t('vnd')}
                             </td>
+                            <td className='px-3 py-3.5 text-sm'>{SeatExchangePoint.double_seat}</td>
                             <td className='px-3 py-3.5 text-sm'>
                               <div className='flex space-x-4'>
                                 <button
                                   type='button'
-                                  className='rounded-sm bg-primary text-white'
+                                  className={classNames('rounded-sm bg-primary text-white', {
+                                    'cursor-not-allowed': doubleSeatExchange.length === 0
+                                  })}
                                   onClick={handleRemoveDoubleSeatExchange}
                                 >
                                   <svg
@@ -377,7 +409,15 @@ export default function Payment() {
                                 <span className='font-bold text-white'>{doubleSeatExchange.length}</span>
                                 <button
                                   type='button'
-                                  className='rounded-sm bg-primary text-white'
+                                  className={classNames('rounded-sm bg-primary text-white', {
+                                    'cursor-not-allowed':
+                                      userPoint <
+                                        totalPointRegularSeat +
+                                          totalPointDoubleSeat +
+                                          totalPointCombo +
+                                          SeatExchangePoint.double_seat ||
+                                      doubleSeatExchange.length === doubleSeat.length
+                                  })}
                                   onClick={handleAddDoubleSeatExchange}
                                 >
                                   <svg
@@ -412,11 +452,14 @@ export default function Payment() {
                                   )}
                                   {t('vnd')}
                                 </td>
+                                <td className='px-3 py-3.5 text-sm'>{combo.exchange_point}</td>
                                 <td className='px-3 py-3.5 text-sm'>
                                   <div className='flex space-x-4'>
                                     <button
                                       type='button'
-                                      className='rounded-sm bg-primary text-white'
+                                      className={classNames('rounded-sm bg-primary text-white', {
+                                        'cursor-not-allowed': (quantityCombosExchange[combo._id] ?? 0) === 0
+                                      })}
                                       onClick={() => handleRemoveCombosExchange(combo)}
                                     >
                                       <svg
@@ -435,7 +478,15 @@ export default function Payment() {
                                     </span>
                                     <button
                                       type='button'
-                                      className='rounded-sm bg-primary text-white'
+                                      className={classNames('rounded-sm bg-primary text-white', {
+                                        'cursor-not-allowed':
+                                          userPoint <
+                                            totalPointRegularSeat +
+                                              totalPointDoubleSeat +
+                                              totalPointCombo +
+                                              combo.exchange_point ||
+                                          (pointCombosExchange[combo._id] ?? 0) === combo.quantity
+                                      })}
                                       onClick={() => handleAddCombosExchange(combo)}
                                     >
                                       <svg
@@ -545,7 +596,7 @@ export default function Payment() {
                   <div className='flex items-center justify-between'>
                     <p>{t('payment')}</p>
                     <p className='font-bold'>
-                      {formatCurrency(bookingData?.total_amount ?? 0)}
+                      {formatCurrency(totalAmount)}
                       {t('vnd')}
                     </p>
                   </div>
@@ -556,7 +607,7 @@ export default function Payment() {
                   <div className='flex items-center justify-between'>
                     <p>{t('total')}</p>
                     <p className='font-bold'>
-                      {formatCurrency(bookingData?.total_amount ?? 0)}
+                      {formatCurrency(totalAmount)}
                       {t('vnd')}
                     </p>
                   </div>

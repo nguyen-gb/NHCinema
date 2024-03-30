@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 import { useContext } from 'react'
@@ -6,6 +6,7 @@ import { useContext } from 'react'
 import userApi from 'src/apis/user.api'
 import { AppContext } from 'src/contexts/app.context'
 import { formatCurrency, formatDateToStringWithTime } from 'src/utils/utils'
+import paymentApi from 'src/apis/payment.api'
 
 export default function HistoryPurchase() {
   const { t } = useTranslation('user')
@@ -16,7 +17,20 @@ export default function HistoryPurchase() {
     queryFn: () => userApi.getHistoryBooking(profile?._id as string)
   })
 
+  const createPaymentUrlMutation = useMutation({
+    mutationFn: paymentApi.createPaymentUrl,
+    onSuccess: (res) => {
+      window.location.href = res.data.data
+    }
+  })
+
   const hisBookings = hisBookingsData?.data.data
+
+  const handlePayment = (bookingId: string) => {
+    createPaymentUrlMutation.mutate({
+      booking_id: bookingId
+    })
+  }
 
   return (
     <div>
@@ -90,7 +104,10 @@ export default function HistoryPurchase() {
                             scope='col'
                             className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
                           >
-                            {Number(hisBooking.payment_status) === 1 ? t('paid') : t('unpaid')}
+                            <p>{Number(hisBooking.payment_status) === 1 ? t('paid') : t('unpaid')}</p>
+                            <button onClick={() => handlePayment(hisBooking._id)} className='cursor-pointer'>
+                              {Number(hisBooking.payment_status) === 0 && `(${t('continue-payment')})`}
+                            </button>
                           </th>
                         </tr>
                       )

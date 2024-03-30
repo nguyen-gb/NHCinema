@@ -36,5 +36,6 @@
   "vnd": "VND",
   "status": "Status",
   "paid": "Paid",
-  "unpaid": "Unpaid"
+  "unpaid": "Unpaid",
+  "continue-payment": "Continue payment"
 }

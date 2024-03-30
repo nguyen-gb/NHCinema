@@ -2,7 +2,7 @@ export interface Seat {
   _id?: string
   seat_number: string | number
   seat_type: number | string
-  status?: number
+  status?: number | string
   price?: number
 }
 

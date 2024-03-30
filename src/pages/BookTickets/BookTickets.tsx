@@ -20,6 +20,7 @@ import Button from 'src/components/Button'
 import { calculateTicketPrice, formatCurrency } from 'src/utils/utils'
 
 interface SeatProps {
+  isBooked: boolean
   isReserved: boolean
   isSelected: boolean
   onSelect: () => void
@@ -27,11 +28,20 @@ interface SeatProps {
   SeatNumber: number
 }
 
-const Seat: React.FC<SeatProps> = ({ isReserved, isSelected, onSelect, isDoubleSeat = false, SeatNumber }) => {
+const Seat: React.FC<SeatProps> = ({
+  isBooked,
+  isReserved,
+  isSelected,
+  onSelect,
+  isDoubleSeat = false,
+  SeatNumber
+}) => {
   const seatClasses = `${
     isDoubleSeat ? 'w-24 mx-4' : 'w-[2rem] sm:w-[2.5rem]'
   } h-[2rem] sm:h-[2.5rem] m-1 rounded-md text-white ${
-    isReserved
+    isBooked
+      ? 'cursor-not-allowed bg-[#252a31]'
+      : isReserved
       ? 'bg-red-500 cursor-not-allowed'
       : isSelected
       ? 'bg-primary'
@@ -42,12 +52,12 @@ const Seat: React.FC<SeatProps> = ({ isReserved, isSelected, onSelect, isDoubleS
     <button
       className={seatClasses}
       onClick={() => {
-        if (!isReserved) {
+        if (!isReserved && !isBooked) {
           onSelect()
         }
       }}
     >
-      {seatArray[SeatNumber - 1]}
+      {isBooked ? 'X' : seatArray[SeatNumber - 1]}
     </button>
   )
 }
@@ -107,6 +117,7 @@ const BookTickets: React.FC = () => {
     data?.data.data.seat_array.map((seat) => {
       return {
         seat_number: Number(seat.seat_number),
+        status: seat.status,
         seat_type: seat.seat_type
       }
     }) ?? []
@@ -296,7 +307,8 @@ const BookTickets: React.FC = () => {
                       return (
                         <Seat
                           key={colIndex}
-                          isReserved={reservedSeats.some((s) => s.seat_number === SeatNumber)}
+                          isBooked={reservedSeats.some((s) => s.seat_number === SeatNumber && s.status === 'COMPLETE')}
+                          isReserved={reservedSeats.some((s) => s.seat_number === SeatNumber && s.status === 'PENDING')}
                           isSelected={selectedSeats.some((s) => s.seat_number === SeatNumber)}
                           onSelect={() => toggleSeat(seat)}
                           SeatNumber={SeatNumber}
@@ -315,7 +327,8 @@ const BookTickets: React.FC = () => {
                     return (
                       <Seat
                         key={index}
-                        isReserved={reservedSeats.some((s) => s.seat_number === SeatNumber)}
+                        isBooked={reservedSeats.some((s) => s.seat_number === SeatNumber && s.status === 'COMPLETE')}
+                        isReserved={reservedSeats.some((s) => s.seat_number === SeatNumber && s.status === 'PENDING')}
                         isSelected={selectedSeats.some((s) => s.seat_number === SeatNumber)}
                         onSelect={() => toggleSeat(seat)}
                         isDoubleSeat={true}
@@ -326,8 +339,14 @@ const BookTickets: React.FC = () => {
                 </div>
                 <div className='my-8 flex flex-wrap items-center justify-center gap-4 text-sm text-white md:text-base xl:gap-8'>
                   <div className='flex items-center gap-2'>
-                    <div className='flex aspect-square w-4 items-center justify-center rounded-[4px] bg-red-500 sm:w-6 xl:h-8 xl:w-8 xl:rounded-[8px]'></div>
+                    <div className='flex aspect-square w-4 items-center justify-center rounded-[4px] bg-[#252A31] sm:w-6 xl:h-8 xl:w-8 xl:rounded-[8px]'>
+                      X
+                    </div>
                     {t('booked')}
+                  </div>
+                  <div className='flex items-center gap-2'>
+                    <div className='flex aspect-square w-4 items-center justify-center rounded-[4px] bg-red-500 sm:w-6 xl:h-8 xl:w-8 xl:rounded-[8px]'></div>
+                    {t('reserved-seat')}
                   </div>
                   <div className='flex items-center gap-2'>
                     <div className='flex aspect-square w-4 items-center justify-center rounded-[4px] bg-primary sm:w-6 xl:h-8 xl:w-8 xl:rounded-[8px]'></div>
