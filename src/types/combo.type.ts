@@ -5,6 +5,7 @@ export interface Combo {
   price: number
   type: ComboType
   quantity: number
+  exchange_point: number
 }
 
 export enum ComboType {

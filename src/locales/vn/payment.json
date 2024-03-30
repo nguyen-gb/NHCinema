@@ -5,7 +5,9 @@
   "movie": "Phim",
   "show-date-and-time": "Ngày giờ chiếu",
   "format": "Định dạng",
-  "chair": "Ghế",
+  "seat": "Ghế",
+  "regular-seat": "Ghế thường",
+  "double-seat": "Ghế đôi",
   "cinema-room": "Phòng chiếu",
   "billing-infor": "Thông tin thanh toán",
   "category": "Danh mục",
@@ -19,5 +21,7 @@
   "total": "Tổng",
   "back": "Quay lại",
   "note": "Ghi chú",
-  "note-des": "Không mua vé cho trẻ em dưới 13 tuổi đối với các suất chiếu phim kết thúc sau 22h00 và không mua vé cho trẻ em dưới 16 tuổi đối với các suất chiếu phim kết thúc sau 23h00."
+  "note-des": "Không mua vé cho trẻ em dưới 13 tuổi đối với các suất chiếu phim kết thúc sau 22h00 và không mua vé cho trẻ em dưới 16 tuổi đối với các suất chiếu phim kết thúc sau 23h00.",
+  "quantity-converted-by-point": "Số lượng (Quy đổi bằng điểm)",
+  "total-point": "Tổng điểm"
 }

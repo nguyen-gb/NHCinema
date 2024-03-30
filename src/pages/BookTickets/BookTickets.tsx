@@ -117,24 +117,33 @@ const BookTickets: React.FC = () => {
       return
     }
 
+    if (selectedSeats.length >= 10) {
+      toast.warn(t('empty-left-seat'), {
+        position: 'top-center',
+        autoClose: 2000
+      })
+      return
+    }
     const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number)
     const seatPrice = calculateTicketPrice(seat.seat_type)
 
     if (seatIndex === -1) {
       const number = parseInt(seatArray[seat.seat_number - 1].substring(1))
-      if (number === 2 && seat.seat_type === SeatType.single_chair) {
+      if (number === 2 && seat.seat_type === SeatType.single_seat) {
         const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number - 1)
         if (seatIndex === -1) {
           toast.warn(t('empty-left-seat'), {
-            position: 'top-center'
+            position: 'top-center',
+            autoClose: 2000
           })
           return
         }
-      } else if (number === 8 && seat.seat_type === SeatType.single_chair) {
+      } else if (number === 8 && seat.seat_type === SeatType.single_seat) {
         const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + 1)
         if (seatIndex === -1) {
           toast.warn(t('empty-right-seat'), {
-            position: 'top-center'
+            position: 'top-center',
+            autoClose: 2000
           })
           return
         }
@@ -145,13 +154,15 @@ const BookTickets: React.FC = () => {
       const right2SeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + 2)
       if (left2SeatIndex !== -1 && leftSeatIndex === -1) {
         toast.warn(t('empty-left-seat'), {
-          position: 'top-center'
+          position: 'top-center',
+          autoClose: 2000
         })
         return
       }
       if (right2SeatIndex !== -1 && rightSeatIndex === -1) {
         toast.warn(t('empty-right-seat'), {
-          position: 'top-center'
+          position: 'top-center',
+          autoClose: 2000
         })
         return
       }
@@ -160,19 +171,21 @@ const BookTickets: React.FC = () => {
       setTotal((pre) => pre + seatPrice)
     } else {
       const number = parseInt(seatArray[seat.seat_number - 1].substring(1))
-      if (number === 1 && seat.seat_type === SeatType.single_chair) {
+      if (number === 1 && seat.seat_type === SeatType.single_seat) {
         const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + 1)
         if (seatIndex !== -1) {
           toast.warn(t('empty-left-seat-cancel'), {
-            position: 'top-center'
+            position: 'top-center',
+            autoClose: 2000
           })
           return
         }
-      } else if (number === 9 && seat.seat_type === SeatType.single_chair) {
+      } else if (number === 9 && seat.seat_type === SeatType.single_seat) {
         const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number - 1)
         if (seatIndex !== -1) {
           toast.warn(t('empty-right-seat-cancel'), {
-            position: 'top-center'
+            position: 'top-center',
+            autoClose: 2000
           })
           return
         }
@@ -182,7 +195,8 @@ const BookTickets: React.FC = () => {
       const rightSeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + 1)
       if (leftSeatIndex !== -1 && rightSeatIndex !== -1) {
         toast.warn(t('empty-between-seat-cancel'), {
-          position: 'top-center'
+          position: 'top-center',
+          autoClose: 2000
         })
         return
       }
@@ -277,7 +291,7 @@ const BookTickets: React.FC = () => {
                       const SeatNumber = rowIndex * cols + colIndex + 1
                       const seat = {
                         seat_number: SeatNumber,
-                        seat_type: SeatType.single_chair
+                        seat_type: SeatType.single_seat
                       }
                       return (
                         <Seat
@@ -296,7 +310,7 @@ const BookTickets: React.FC = () => {
                     const SeatNumber = totalSeats + index + 1
                     const seat = {
                       seat_number: SeatNumber,
-                      seat_type: SeatType.double_chair
+                      seat_type: SeatType.double_seat
                     }
                     return (
                       <Seat

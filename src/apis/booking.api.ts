@@ -1,4 +1,4 @@
-import { Booking, BookingDetail } from './../types/booking.type'
+import { Booking, BookingDetail, UsePoint } from './../types/booking.type'
 import { SuccessResponse } from 'src/types/utils.type'
 import http from 'src/utils/http'
 
@@ -10,6 +10,9 @@ const bookingApi = {
   },
   getBookingDetail(id: string) {
     return http.get<SuccessResponse<BookingDetail>>(`${URL}/${id}`)
+  },
+  usePoint(body: UsePoint) {
+    return http.post<SuccessResponse<BookingDetail>>(`${URL}/use-point`, body)
   }
 }
 

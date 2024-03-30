@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -7,20 +8,57 @@ import bookingApi from 'src/apis/booking.api'
 import { formatCurrency } from 'src/utils/utils'
 import { seatArray } from 'src/constants/product'
 import paymentApi from 'src/apis/payment.api'
-import { Seat } from 'src/types/seat.type'
+import { SeatExchangePoint, SeatType } from 'src/types/seat.type'
 import Button from 'src/components/Button'
+import path from 'src/constants/path'
+import { Combo } from 'src/types/combo.type'
 
 export default function Payment() {
   const { t } = useTranslation('payment')
   const { bookingId } = useParams()
+  const [totalPointRegularSeat, setTotalPointRegularSeat] = useState(0)
+  const [totalPointDoubleSeat, setTotalPointDoubleSeat] = useState(0)
+  const [totalPointCombo, setTotalPointCombo] = useState(0)
+  const [totalAmountRegularSeat, setTotalAmountRegularSeat] = useState(0)
+  const [totalAmountDoubleSeat, setTotalAmountDoubleSeat] = useState(0)
+
+  const [regularSeatExchange, setRegularSeatExchange] = useState<
+    {
+      seat_number: string
+    }[]
+  >([])
+  const [doubleSeatExchange, setDoubleSeatExchange] = useState<
+    {
+      seat_number: string
+    }[]
+  >([])
+
+  const [combosExchange, setCombosExchange] = useState<Combo[]>([])
+  const [quantityCombosExchange, setQuantityCombosExchange] = useState<{ [combo_id: string]: number }>({})
+  const [pointCombosExchange, setPointCombosExchange] = useState<{ [combo_id: string]: number }>({})
 
   const navigate = useNavigate()
 
   const { data } = useQuery({
     queryKey: ['booking', bookingId],
-    queryFn: () => bookingApi.getBookingDetail(bookingId as string)
+    queryFn: () => bookingApi.getBookingDetail(bookingId as string),
+    onError: () => {
+      navigate(path.home)
+    }
   })
+
   const bookingData = data?.data.data
+  const userPoint = bookingData?.exchange_point ?? 0
+
+  const regularSeat = useMemo(() => {
+    return bookingData?.seats.filter((seat) => seat.seat_type === SeatType.single_seat) ?? []
+  }, [bookingData])
+
+  const doubleSeat = useMemo(() => {
+    return bookingData?.seats.filter((seat) => seat.seat_type === SeatType.double_seat) ?? []
+  }, [bookingData])
+
+  const combos = bookingData?.combos ?? []
 
   const createPaymentUrlMutation = useMutation({
     mutationFn: paymentApi.createPaymentUrl,
@@ -29,11 +67,155 @@ export default function Payment() {
     }
   })
 
+  const usePointMutation = useMutation({
+    mutationFn: bookingApi.usePoint,
+    onSuccess: () => {
+      handlePayment()
+    }
+  })
+
+  const handleAddRegularSeatExchange = () => {
+    if (
+      userPoint >= totalPointRegularSeat + totalPointDoubleSeat + totalPointCombo + SeatExchangePoint.single_seat &&
+      regularSeatExchange.length < regularSeat.length
+    ) {
+      const seat_number = regularSeat[regularSeatExchange.length].seat_number
+      setRegularSeatExchange((pre) => [...pre, { seat_number: String(seat_number) }])
+      setTotalPointRegularSeat((pre) => pre + SeatExchangePoint.single_seat)
+      setTotalAmountRegularSeat((pre) => pre - (regularSeat[regularSeatExchange.length].price as number))
+    }
+  }
+
+  const handleRemoveRegularSeatExchange = () => {
+    if (regularSeatExchange.length > 0) {
+      const seat_number = regularSeat[regularSeatExchange.length - 1].seat_number
+      setRegularSeatExchange((pre) => {
+        return pre.filter((seat) => seat.seat_number !== seat_number)
+      })
+      setTotalPointRegularSeat((pre) => pre - SeatExchangePoint.single_seat)
+      setTotalAmountRegularSeat((pre) => pre + (regularSeat[regularSeatExchange.length - 1].price as number))
+    }
+  }
+
+  const handleAddDoubleSeatExchange = () => {
+    if (
+      userPoint >= totalPointRegularSeat + totalPointDoubleSeat + totalPointCombo + SeatExchangePoint.double_seat &&
+      doubleSeatExchange.length < doubleSeat.length
+    ) {
+      const seat_number = doubleSeat[doubleSeatExchange.length].seat_number
+      setDoubleSeatExchange((pre) => [...pre, { seat_number: String(seat_number) }])
+      setTotalPointDoubleSeat((pre) => pre + SeatExchangePoint.double_seat)
+      setTotalAmountDoubleSeat((pre) => pre - (doubleSeat[doubleSeatExchange.length].price as number))
+    }
+  }
+
+  const handleRemoveDoubleSeatExchange = () => {
+    if (doubleSeatExchange.length > 0) {
+      const seat_number = doubleSeat[doubleSeatExchange.length - 1].seat_number
+      setDoubleSeatExchange((pre) => {
+        return pre.filter((seat) => seat.seat_number !== seat_number)
+      })
+      setTotalPointDoubleSeat((pre) => pre - SeatExchangePoint.double_seat)
+      setTotalAmountDoubleSeat((pre) => pre + (doubleSeat[doubleSeatExchange.length - 1].price as number))
+    }
+  }
+
+  const handleAddCombosExchange = (item: Combo) => {
+    if (
+      userPoint >= totalPointRegularSeat + totalPointDoubleSeat + totalPointCombo + item.exchange_point &&
+      (combosExchange.filter((c) => c._id === item._id)[0]?.quantity ?? 0) <
+        combos.filter((c) => c._id === item._id)[0].quantity
+    ) {
+      setCombosExchange((pre) => {
+        const existsInArray = pre.some((combo) => combo._id === item._id)
+        if (existsInArray) {
+          return pre.map((combo) => {
+            if (item._id === combo._id) {
+              return {
+                ...combo,
+                quantity: combo.quantity + 1
+              }
+            }
+            return combo
+          })
+        } else {
+          return [
+            ...pre,
+            {
+              ...item,
+              quantity: 1
+            }
+          ]
+        }
+      })
+      setTotalPointCombo((pre) => pre + item.exchange_point)
+    }
+  }
+
+  const handleRemoveCombosExchange = (item: Combo) => {
+    if (combosExchange.filter((c) => c._id === item._id).length > 0) {
+      setCombosExchange((pre) => {
+        const existsInArray = pre.some((combo) => combo._id === item._id && combo.quantity > 1)
+        if (existsInArray) {
+          return pre.map((combo) => {
+            if (item._id === combo._id) {
+              return {
+                ...combo,
+                quantity: combo.quantity - 1
+              }
+            }
+            return combo
+          })
+        } else {
+          return pre.filter((combo) => item._id !== combo._id)
+        }
+      })
+      setTotalPointCombo((pre) => pre - item.exchange_point)
+    }
+  }
+
+  const handleUsePoint = () => {
+    if (regularSeatExchange.length > 0 || doubleSeatExchange.length > 0 || combosExchange.length > 0) {
+      const body = {
+        booking_id: bookingId as string,
+        seats: [...regularSeatExchange, ...doubleSeatExchange],
+        combos: combosExchange.map((combo) => {
+          return {
+            combo_id: combo._id,
+            quantity: combo.quantity
+          }
+        })
+      }
+      usePointMutation.mutate(body)
+    } else {
+      handlePayment()
+    }
+  }
+
   const handlePayment = () => {
     createPaymentUrlMutation.mutate({
       booking_id: bookingId as string
     })
   }
+
+  useEffect(() => {
+    const quantities: { [combo_id: string]: number } = {}
+    combosExchange.forEach((combo) => {
+      quantities[combo._id] = combo.quantity
+    })
+    setQuantityCombosExchange(quantities)
+
+    const points: { [combo_id: string]: number } = {}
+    combosExchange.forEach((combo) => {
+      points[combo._id] = combo.exchange_point * combo.quantity
+    })
+    setPointCombosExchange(points)
+  }, [combosExchange])
+
+  useEffect(() => {
+    setTotalAmountRegularSeat(regularSeat.reduce((sum, seat) => sum + (seat.price as number), 0))
+    setTotalAmountDoubleSeat(doubleSeat.reduce((sum, seat) => sum + (seat.price as number), 0))
+  }, [regularSeat, doubleSeat])
 
   return (
     <div className='bg-secondary'>
@@ -61,7 +243,7 @@ export default function Payment() {
                     </div>
                   </div>
                   <div>
-                    <p>{t('chair')}</p>
+                    <p>{t('seat')}</p>
                     <p className='font-semibold text-primary'>
                       {bookingData?.seats.map((seat) => seatArray[Number(seat.seat_number) - 1]).join(', ')}
                     </p>
@@ -81,7 +263,7 @@ export default function Payment() {
               <div className='mt-5 space-y-6 rounded-2xl bg-[#1A1D23] p-4 text-sm md:p-6 md:text-base'>
                 <h4 className='font-bold'>{t('billing-infor')}</h4>
                 <div>
-                  <div className='mt-4 rounded-xl ring-1 ring-gray-700 sm:mx-0'>
+                  <div className='mt-4 overflow-x-auto rounded-xl ring-1 ring-gray-700 sm:mx-0'>
                     <table className='min-w-full divide-y divide-gray-600'>
                       <thead>
                         <tr>
@@ -97,40 +279,182 @@ export default function Payment() {
                           <th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-white'>
                             {t('total-amount')}
                           </th>
+                          <th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-white'>
+                            {t('quantity-converted-by-point')}
+                          </th>
+                          <th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-white'>
+                            {t('total-point')}
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td className='relative py-4 pl-4 pr-3 text-sm sm:pl-6'>
-                            <div className='font-medium text-white'>
-                              {t('chair')} (
-                              {bookingData?.seats.map((seat) => seatArray[Number(seat.seat_number) - 1]).join(', ')})
-                            </div>
-                          </td>
-                          <td className='px-3 py-3.5 text-sm'>{bookingData?.seats.length}</td>
-                          {bookingData?.seats && (
+                        {regularSeat && regularSeat.length > 0 && (
+                          <tr>
+                            <td className='relative py-4 pl-4 pr-3 text-sm sm:pl-6'>
+                              <div className='font-medium text-white'>
+                                {t('regular-seat')} (
+                                {regularSeat.map((seat) => seatArray[Number(seat.seat_number) - 1]).join(', ')})
+                              </div>
+                            </td>
+                            <td className='px-3 py-3.5 text-sm'>{regularSeat.length}</td>
                             <td className='px-3 py-3.5 text-sm'>
-                              {formatCurrency(
-                                (bookingData.seats as Seat[]).reduce((sum, seat) => sum + (seat.price as number), 0)
-                              )}
+                              {formatCurrency(totalAmountRegularSeat)}
                               {t('vnd')}
                             </td>
-                          )}
-                        </tr>
-                        {bookingData?.combos.map((combo) => {
-                          return (
-                            <tr key={combo._id}>
-                              <td className='relative py-4 pl-4 pr-3 text-sm sm:pl-6'>
-                                <div className='font-medium text-white'>{combo.description}</div>
-                              </td>
-                              <td className='px-3 py-3.5 text-sm'>{combo.quantity}</td>
-                              <td className='px-3 py-3.5 text-sm'>
-                                {formatCurrency(combo.quantity * combo.price)}
-                                {t('vnd')}
-                              </td>
-                            </tr>
-                          )
-                        })}
+                            <td className='px-3 py-3.5 text-sm'>
+                              <div className='flex space-x-4'>
+                                <button
+                                  type='button'
+                                  className='rounded-sm bg-primary text-white'
+                                  onClick={handleRemoveRegularSeatExchange}
+                                >
+                                  <svg
+                                    xmlns='http://www.w3.org/2000/svg'
+                                    fill='none'
+                                    viewBox='0 0 24 24'
+                                    strokeWidth={1.5}
+                                    stroke='currentColor'
+                                    className='h-6 w-6'
+                                  >
+                                    <path strokeLinecap='round' strokeLinejoin='round' d='M19.5 12h-15' />
+                                  </svg>
+                                </button>
+                                <span className='font-bold text-white'>{regularSeatExchange.length}</span>
+                                <button
+                                  type='button'
+                                  className='rounded-sm bg-primary text-white'
+                                  onClick={handleAddRegularSeatExchange}
+                                >
+                                  <svg
+                                    xmlns='http://www.w3.org/2000/svg'
+                                    fill='none'
+                                    viewBox='0 0 24 24'
+                                    strokeWidth={1.5}
+                                    stroke='currentColor'
+                                    className='h-6 w-6'
+                                  >
+                                    <path strokeLinecap='round' strokeLinejoin='round' d='M12 4.5v15m7.5-7.5h-15' />
+                                  </svg>
+                                </button>
+                              </div>
+                            </td>
+                            <td className='px-3 py-3.5 text-sm'>
+                              {regularSeatExchange.length * SeatExchangePoint.single_seat}
+                            </td>
+                          </tr>
+                        )}
+                        {doubleSeat && doubleSeat?.length > 0 && (
+                          <tr>
+                            <td className='relative py-4 pl-4 pr-3 text-sm sm:pl-6'>
+                              <div className='font-medium text-white'>
+                                {t('double-seat')} (
+                                {doubleSeat.map((seat) => seatArray[Number(seat.seat_number) - 1]).join(', ')})
+                              </div>
+                            </td>
+                            <td className='px-3 py-3.5 text-sm'>{doubleSeat.length}</td>
+                            <td className='px-3 py-3.5 text-sm'>
+                              {formatCurrency(totalAmountDoubleSeat)}
+                              {t('vnd')}
+                            </td>
+                            <td className='px-3 py-3.5 text-sm'>
+                              <div className='flex space-x-4'>
+                                <button
+                                  type='button'
+                                  className='rounded-sm bg-primary text-white'
+                                  onClick={handleRemoveDoubleSeatExchange}
+                                >
+                                  <svg
+                                    xmlns='http://www.w3.org/2000/svg'
+                                    fill='none'
+                                    viewBox='0 0 24 24'
+                                    strokeWidth={1.5}
+                                    stroke='currentColor'
+                                    className='h-6 w-6'
+                                  >
+                                    <path strokeLinecap='round' strokeLinejoin='round' d='M19.5 12h-15' />
+                                  </svg>
+                                </button>
+                                <span className='font-bold text-white'>{doubleSeatExchange.length}</span>
+                                <button
+                                  type='button'
+                                  className='rounded-sm bg-primary text-white'
+                                  onClick={handleAddDoubleSeatExchange}
+                                >
+                                  <svg
+                                    xmlns='http://www.w3.org/2000/svg'
+                                    fill='none'
+                                    viewBox='0 0 24 24'
+                                    strokeWidth={1.5}
+                                    stroke='currentColor'
+                                    className='h-6 w-6'
+                                  >
+                                    <path strokeLinecap='round' strokeLinejoin='round' d='M12 4.5v15m7.5-7.5h-15' />
+                                  </svg>
+                                </button>
+                              </div>
+                            </td>
+                            <td className='px-3 py-3.5 text-sm'>
+                              {doubleSeatExchange.length * SeatExchangePoint.double_seat}
+                            </td>
+                          </tr>
+                        )}
+                        {combos.length > 0 &&
+                          combos.map((combo) => {
+                            return (
+                              <tr key={combo._id}>
+                                <td className='relative py-4 pl-4 pr-3 text-sm sm:pl-6'>
+                                  <div className='font-medium text-white'>{combo.description}</div>
+                                </td>
+                                <td className='px-3 py-3.5 text-sm'>{combo.quantity}</td>
+                                <td className='px-3 py-3.5 text-sm'>
+                                  {formatCurrency(
+                                    (combo.quantity - (quantityCombosExchange[combo._id] ?? 0)) * combo.price
+                                  )}
+                                  {t('vnd')}
+                                </td>
+                                <td className='px-3 py-3.5 text-sm'>
+                                  <div className='flex space-x-4'>
+                                    <button
+                                      type='button'
+                                      className='rounded-sm bg-primary text-white'
+                                      onClick={() => handleRemoveCombosExchange(combo)}
+                                    >
+                                      <svg
+                                        xmlns='http://www.w3.org/2000/svg'
+                                        fill='none'
+                                        viewBox='0 0 24 24'
+                                        strokeWidth={1.5}
+                                        stroke='currentColor'
+                                        className='h-6 w-6'
+                                      >
+                                        <path strokeLinecap='round' strokeLinejoin='round' d='M19.5 12h-15' />
+                                      </svg>
+                                    </button>
+                                    <span className='font-bold text-white'>
+                                      {quantityCombosExchange[combo._id] ?? 0}
+                                    </span>
+                                    <button
+                                      type='button'
+                                      className='rounded-sm bg-primary text-white'
+                                      onClick={() => handleAddCombosExchange(combo)}
+                                    >
+                                      <svg
+                                        xmlns='http://www.w3.org/2000/svg'
+                                        fill='none'
+                                        viewBox='0 0 24 24'
+                                        strokeWidth={1.5}
+                                        stroke='currentColor'
+                                        className='h-6 w-6'
+                                      >
+                                        <path strokeLinecap='round' strokeLinejoin='round' d='M12 4.5v15m7.5-7.5h-15' />
+                                      </svg>
+                                    </button>
+                                  </div>
+                                </td>
+                                <td className='px-3 py-3.5 text-sm'>{pointCombosExchange[combo._id] ?? 0}</td>
+                              </tr>
+                            )
+                          })}
                       </tbody>
                     </table>
                   </div>
@@ -241,7 +565,7 @@ export default function Payment() {
                   <Button
                     isLoading={createPaymentUrlMutation.isLoading}
                     disabled={createPaymentUrlMutation.isLoading}
-                    onClick={handlePayment}
+                    onClick={handleUsePoint}
                     className='inline-flex h-10 w-full items-center justify-center rounded-full bg-primary px-8 py-2 text-sm font-medium transition-all hover:scale-105 hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none'
                   >
                     {t('payment')}

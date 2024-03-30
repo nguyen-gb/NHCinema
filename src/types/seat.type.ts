@@ -7,6 +7,11 @@ export interface Seat {
 }
 
 export enum SeatType {
-  single_chair = 0,
-  double_chair = 1
+  single_seat = 0,
+  double_seat = 1
+}
+
+export enum SeatExchangePoint {
+  single_seat = 1000,
+  double_seat = 2000
 }

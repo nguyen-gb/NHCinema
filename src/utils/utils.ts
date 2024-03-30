@@ -119,9 +119,9 @@ export function calculateTicketPrice(seatType: SeatType): number {
     6: format === '2D' ? 175000 : 180000
   }
 
-  if (seatType === SeatType.single_chair) {
+  if (seatType === SeatType.single_seat) {
     return regularSeatPrices[dayOfWeek]
-  } else if (seatType === SeatType.double_chair) {
+  } else if (seatType === SeatType.double_seat) {
     return doubleSeatPrices[dayOfWeek]
   } else {
     throw new Error('Invalid seat type')

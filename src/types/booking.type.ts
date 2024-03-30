@@ -29,4 +29,16 @@ export interface BookingDetail {
   total_amount: number
   expireAt: string
   combos: Combo[]
+  exchange_point: number
+}
+
+export interface UsePoint {
+  booking_id: string
+  seats: {
+    seat_number: string
+  }[]
+  combos: {
+    combo_id: string
+    quantity: number
+  }[]
 }
