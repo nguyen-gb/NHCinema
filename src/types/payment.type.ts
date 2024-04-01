@@ -31,6 +31,7 @@ export interface ConfirmPaymentRes {
   time: string
   showtime: string
   total_amount: number
+  discount_price?: number
   theater_name: string
   format: string
   created_at: string

@@ -17,6 +17,9 @@ const userApi = {
   },
   changePassword(body: { password: string; new_password: string; confirm_password: string }) {
     return http.post(`auth/user/change-password`, body)
+  },
+  getHistoryBonusPoints() {
+    return http.get<SuccessResponse<ConfirmPaymentRes[]>>('auth/member')
   }
 }
 

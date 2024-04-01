@@ -37,5 +37,6 @@
   "status": "Trạng thái",
   "paid": "Đã thanh toán",
   "unpaid": "Chưa thanh toán",
-  "continue-payment": "Tiếp tục thanh toán"
+  "continue-payment": "Tiếp tục thanh toán",
+  "detail": "Chi tiết"
 }

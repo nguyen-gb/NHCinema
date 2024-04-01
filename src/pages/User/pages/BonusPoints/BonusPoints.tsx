@@ -1,54 +1,19 @@
+import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
-// import { useQuery } from '@tanstack/react-query'
-// import classNames from 'classnames'
-// import { Link, createSearchParams } from 'react-router-dom'
 
-// import { purchasesStatus } from 'src/constants/purchase'
-// import purchaseApi from 'src/apis/purchase.api'
-// import path from 'src/constants/path'
-// import useQueryParams from 'src/hooks/useQueryParams'
-// import { PurchaseListStatus } from 'src/types/purchase.type'
-// import { formatCurrency, generateNameId } from 'src/utils/utils'
-
-// const purchaseTabs = [
-//   { status: purchasesStatus.all, name: 'Tất cả' },
-//   { status: purchasesStatus.waitForConfirmation, name: 'Chờ xác nhận' },
-//   { status: purchasesStatus.waitForGetting, name: 'Chờ lấy hàng' },
-//   { status: purchasesStatus.inProgress, name: 'Đang giao' },
-//   { status: purchasesStatus.delivered, name: 'Đã giao' },
-//   { status: purchasesStatus.cancelled, name: 'Đã huỷ' }
-// ]
+import userApi from 'src/apis/user.api'
 
 export default function BonusPoints() {
   const { t } = useTranslation('user')
-  // const queryParams: { status?: string } = useQueryParams()
-  // const status: number = Number(queryParams.status) || purchasesStatus.all
 
-  // const { data: purchasesData } = useQuery({
-  //   queryKey: ['purchases', { status }],
-  //   queryFn: () => purchaseApi.getPurchases({ status: status as PurchaseListStatus })
-  // })
+  const { data } = useQuery({
+    queryKey: ['bonuspoint'],
+    queryFn: () => userApi.getHistoryBonusPoints()
+  })
 
-  // const purchases = purchasesData?.data.data
+  const hisBonusPoints = data?.data.data
 
-  // const purchaseTabsLink = purchaseTabs.map((tab) => (
-  //   <Link
-  //     key={tab.status}
-  //     to={{
-  //       pathname: path.historyPurchase,
-  //       search: createSearchParams({
-  //         status: String(tab.status)
-  //       }).toString()
-  //     }}
-  //     className={classNames('flex flex-1 items-center justify-center border-b-2 bg-white py-4 text-center', {
-  //       'border-b-primary text-primary': status === tab.status,
-  //       'border-b-black/10 text-gray-900': status !== tab.status
-  //     })}
-  //   >
-  //     {tab.name}
-  //   </Link>
-  // ))
   return (
     <div>
       <Helmet>

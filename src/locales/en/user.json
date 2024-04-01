@@ -37,5 +37,6 @@
   "status": "Status",
   "paid": "Paid",
   "unpaid": "Unpaid",
-  "continue-payment": "Continue payment"
+  "continue-payment": "Continue payment",
+  "detail": "Detail"
 }
