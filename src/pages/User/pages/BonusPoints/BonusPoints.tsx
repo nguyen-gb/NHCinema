@@ -13,6 +13,7 @@ export default function BonusPoints() {
   })
 
   const hisBonusPoints = data?.data.data
+  console.log(hisBonusPoints)
 
   return (
     <div>
