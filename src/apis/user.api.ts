@@ -1,5 +1,5 @@
 import { ConfirmPaymentRes } from 'src/types/payment.type'
-import { User } from 'src/types/user.type'
+import { User, BonusPointsRes } from 'src/types/user.type'
 import { SuccessResponse } from 'src/types/utils.type'
 import http from 'src/utils/http'
 
@@ -19,7 +19,7 @@ const userApi = {
     return http.post(`auth/user/change-password`, body)
   },
   getHistoryBonusPoints() {
-    return http.get<SuccessResponse<ConfirmPaymentRes[]>>('auth/member')
+    return http.get<SuccessResponse<BonusPointsRes>>('auth/member')
   }
 }
 

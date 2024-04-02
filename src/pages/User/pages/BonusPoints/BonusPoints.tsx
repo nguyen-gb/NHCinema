@@ -1,19 +1,33 @@
 import { useQuery } from '@tanstack/react-query'
+import moment from 'moment'
+import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 
 import userApi from 'src/apis/user.api'
+import BonusPointsDetail from 'src/pages/User/components/BonusPointsDetail'
+import { PointHistory } from 'src/types/user.type'
 
 export default function BonusPoints() {
   const { t } = useTranslation('user')
+  const [bonusPoints, setBonusPoints] = useState<PointHistory | null>(null)
+  const [isOpen, setIsOpen] = useState(false)
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['bonuspoint'],
     queryFn: () => userApi.getHistoryBonusPoints()
   })
-
   const hisBonusPoints = data?.data.data
-  console.log(hisBonusPoints)
+
+  const openPopup = (bonusPoints: PointHistory) => {
+    setBonusPoints(bonusPoints)
+    setIsOpen(true)
+  }
+
+  const closePopup = () => {
+    setIsOpen(false)
+    setBonusPoints(null)
+  }
 
   return (
     <div>
@@ -32,9 +46,6 @@ export default function BonusPoints() {
                       {t('day-trading')}
                     </th>
                     <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
-                      {t('transaction-type')}
-                    </th>
-                    <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
                       {t('trading-name')}
                     </th>
                     <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
@@ -42,13 +53,47 @@ export default function BonusPoints() {
                     </th>
                   </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                  {!isLoading &&
+                    hisBonusPoints &&
+                    hisBonusPoints.point_history.map((bonusPoints) => {
+                      return (
+                        <tr key={bonusPoints._id}>
+                          <th
+                            scope='col'
+                            className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
+                          >
+                            {moment(bonusPoints.day_trading).format('HH:mm DD/MM/YYYY')}
+                          </th>
+                          <th
+                            scope='col'
+                            className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
+                          >
+                            {bonusPoints.name}
+                          </th>
+                          <th
+                            scope='col'
+                            className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
+                          >
+                            {bonusPoints.used_point}
+                          </th>
+                          <th
+                            scope='col'
+                            className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
+                          >
+                            <button onClick={() => openPopup(bonusPoints)}>{t('detail')}</button>
+                          </th>
+                        </tr>
+                      )
+                    })}
+                </tbody>
               </table>
-              <div className='py-10 text-center text-sm text-gray-500'>{t('no-data')}</div>
+              {!isLoading && !data && <div className='py-10 text-center text-sm text-gray-500'>{t('no-data')}</div>}
             </div>
           </div>
         </div>
       </div>
+      <BonusPointsDetail isOpen={isOpen} bonusPoints={bonusPoints as PointHistory} onClose={closePopup} />
     </div>
   )
 }

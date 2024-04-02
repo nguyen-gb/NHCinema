@@ -128,40 +128,51 @@ const BookTickets: React.FC = () => {
       return
     }
 
-    if (selectedSeats.length >= 10) {
-      toast.warn(t('empty-left-seat'), {
-        position: 'top-center',
-        autoClose: 2000
-      })
-      return
-    }
     const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number)
     const seatPrice = calculateTicketPrice(seat.seat_type)
 
     if (seatIndex === -1) {
+      if (selectedSeats.length >= 10) {
+        toast.warn(t('max-seat-warn'), {
+          position: 'top-center',
+          autoClose: 2000
+        })
+        return
+      }
+
       const number = parseInt(seatArray[seat.seat_number - 1].substring(1))
+      const leftSeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number - 1)
+      const rightSeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + 1)
       if (number === 2 && seat.seat_type === SeatType.single_seat) {
-        const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number - 1)
-        if (seatIndex === -1) {
-          toast.warn(t('empty-left-seat'), {
-            position: 'top-center',
-            autoClose: 2000
-          })
-          return
+        for (let index = 1; index < 8; index++) {
+          const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + index)
+          if (seatIndex === -1) {
+            const chooseSeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number - 1)
+            if (chooseSeatIndex === -1) {
+              toast.warn(t('empty-left-seat'), {
+                position: 'top-center',
+                autoClose: 2000
+              })
+              return
+            }
+          }
         }
       } else if (number === 8 && seat.seat_type === SeatType.single_seat) {
-        const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + 1)
-        if (seatIndex === -1) {
-          toast.warn(t('empty-right-seat'), {
-            position: 'top-center',
-            autoClose: 2000
-          })
-          return
+        for (let index = 1; index < 8; index++) {
+          const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number - index)
+          if (seatIndex === -1) {
+            const chooseSeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + 1)
+            if (chooseSeatIndex === -1) {
+              toast.warn(t('empty-right-seat'), {
+                position: 'top-center',
+                autoClose: 2000
+              })
+              return
+            }
+          }
         }
       }
-      const leftSeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number - 1)
       const left2SeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number - 2)
-      const rightSeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + 1)
       const right2SeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + 2)
       if (left2SeatIndex !== -1 && leftSeatIndex === -1) {
         toast.warn(t('empty-left-seat'), {
@@ -182,28 +193,38 @@ const BookTickets: React.FC = () => {
       setTotal((pre) => pre + seatPrice)
     } else {
       const number = parseInt(seatArray[seat.seat_number - 1].substring(1))
+      const leftSeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number - 1)
+      const rightSeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + 1)
       if (number === 1 && seat.seat_type === SeatType.single_seat) {
-        const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + 1)
-        if (seatIndex !== -1) {
-          toast.warn(t('empty-left-seat-cancel'), {
-            position: 'top-center',
-            autoClose: 2000
-          })
-          return
+        for (let index = 1; index < 8; index++) {
+          const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + index)
+          if (seatIndex === -1) {
+            const chooseSeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + 1)
+            if (chooseSeatIndex !== -1) {
+              toast.warn(t('empty-right-seat-cancel'), {
+                position: 'top-center',
+                autoClose: 2000
+              })
+              return
+            }
+          }
         }
       } else if (number === 9 && seat.seat_type === SeatType.single_seat) {
-        const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number - 1)
-        if (seatIndex !== -1) {
-          toast.warn(t('empty-right-seat-cancel'), {
-            position: 'top-center',
-            autoClose: 2000
-          })
-          return
+        for (let index = 1; index < 8; index++) {
+          const seatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number - index)
+          if (seatIndex === -1) {
+            const chooseSeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number - 1)
+            if (chooseSeatIndex !== -1) {
+              toast.warn(t('empty-left-seat-cancel'), {
+                position: 'top-center',
+                autoClose: 2000
+              })
+              return
+            }
+          }
         }
       }
 
-      const leftSeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number - 1)
-      const rightSeatIndex = selectedSeats.findIndex((s) => s.seat_number === seat.seat_number + 1)
       if (leftSeatIndex !== -1 && rightSeatIndex !== -1) {
         toast.warn(t('empty-between-seat-cancel'), {
           position: 'top-center',
@@ -259,6 +280,21 @@ const BookTickets: React.FC = () => {
     const newTotalPrice = combo.reduce((acc, item) => acc + item.price * item.quantity, 0)
     setTotalCombo(newTotalPrice)
   }, [combo])
+
+  useEffect(() => {
+    if (data) {
+      const currentDate = new Date()
+      const currentHour = currentDate.getHours()
+      const currentMinute = currentDate.getMinutes()
+
+      const [hour, minute] = data.data.data.showtime.split(':').map(Number)
+      const isPastTime = hour < currentHour || (hour === currentHour && minute < currentMinute - 5)
+
+      if (data.data.data.time === currentDate.toISOString().slice(0, 10) && isPastTime) {
+        navigate(-1)
+      }
+    }
+  }, [data, navigate])
 
   return (
     <div className='bg-secondary'>
