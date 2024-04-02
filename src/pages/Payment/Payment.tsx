@@ -79,8 +79,7 @@ export default function Payment() {
   const handleAddRegularSeatExchange = () => {
     if (
       userPoint >= totalPointRegularSeat + totalPointDoubleSeat + totalPointCombo + SeatExchangePoint.single_seat &&
-      regularSeatExchange.length < regularSeat.length &&
-      totalAmount - (regularSeat[regularSeatExchange.length].price as number) > 0
+      regularSeatExchange.length < regularSeat.length
     ) {
       const seat_number = regularSeat[regularSeatExchange.length].seat_number
       setRegularSeatExchange((pre) => [...pre, { seat_number: String(seat_number) }])
@@ -105,8 +104,7 @@ export default function Payment() {
   const handleAddDoubleSeatExchange = () => {
     if (
       userPoint >= totalPointRegularSeat + totalPointDoubleSeat + totalPointCombo + SeatExchangePoint.double_seat &&
-      doubleSeatExchange.length < doubleSeat.length &&
-      totalAmount - (doubleSeat[doubleSeatExchange.length].price as number) > 0
+      doubleSeatExchange.length < doubleSeat.length
     ) {
       const seat_number = doubleSeat[doubleSeatExchange.length].seat_number
       setDoubleSeatExchange((pre) => [...pre, { seat_number: String(seat_number) }])
@@ -132,8 +130,7 @@ export default function Payment() {
     if (
       userPoint >= totalPointRegularSeat + totalPointDoubleSeat + totalPointCombo + item.exchange_point &&
       (combosExchange.filter((c) => c._id === item._id)[0]?.quantity ?? 0) <
-        combos.filter((c) => c._id === item._id)[0].quantity &&
-      totalAmount - item.price > 0
+        combos.filter((c) => c._id === item._id)[0].quantity
     ) {
       setCombosExchange((pre) => {
         const existsInArray = pre.some((combo) => combo._id === item._id)
@@ -353,8 +350,7 @@ export default function Payment() {
                                           totalPointDoubleSeat +
                                           totalPointCombo +
                                           SeatExchangePoint.single_seat ||
-                                      regularSeatExchange.length === regularSeat.length ||
-                                      totalAmount - (regularSeat[regularSeatExchange.length].price as number) <= 0
+                                      regularSeatExchange.length === regularSeat.length
                                   })}
                                   onClick={handleAddRegularSeatExchange}
                                 >
@@ -420,8 +416,7 @@ export default function Payment() {
                                           totalPointDoubleSeat +
                                           totalPointCombo +
                                           SeatExchangePoint.double_seat ||
-                                      doubleSeatExchange.length === doubleSeat.length ||
-                                      totalAmount - (doubleSeat[doubleSeatExchange.length].price as number) <= 0
+                                      doubleSeatExchange.length === doubleSeat.length
                                   })}
                                   onClick={handleAddDoubleSeatExchange}
                                 >
@@ -490,8 +485,7 @@ export default function Payment() {
                                               totalPointDoubleSeat +
                                               totalPointCombo +
                                               combo.exchange_point ||
-                                          (pointCombosExchange[combo._id] ?? 0) === combo.quantity ||
-                                          totalAmount - combo.price <= 0
+                                          (pointCombosExchange[combo._id] ?? 0) === combo.quantity
                                       })}
                                       onClick={() => handleAddCombosExchange(combo)}
                                     >
@@ -607,6 +601,13 @@ export default function Payment() {
                     </p>
                   </div>
                   <div className='flex items-center justify-between'>
+                    <p>VAT (10%)</p>
+                    <p className='font-bold'>
+                      {formatCurrency((bookingData?.total_amount ?? 0) * 0.1)}
+                      {t('vnd')}
+                    </p>
+                  </div>
+                  <div className='flex items-center justify-between'>
                     <p>{t('discount')}</p>
                     <p className='font-bold'>
                       {formatCurrency((bookingData?.total_amount ?? 0) - totalAmount)}
@@ -616,7 +617,7 @@ export default function Payment() {
                   <div className='flex items-center justify-between'>
                     <p>{t('total')}</p>
                     <p className='font-bold'>
-                      {formatCurrency(totalAmount)}
+                      {formatCurrency(totalAmount + (bookingData?.total_amount ?? 0) * 0.1)}
                       {t('vnd')}
                     </p>
                   </div>

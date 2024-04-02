@@ -34,5 +34,6 @@ export interface ConfirmPaymentRes {
   discount_price?: number
   theater_name: string
   format: string
+  code: string
   created_at: string
 }

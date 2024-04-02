@@ -26,7 +26,7 @@
   "message-des": "Thông báo từ cổng thanh toán",
   "transaction-number-des": "Mã GD trên cổng thanh toán",
   "bank-des": "Ngân hàng GD",
-  "booking_id": "Mã đặt vé",
+  "booking-id": "Mã vé",
   "cinema": "Rạp",
   "movie-name": "Tên phim",
   "showtime": "Suất chiếu",

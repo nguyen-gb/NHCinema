@@ -15,7 +15,7 @@ export default function Notification() {
   //   enabled: isAuthenticated
   // })
 
-  const notifications = [1, 2, 3, 4, 5]
+  const notifications = [1, 2, 3, 4, 5, 6, 7]
   return (
     <Popover
       renderPopover={

@@ -26,7 +26,7 @@
   "message-des": "Notification from the payment gateway",
   "transaction-number-des": "Transaction code on the payment gateway",
   "bank-des": "Bank for the transaction",
-  "booking_id": "Booking ID",
+  "booking-id": "Booking ID",
   "cinema": "Cinema",
   "movie-name": "Movie name",
   "showtime": "Showtime",

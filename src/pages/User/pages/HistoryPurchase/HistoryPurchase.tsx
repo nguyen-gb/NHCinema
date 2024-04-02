@@ -61,6 +61,9 @@ export default function HistoryPurchase() {
                 <thead>
                   <tr>
                     <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
+                      Code
+                    </th>
+                    <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
                       {t('day-trading')}
                     </th>
                     <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
@@ -82,9 +85,15 @@ export default function HistoryPurchase() {
                 </thead>
                 <tbody>
                   {hisBookings &&
-                    hisBookings.map((hisBooking, index) => {
+                    hisBookings.map((hisBooking) => {
                       return (
-                        <tr key={index}>
+                        <tr key={hisBooking._id}>
+                          <th
+                            scope='col'
+                            className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
+                          >
+                            {hisBooking.code}
+                          </th>
                           <th
                             scope='col'
                             className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
