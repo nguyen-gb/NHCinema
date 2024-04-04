@@ -78,14 +78,16 @@ export default function BonusPointsDetail({ isOpen, bonusPoints, onClose }: Prop
                           </td>
                           <td className='px-3 py-3.5 text-sm'>{bonusPoints?.seats.length}</td>
                           <td className='px-3 py-3.5 text-sm'>
-                            {bonusPoints.seats.reduce(
-                              (total, seat) =>
-                                total +
-                                (seat.seat_type === SeatType.single_seat
-                                  ? SeatExchangePoint.single_seat
-                                  : SeatExchangePoint.double_seat),
-                              0
-                            )}
+                            {bonusPoints.used_point < 0
+                              ? bonusPoints.seats.reduce(
+                                  (total, seat) =>
+                                    total +
+                                    (seat.seat_type === SeatType.single_seat
+                                      ? SeatExchangePoint.single_seat
+                                      : SeatExchangePoint.double_seat),
+                                  0
+                                ) * -1
+                              : bonusPoints.seats.reduce((total, seat) => total + (seat.price ?? 0), 0) / 1000}
                           </td>
                         </tr>
                       )}
@@ -96,7 +98,11 @@ export default function BonusPointsDetail({ isOpen, bonusPoints, onClose }: Prop
                               <div className='font-medium text-white'>{combo.description}</div>
                             </td>
                             <td className='px-3 py-3.5 text-sm'>{combo.quantity}</td>
-                            <td className='px-3 py-3.5 text-sm'>{combo.quantity * combo.exchange_point}</td>
+                            <td className='px-3 py-3.5 text-sm'>
+                              {bonusPoints.used_point < 0
+                                ? combo.quantity * combo.exchange_point * -1
+                                : (combo.quantity * combo.price) / 1000}
+                            </td>
                           </tr>
                         )
                       })}
@@ -108,7 +114,7 @@ export default function BonusPointsDetail({ isOpen, bonusPoints, onClose }: Prop
           </div>
         </div>
         <button
-          className='absolute right-[1rem] top-[1rem] text-primary xl:right-[-1rem] xl:top-[-1rem]'
+          className='absolute right-[0rem] top-[1.2rem] text-primary xl:right-[-1rem] xl:top-[0.5rem]'
           onClick={handleClose}
         >
           <AiOutlineCloseCircle className='h-8 w-8' />
