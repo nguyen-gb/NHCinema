@@ -38,5 +38,8 @@
   "paid": "Đã thanh toán",
   "unpaid": "Chưa thanh toán",
   "continue-payment": "Tiếp tục thanh toán",
-  "detail": "Chi tiết"
+  "detail": "Chi tiết",
+  "review": "Đánh giá",
+  "reviewed": "Đã đánh giá",
+  "send": "Gửi"
 }

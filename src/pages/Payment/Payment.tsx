@@ -276,7 +276,12 @@ export default function Payment() {
                 </div>
               </div>
               <div className='mt-5 space-y-6 rounded-2xl bg-[#1A1D23] p-4 text-sm md:p-6 md:text-base'>
-                <h4 className='font-bold'>{t('billing-infor')}</h4>
+                <div className='flex justify-between'>
+                  <h4 className='font-bold'>{t('billing-infor')}</h4>
+                  <h4 className='font-bold'>
+                    {t('your-total-point')}: {bookingData?.exchange_point}
+                  </h4>
+                </div>
                 <div>
                   <div className='mt-4 overflow-x-auto rounded-xl ring-1 ring-gray-700 sm:mx-0'>
                     <table className='min-w-full divide-y divide-gray-600'>

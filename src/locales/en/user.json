@@ -38,5 +38,8 @@
   "paid": "Paid",
   "unpaid": "Unpaid",
   "continue-payment": "Continue payment",
-  "detail": "Detail"
+  "detail": "Detail",
+  "review": "Review",
+  "reviewed": "Reviewed",
+  "send": "Send"
 }

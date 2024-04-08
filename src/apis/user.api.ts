@@ -1,5 +1,5 @@
 import { ConfirmPaymentRes } from 'src/types/payment.type'
-import { User, BonusPointsRes } from 'src/types/user.type'
+import { User, BonusPointsRes, Review } from 'src/types/user.type'
 import { SuccessResponse } from 'src/types/utils.type'
 import http from 'src/utils/http'
 
@@ -20,6 +20,9 @@ const userApi = {
   },
   getHistoryBonusPoints() {
     return http.get<SuccessResponse<BonusPointsRes>>('auth/member')
+  },
+  reviewMovie(body: Review) {
+    return http.post(`auth/review`, body)
   }
 }
 

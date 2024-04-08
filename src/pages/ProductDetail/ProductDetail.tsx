@@ -16,22 +16,38 @@ import VideoPopup from 'src/components/VideoPopup'
 import DropdownCinema from 'src/components/DropdownCinema'
 import showtimesApi from 'src/apis/showtimes.api'
 import { AppContext } from 'src/contexts/app.context'
+import { AiFillStar } from 'react-icons/ai'
 
 export default function ProductDetail() {
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
   const { i18n, t } = useTranslation('product')
   const { cinema } = useContext(AppContext)
-  const navigate = useNavigate()
   const [isVideoOpen, setIsVideoOpen] = useState(false)
   const [isHideShowTimes, setIsHideShowTimes] = useState(true)
   const [currentDate, setCurrentDate] = useState(new Date())
+  const [pageSize, setPageSize] = useState(5)
+  const [totalRecord, setTotalRecord] = useState(0)
+
+  const queryConfig = {
+    page: 1,
+    page_size: pageSize
+  }
 
   const { movieId } = useParams()
   const id = getIdFromMovieId(movieId as string)
+
   const { data: productDetailData, isLoading } = useQuery({
     queryKey: ['product', id],
     queryFn: () => productApi.getProductDetail(id)
   })
+  const product = productDetailData?.data.data
+
+  const { data: productReviewData } = useQuery({
+    queryKey: ['review', id],
+    queryFn: () => productApi.getProductReview(id, queryConfig)
+  })
+  const reviews = productReviewData?.data
+
   const { data: showtimeData } = useQuery({
     queryKey: ['showtime', cinema._id, id],
     queryFn: () =>
@@ -40,12 +56,10 @@ export default function ProductDetail() {
         movie_id: id
       })
   })
+  const showtimes = showtimeData?.data.data[0].times
 
   const currentHour = currentDate.getHours()
   const currentMinute = currentDate.getMinutes()
-
-  const product = productDetailData?.data.data
-  const showtimes = showtimeData?.data.data[0].times
 
   const openVideoPopup = () => {
     setIsVideoOpen(true)
@@ -68,6 +82,14 @@ export default function ProductDetail() {
   const handleChooseTime = (showtime_id: string) => {
     navigate(`/book-tickets/${showtime_id}?format=${product?.format}`)
   }
+
+  const handleViewMore = () => {
+    setPageSize((pre) => pre + 5)
+  }
+
+  useEffect(() => {
+    productReviewData && setTotalRecord(productReviewData?.data.total_record)
+  }, [productReviewData])
 
   useEffect(() => {
     setTimeout(() => setCurrentDate(new Date()), 60 * 1000)
@@ -301,6 +323,42 @@ export default function ProductDetail() {
               )}
             </div>
           )}
+        </div>
+        <div className='rounded-sm bg-white p-6'>
+          <div className='mb-4 flex items-center gap-2'>
+            <h4 className='text-xl uppercase'>
+              {t('review')} {`(${reviews?.total_record})`}
+            </h4>
+            <div className='max-w-min rounded-sm border border-primary bg-primary/20 px-2 py-1 text-lg'>
+              {reviews?.total_review}/5
+            </div>
+          </div>
+          <div className='flex flex-col gap-4'>
+            {reviews?.data?.map((review, index) => (
+              <div key={index} className='rounded-sm border p-2'>
+                <span className='text-sm text-primary'>{review.user_name}</span>
+                {
+                  <div className='hidden max-w-fit rounded-lg py-2 md:flex'>
+                    {Array.from({ length: 5 }).map((_, index) => {
+                      return (
+                        <AiFillStar
+                          key={index}
+                          color={index + 1 <= review.rating || review.rating === 0 ? 'yellow' : 'black'}
+                          className='h-4 w-4'
+                        />
+                      )
+                    })}
+                  </div>
+                }
+                <span>{review.review}</span>
+              </div>
+            ))}
+            {totalRecord > pageSize && (
+              <span className='text-center transition-all hover:text-primary'>
+                <button onClick={handleViewMore}>{t('view-more')}</button>
+              </span>
+            )}
+          </div>
         </div>
         <VideoPopup isOpen={isVideoOpen} videoUrl={product.trailer} onClose={closeVideoPopup} />
       </div>

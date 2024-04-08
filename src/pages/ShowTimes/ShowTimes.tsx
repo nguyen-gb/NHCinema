@@ -249,15 +249,21 @@ export default function ShowTimes() {
                 </div>
                 <div className='flex-grow bg-white p-[20px]'>
                   <Link to={`${path.home}movie/${generateNameId({ name: product.name, id: String(product._id) })}`}>
-                    <h3 className='text-xl uppercase text-quaternary'>{product.name}</h3>
+                    <h3 className='text-xl uppercase text-quaternary transition-all hover:text-primary'>
+                      {product.name}
+                    </h3>
                   </Link>
                   <h3 className='mb-[10px] text-base uppercase text-quaternary'>{product.english_name}</h3>
                   <div className='mb-[20px] hidden max-w-fit rounded-lg bg-secondary px-4 py-2 md:flex'>
-                    <AiFillStar color='yellow' className='h-6 w-6' />
-                    <AiFillStar color='yellow' className='h-6 w-6' />
-                    <AiFillStar color='yellow' className='h-6 w-6' />
-                    <AiFillStar color='yellow' className='h-6 w-6' />
-                    <AiFillStar color='yellow' className='h-6 w-6' />
+                    {Array.from({ length: 5 }).map((_, index) => {
+                      return (
+                        <AiFillStar
+                          key={index}
+                          color={index + 1 <= product.rating || product.rating === 0 ? 'yellow' : 'black'}
+                          className='h-6 w-6 cursor-pointer'
+                        />
+                      )
+                    })}
                   </div>
                   <div className='mb-[20px] hidden grid-cols-3 gap-4 md:grid'>
                     <span className='col-span-3 flex items-start lg:col-span-1'>

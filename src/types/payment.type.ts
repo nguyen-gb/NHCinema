@@ -35,5 +35,6 @@ export interface ConfirmPaymentRes {
   theater_name: string
   format: string
   code: string
+  reviewed: number
   created_at: string
 }

@@ -2,6 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 import { useContext, useState } from 'react'
+import moment from 'moment'
 
 import userApi from 'src/apis/user.api'
 import { AppContext } from 'src/contexts/app.context'
@@ -9,15 +10,17 @@ import { formatCurrency, formatDateToStringWithTime } from 'src/utils/utils'
 import paymentApi from 'src/apis/payment.api'
 import PurchaseDetail from 'src/pages/User/components/PurchaseDetail'
 import { ConfirmPaymentRes } from 'src/types/payment.type'
+import ReviewPopup from 'src/pages/User/components/ReviewPopup'
 
 export default function HistoryPurchase() {
   const { t } = useTranslation('user')
   const { profile } = useContext(AppContext)
 
   const [bookingData, setBookingData] = useState<ConfirmPaymentRes | null>(null)
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpenPopupDetail, setIsOpenPopupDetail] = useState(false)
+  const [isOpenPopupReview, setIsOpenPopupReview] = useState(false)
 
-  const { data: hisBookingsData } = useQuery({
+  const { data: hisBookingsData, refetch } = useQuery({
     queryKey: ['purchases', profile?._id],
     queryFn: () => userApi.getHistoryBooking(profile?._id as string)
   })
@@ -37,13 +40,30 @@ export default function HistoryPurchase() {
     })
   }
 
-  const openPopup = (bookingData: ConfirmPaymentRes) => {
-    setBookingData(bookingData)
-    setIsOpen(true)
+  const isPastTime = (time: string) => {
+    const currentTime = moment()
+    const targetTime = moment(time, 'HH:mm DD:MM:YYYY')
+    if (currentTime.isAfter(targetTime)) return true
+    else return false
   }
 
-  const closePopup = () => {
-    setIsOpen(false)
+  const openPopupDetail = (bookingData: ConfirmPaymentRes) => {
+    setBookingData(bookingData)
+    setIsOpenPopupDetail(true)
+  }
+
+  const closePopupDetail = () => {
+    setIsOpenPopupDetail(false)
+    setBookingData(null)
+  }
+
+  const openPopupReview = (bookingData: ConfirmPaymentRes) => {
+    setBookingData(bookingData)
+    setIsOpenPopupReview(true)
+  }
+
+  const closePopupReview = () => {
+    setIsOpenPopupReview(false)
     setBookingData(null)
   }
 
@@ -144,8 +164,20 @@ export default function HistoryPurchase() {
                             scope='col'
                             className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-primary sm:pl-6'
                           >
-                            <button onClick={() => openPopup(hisBooking)}>{t('detail')}</button>
+                            <button onClick={() => openPopupDetail(hisBooking)}>{t('detail')}</button>
                           </th>
+                          {isPastTime(`${hisBooking.showtime} ${hisBooking.time}`) && (
+                            <th
+                              scope='col'
+                              className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-primary sm:pl-6'
+                            >
+                              {hisBooking.reviewed === 0 && Number(hisBooking.payment_status) === 1 ? (
+                                <button onClick={() => openPopupReview(hisBooking)}>{t('review')}</button>
+                              ) : (
+                                <button>{t('reviewed')}</button>
+                              )}
+                            </th>
+                          )}
                         </tr>
                       )
                     })}
@@ -156,7 +188,19 @@ export default function HistoryPurchase() {
           </div>
         </div>
       </div>
-      <PurchaseDetail isOpen={isOpen} bookingData={bookingData as ConfirmPaymentRes} onClose={closePopup} />
+
+      <PurchaseDetail
+        isOpen={isOpenPopupDetail}
+        bookingData={bookingData as ConfirmPaymentRes}
+        onClose={closePopupDetail}
+      />
+
+      <ReviewPopup
+        isOpen={isOpenPopupReview}
+        bookingData={bookingData as ConfirmPaymentRes}
+        onClose={closePopupReview}
+        onDone={refetch}
+      />
     </div>
   )
 }
