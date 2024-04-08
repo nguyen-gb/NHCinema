@@ -17,6 +17,7 @@ import DropdownCinema from 'src/components/DropdownCinema'
 import showtimesApi from 'src/apis/showtimes.api'
 import { AppContext } from 'src/contexts/app.context'
 import { AiFillStar } from 'react-icons/ai'
+import { UserReview } from 'src/types/user.type'
 
 export default function ProductDetail() {
   const navigate = useNavigate()
@@ -26,6 +27,8 @@ export default function ProductDetail() {
   const [isHideShowTimes, setIsHideShowTimes] = useState(true)
   const [currentDate, setCurrentDate] = useState(new Date())
   const [pageSize, setPageSize] = useState(5)
+  const [record, setRecord] = useState<UserReview[]>([])
+  const [totalReview, setTotalReview] = useState('0')
   const [totalRecord, setTotalRecord] = useState(0)
 
   const queryConfig = {
@@ -43,7 +46,7 @@ export default function ProductDetail() {
   const product = productDetailData?.data.data
 
   const { data: productReviewData } = useQuery({
-    queryKey: ['review', id],
+    queryKey: ['review', id, pageSize],
     queryFn: () => productApi.getProductReview(id, queryConfig)
   })
   const reviews = productReviewData?.data
@@ -88,7 +91,9 @@ export default function ProductDetail() {
   }
 
   useEffect(() => {
+    productReviewData && setTotalReview(productReviewData?.data.total_review)
     productReviewData && setTotalRecord(productReviewData?.data.total_record)
+    productReviewData && setRecord(productReviewData.data.data)
   }, [productReviewData])
 
   useEffect(() => {
@@ -327,32 +332,33 @@ export default function ProductDetail() {
         <div className='rounded-sm bg-white p-6'>
           <div className='mb-4 flex items-center gap-2'>
             <h4 className='text-xl uppercase'>
-              {t('review')} {`(${reviews?.total_record})`}
+              {t('review')} {`(${totalRecord})`}
             </h4>
             <div className='max-w-min rounded-sm border border-primary bg-primary/20 px-2 py-1 text-lg'>
-              {reviews?.total_review}/5
+              {totalReview}/5
             </div>
           </div>
           <div className='flex flex-col gap-4'>
-            {reviews?.data?.map((review, index) => (
-              <div key={index} className='rounded-sm border p-2'>
-                <span className='text-sm text-primary'>{review.user_name}</span>
-                {
-                  <div className='hidden max-w-fit rounded-lg py-2 md:flex'>
-                    {Array.from({ length: 5 }).map((_, index) => {
-                      return (
-                        <AiFillStar
-                          key={index}
-                          color={index + 1 <= review.rating || review.rating === 0 ? 'yellow' : 'black'}
-                          className='h-4 w-4'
-                        />
-                      )
-                    })}
-                  </div>
-                }
-                <span>{review.review}</span>
-              </div>
-            ))}
+            {record &&
+              record.map((review, index) => (
+                <div key={index} className='rounded-sm border p-2'>
+                  <span className='text-sm text-primary'>{review.user_name}</span>
+                  {
+                    <div className='hidden max-w-fit rounded-lg py-2 md:flex'>
+                      {Array.from({ length: 5 }).map((_, index) => {
+                        return (
+                          <AiFillStar
+                            key={index}
+                            color={index + 1 <= review.rating || review.rating === 0 ? 'yellow' : 'black'}
+                            className='h-4 w-4'
+                          />
+                        )
+                      })}
+                    </div>
+                  }
+                  <span>{review.review}</span>
+                </div>
+              ))}
             {totalRecord > pageSize && (
               <span className='text-center transition-all hover:text-primary'>
                 <button onClick={handleViewMore}>{t('view-more')}</button>
