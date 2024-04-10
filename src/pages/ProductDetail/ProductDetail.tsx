@@ -49,7 +49,6 @@ export default function ProductDetail() {
     queryKey: ['review', id, pageSize],
     queryFn: () => productApi.getProductReview(id, queryConfig)
   })
-  const reviews = productReviewData?.data
 
   const { data: showtimeData } = useQuery({
     queryKey: ['showtime', cinema._id, id],
