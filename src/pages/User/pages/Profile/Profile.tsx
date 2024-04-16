@@ -180,7 +180,6 @@ export default function Profile() {
                       className='w-full rounded-[10px] border border-quaternary/20 p-[10px] text-quaternary outline-none focus:border-quaternary focus:shadow-sm'
                       {...register('gender')}
                       name='gender'
-                      placeholder={t('gender')}
                     >
                       <option value='Male'>{t('male')}</option>
                       <option value='Female'>{t('female')}</option>
