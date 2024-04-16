@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import moment from 'moment'
+import { io } from 'socket.io-client'
 
 import { AppContext } from 'src/contexts/app.context'
 import { seatArray } from 'src/constants/product'
@@ -18,6 +19,8 @@ import { Combo as ComboInterface, ComboType } from 'src/types/combo.type'
 import Combo from 'src/components/Combo'
 import Button from 'src/components/Button'
 import { calculateTicketPrice, formatCurrency } from 'src/utils/utils'
+import config from 'src/constants/config'
+import { Showtimes } from 'src/types/showtimes.type'
 
 interface SeatProps {
   isBooked: boolean
@@ -67,6 +70,13 @@ const BookTickets: React.FC = () => {
   const { t } = useTranslation('book-tickets')
   const { isAuthenticated, cinema } = useContext(AppContext)
   const navigate = useNavigate()
+  const [reservedSeats, setReservedSeats] = useState<
+    {
+      seat_number: number
+      status: string
+      seat_type: string
+    }[]
+  >([])
   const [selectedSeats, setSelectedSeats] = useState<{ seat_number: number; seat_type: number }[]>([])
   const [combo, setCombo] = useState<ComboInterface[]>([])
   const [total, setTotal] = useState(0)
@@ -95,6 +105,7 @@ const BookTickets: React.FC = () => {
     mutationFn: (body: Booking) => bookingApi.createBooking(body),
     onSuccess: (data) => {
       if (data.data.status === 200) {
+        handleSocket()
         refetch()
         const bookingId = data.data.data._id
         navigate(`/payment/${bookingId}`)
@@ -112,15 +123,6 @@ const BookTickets: React.FC = () => {
       }
     }
   })
-
-  const reservedSeats =
-    data?.data.data.seat_array.map((seat) => {
-      return {
-        seat_number: Number(seat.seat_number),
-        status: seat.status,
-        seat_type: seat.seat_type
-      }
-    }) ?? []
 
   const toggleSeat = (seat: { seat_number: number; seat_type: SeatType }) => {
     if (!isAuthenticated) {
@@ -268,6 +270,29 @@ const BookTickets: React.FC = () => {
     createBookingMutation.mutate(body)
   }
 
+  const handleSocket = () => {
+    const socket = io(config.socketUrl, { transports: ['websocket'] })
+
+    socket.once('connect', () => {
+      socket.emit('showtime', {
+        showtime_id: showtimeId
+      })
+    })
+  }
+
+  useEffect(() => {
+    data &&
+      setReservedSeats(
+        data.data.data.seat_array.map((seat) => {
+          return {
+            seat_number: Number(seat.seat_number),
+            status: String(seat.status),
+            seat_type: String(seat.seat_type)
+          }
+        })
+      )
+  }, [data])
+
   useEffect(() => {
     if (countdownTime <= 0) {
       navigate(-1)
@@ -295,6 +320,42 @@ const BookTickets: React.FC = () => {
       }
     }
   }, [data, navigate])
+
+  useEffect(() => {
+    const socket = io(config.socketUrl, {
+      transports: ['websocket']
+    })
+
+    socket.on('connect', () => {
+      socket.on(showtimeId as string, (data: Showtimes) => {
+        setReservedSeats(
+          data.seat_array.map((seat) => {
+            return {
+              seat_number: Number(seat.seat_number),
+              status: String(seat.status),
+              seat_type: String(seat.seat_type)
+            }
+          })
+        )
+
+        const seatNumberArray = data.seat_array.map((seat) => Number(seat.seat_number))
+        const isExist = selectedSeats.some((seat) => seatNumberArray.includes(seat.seat_number))
+        if (isExist) {
+          toast.warn(t('select-different-seats'), {
+            position: 'top-center',
+            autoClose: 2000
+          })
+          setSelectedSeats([])
+          setTotal(0)
+        }
+      })
+    })
+
+    return () => {
+      socket.disconnect()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSeats])
 
   return (
     <div className='bg-secondary'>
