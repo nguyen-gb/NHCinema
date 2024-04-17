@@ -10,5 +10,6 @@
   "forgot-password": "Forgot password",
   "personal-information": "Personal Information",
   "logout": "Logout",
-  "notification": "Notification"
+  "notification": "Notification",
+  "no-notifications": "No notifications"
 }

@@ -328,43 +328,53 @@ export default function ProductDetail() {
             </div>
           )}
         </div>
-        <div className='rounded-sm bg-white p-6'>
-          <div className='mb-4 flex items-center gap-2'>
-            <h4 className='text-xl uppercase'>
-              {t('review')} {`(${totalRecord})`}
-            </h4>
-            <div className='max-w-min rounded-sm border border-primary bg-primary/20 px-2 py-1 text-lg'>
-              {totalReview}/5
+        {totalRecord <= 0 && (
+          <div className='rounded-sm bg-white p-6'>
+            <div className='mb-4 flex items-center gap-2'>
+              <h4 className='text-xl uppercase'>{t('review')}</h4>
+            </div>
+            {t('no-reviews')}
+          </div>
+        )}
+        {totalRecord > 0 && (
+          <div className='rounded-sm bg-white p-6'>
+            <div className='mb-4 flex items-center gap-2'>
+              <h4 className='text-xl uppercase'>
+                {t('review')} {`(${totalRecord})`}
+              </h4>
+              <div className='max-w-min rounded-sm border border-primary bg-primary/20 px-2 py-1 text-lg'>
+                {totalReview}/5
+              </div>
+            </div>
+            <div className='flex flex-col gap-4'>
+              {record &&
+                record.map((review, index) => (
+                  <div key={index} className='rounded-sm border p-2'>
+                    <span className='text-sm text-primary'>{review.user_name}</span>
+                    {
+                      <div className='hidden max-w-fit rounded-lg py-2 md:flex'>
+                        {Array.from({ length: 5 }).map((_, index) => {
+                          return (
+                            <AiFillStar
+                              key={index}
+                              color={index + 1 <= review.rating || review.rating === 0 ? 'yellow' : 'black'}
+                              className='h-4 w-4'
+                            />
+                          )
+                        })}
+                      </div>
+                    }
+                    <span>{review.review}</span>
+                  </div>
+                ))}
+              {totalRecord > pageSize && (
+                <span className='text-center transition-all hover:text-primary'>
+                  <button onClick={handleViewMore}>{t('view-more')}</button>
+                </span>
+              )}
             </div>
           </div>
-          <div className='flex flex-col gap-4'>
-            {record &&
-              record.map((review, index) => (
-                <div key={index} className='rounded-sm border p-2'>
-                  <span className='text-sm text-primary'>{review.user_name}</span>
-                  {
-                    <div className='hidden max-w-fit rounded-lg py-2 md:flex'>
-                      {Array.from({ length: 5 }).map((_, index) => {
-                        return (
-                          <AiFillStar
-                            key={index}
-                            color={index + 1 <= review.rating || review.rating === 0 ? 'yellow' : 'black'}
-                            className='h-4 w-4'
-                          />
-                        )
-                      })}
-                    </div>
-                  }
-                  <span>{review.review}</span>
-                </div>
-              ))}
-            {totalRecord > pageSize && (
-              <span className='text-center transition-all hover:text-primary'>
-                <button onClick={handleViewMore}>{t('view-more')}</button>
-              </span>
-            )}
-          </div>
-        </div>
+        )}
         <VideoPopup isOpen={isVideoOpen} videoUrl={product.trailer} onClose={closeVideoPopup} />
       </div>
     </div>

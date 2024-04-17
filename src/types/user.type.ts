@@ -44,3 +44,17 @@ export interface UserReview {
   review: string
   user_name: string
 }
+
+export interface Notification {
+  _id: string
+  user_id: string
+  object_id: string
+  title: string
+  description: string
+  type: NotificationType
+}
+
+export enum NotificationType {
+  Purchase = 1,
+  Movie = 2
+}

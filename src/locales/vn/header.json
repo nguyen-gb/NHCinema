@@ -10,5 +10,6 @@
   "forgot-password": "Quên mật khẩu",
   "personal-information": "Thông tin cá nhân",
   "logout": "Đăng xuất",
-  "notification": "Thông báo"
+  "notification": "Thông báo",
+  "no-notifications": "Không có thông báo"
 }

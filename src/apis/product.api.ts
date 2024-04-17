@@ -15,7 +15,7 @@ const productApi = {
     return http.get<SuccessResponse<Product>>(`${URL}/${id}`)
   },
   getProductReview(id: string, params: Params) {
-    return http.get<ReviewSuccessResponse<UserReview[]>>(`auth/review/${id}/movie`, {
+    return http.get<ReviewSuccessResponse<UserReview[]>>(`unauth/review/${id}/movie`, {
       params: params
     })
   }
