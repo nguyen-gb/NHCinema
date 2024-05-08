@@ -22,7 +22,7 @@ const userApi = {
     return http.get<SuccessResponse<BonusPointsRes>>('auth/member')
   },
   reviewMovie(body: Review) {
-    return http.post(`auth/review`, body)
+    return http.post(`unauth/review`, body)
   },
   getNotification() {
     return http.get<SuccessResponse<Notification[]>>('auth/notification/user')
