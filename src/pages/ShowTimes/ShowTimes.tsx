@@ -33,7 +33,7 @@ export default function ShowTimes() {
   const dayAfterTwoDays = new Date(currentDate)
   dayAfterTwoDays.setDate(currentDate.getDate() + 3)
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isFetching } = useQuery({
     queryKey: ['showtimes', date, cinema],
     queryFn: () => showtimesApi.getShowtimesByDate({ theater_id: cinema._id, time: formatDateToString(date) }),
     keepPreviousData: true,
@@ -204,7 +204,7 @@ export default function ShowTimes() {
         </div>
         <div className='bg-tertiary p-[20px] text-lg uppercase text-white'>{t('movie-schedule')}</div>
         <div className='flex flex-col justify-start bg-white/95'>
-          {isLoading &&
+          {(isLoading || isFetching) &&
             Array.from({ length: 3 }).map((_, index) => (
               <div
                 key={index}
@@ -238,6 +238,7 @@ export default function ShowTimes() {
               </div>
             ))}
           {!isLoading &&
+            !isFetching &&
             data &&
             data.data.data.map((product) => (
               <div

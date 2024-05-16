@@ -55,7 +55,7 @@ export function formatDateToStringWithTime(date: Date) {
   const hours = String(date.getHours()).padStart(2, '0')
   const minutes = String(date.getMinutes()).padStart(2, '0')
 
-  const formattedDateTime = `${hours}:${minutes} ${year}-${month}-${day}`
+  const formattedDateTime = `${hours}:${minutes} ${day}-${month}-${year}`
   return formattedDateTime
 }
 

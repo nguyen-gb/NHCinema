@@ -19,8 +19,6 @@ export default function Notification() {
     enabled: isAuthenticated
   })
 
-  console.log(data)
-
   const notifications = data?.data.data
   return (
     <Popover
@@ -37,7 +35,7 @@ export default function Notification() {
                     key={notification._id}
                     to={
                       notification.type === NotificationType.Movie
-                        ? `movie/${generateNameId({ name: notification.title, id: notification.object_id })}`
+                        ? `/movie/${generateNameId({ name: notification.title, id: notification.object_id })}`
                         : path.historyPurchase
                     }
                     className='group block border-b-[1px] border-quaternary/20 p-2 text-[12px] text-quaternary'

@@ -1,13 +1,13 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 import { useContext, useState } from 'react'
 import moment from 'moment'
+import { useNavigate } from 'react-router-dom'
 
 import userApi from 'src/apis/user.api'
 import { AppContext } from 'src/contexts/app.context'
 import { formatCurrency, formatDateToStringWithTime } from 'src/utils/utils'
-import paymentApi from 'src/apis/payment.api'
 import PurchaseDetail from 'src/pages/User/components/PurchaseDetail'
 import { ConfirmPaymentRes } from 'src/types/payment.type'
 import ReviewPopup from 'src/pages/User/components/ReviewPopup'
@@ -15,29 +15,25 @@ import ReviewPopup from 'src/pages/User/components/ReviewPopup'
 export default function HistoryPurchase() {
   const { t } = useTranslation('user')
   const { profile } = useContext(AppContext)
+  const navigate = useNavigate()
 
   const [bookingData, setBookingData] = useState<ConfirmPaymentRes | null>(null)
   const [isOpenPopupDetail, setIsOpenPopupDetail] = useState(false)
   const [isOpenPopupReview, setIsOpenPopupReview] = useState(false)
 
-  const { data: hisBookingsData, refetch } = useQuery({
+  const {
+    data: hisBookingsData,
+    isLoading,
+    refetch
+  } = useQuery({
     queryKey: ['purchases', profile?._id],
     queryFn: () => userApi.getHistoryBooking(profile?._id as string)
-  })
-
-  const createPaymentUrlMutation = useMutation({
-    mutationFn: paymentApi.createPaymentUrl,
-    onSuccess: (res) => {
-      window.location.href = res.data.data
-    }
   })
 
   const hisBookings = hisBookingsData?.data.data
 
   const handlePayment = (bookingId: string) => {
-    createPaymentUrlMutation.mutate({
-      booking_id: bookingId
-    })
+    navigate(`/payment/${bookingId}`)
   }
 
   const isPastTime = (time: string) => {
@@ -153,7 +149,7 @@ export default function HistoryPurchase() {
                               <p>
                                 <button
                                   onClick={() => handlePayment(hisBooking._id)}
-                                  className='cursor-pointer transition-all hover:text-primary'
+                                  className='cursor-pointer text-left text-primary/50 transition-all hover:text-primary'
                                 >
                                   {`(${t('continue-payment')})`}
                                 </button>
@@ -183,7 +179,9 @@ export default function HistoryPurchase() {
                     })}
                 </tbody>
               </table>
-              {!hisBookings && <div className='py-10 text-center text-sm text-gray-500'>{t('no-data')}</div>}
+              {!isLoading && !hisBookings && (
+                <div className='py-10 text-center text-sm text-gray-500'>{t('no-data')}</div>
+              )}
             </div>
           </div>
         </div>

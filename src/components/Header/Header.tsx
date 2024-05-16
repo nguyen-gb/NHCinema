@@ -87,7 +87,7 @@ export default function Header() {
               {t('member')}
             </NavLink>
           </div>
-          <div className='col-span-1 justify-self-center'>
+          <div className='col-span-1 cursor-pointer justify-self-center'>
             <Notification />
           </div>
         </div>

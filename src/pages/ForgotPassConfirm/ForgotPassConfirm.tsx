@@ -33,7 +33,6 @@ export default function ForgotPassConfirm() {
     mutationFn: (body: FormData) => authApi.forgotPassConfirm({ ...body, user_id: _id as string })
   })
   const onSubmit = handleSubmit((body) => {
-    console.log(body)
     forgotPassMutation.mutate(body, {
       onSuccess: () => {
         navigate(window.location.href.split('=')[1] ? window.location.href.split('=')[1] : path.home)

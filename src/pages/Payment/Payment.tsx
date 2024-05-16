@@ -321,8 +321,7 @@ export default function Payment() {
                             </td>
                             <td className='px-3 py-3.5 text-sm'>{regularSeat.length}</td>
                             <td className='px-3 py-3.5 text-sm'>
-                              {formatCurrency(totalAmountRegularSeat)}
-                              {t('vnd')}
+                              {formatCurrency(totalAmountRegularSeat)} {t('vnd')}
                             </td>
                             <td className='px-3 py-3.5 text-sm'>{SeatExchangePoint.single_seat}</td>
                             <td className='px-3 py-3.5 text-sm'>
@@ -387,8 +386,7 @@ export default function Payment() {
                             </td>
                             <td className='px-3 py-3.5 text-sm'>{doubleSeat.length}</td>
                             <td className='px-3 py-3.5 text-sm'>
-                              {formatCurrency(totalAmountDoubleSeat)}
-                              {t('vnd')}
+                              {formatCurrency(totalAmountDoubleSeat)} {t('vnd')}
                             </td>
                             <td className='px-3 py-3.5 text-sm'>{SeatExchangePoint.double_seat}</td>
                             <td className='px-3 py-3.5 text-sm'>
@@ -454,7 +452,7 @@ export default function Payment() {
                                 <td className='px-3 py-3.5 text-sm'>
                                   {formatCurrency(
                                     (combo.quantity - (quantityCombosExchange[combo._id] ?? 0)) * combo.price
-                                  )}
+                                  )}{' '}
                                   {t('vnd')}
                                 </td>
                                 <td className='px-3 py-3.5 text-sm'>{combo.exchange_point}</td>
@@ -601,29 +599,25 @@ export default function Payment() {
                   <div className='flex items-center justify-between'>
                     <p>{t('payment')}</p>
                     <p className='font-bold'>
-                      {formatCurrency(bookingData?.total_amount ?? 0)}
-                      {t('vnd')}
+                      {formatCurrency((bookingData?.total_amount ?? 0) / 1.1)} {t('vnd')}
                     </p>
                   </div>
                   <div className='flex items-center justify-between'>
                     <p>VAT (10%)</p>
                     <p className='font-bold'>
-                      {formatCurrency((bookingData?.total_amount ?? 0) * 0.1)}
-                      {t('vnd')}
+                      {formatCurrency((bookingData?.total_amount ?? 0) / 11)} {t('vnd')}
                     </p>
                   </div>
                   <div className='flex items-center justify-between'>
                     <p>{t('discount')}</p>
                     <p className='font-bold'>
-                      {formatCurrency((bookingData?.total_amount ?? 0) - totalAmount)}
-                      {t('vnd')}
+                      {formatCurrency((bookingData?.total_amount ?? 0) - totalAmount)} {t('vnd')}
                     </p>
                   </div>
                   <div className='flex items-center justify-between'>
                     <p>{t('total')}</p>
                     <p className='font-bold'>
-                      {formatCurrency(totalAmount + (bookingData?.total_amount ?? 0) * 0.1)}
-                      {t('vnd')}
+                      {formatCurrency(totalAmount)} {t('vnd')}
                     </p>
                   </div>
                 </div>

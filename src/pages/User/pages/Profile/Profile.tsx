@@ -74,13 +74,11 @@ export default function Profile() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      console.log(data)
       const body = {
         ...(data as Omit<User, '_id'>),
         date_of_birth: data.date_of_birth?.toISOString() as string,
         gender: data.gender as string
       }
-      console.log(body)
       updateMutation.mutate(body, {
         onSuccess: (data) => {
           setProfile(data.data.data)
