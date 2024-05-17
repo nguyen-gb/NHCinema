@@ -71,8 +71,8 @@ export default function TicketPrices() {
             <>
               <div className='mb-4 w-full'>
                 <img
-                  src='https://touchcinema.com/storage/slider-tv/z4045880677164-1ba77b4619d45e773581092b6319ac62.jpg'
-                  alt=''
+                  src='src/assets/images/ticket_2D_price.jpg'
+                  alt='ticket 2D price'
                   className='w-full object-cover'
                 />
               </div>
@@ -94,8 +94,8 @@ export default function TicketPrices() {
             <>
               <div className='mb-4 w-full'>
                 <img
-                  src='https://touchcinema.com/storage/slide-web/z3998808944858-ecbdc76834918b00c5fd6f4a796926dd.jpg'
-                  alt=''
+                  src='src/assets/images/ticket_3D_price.jpg'
+                  alt='ticket 3D price'
                   className='w-full object-cover'
                 />
               </div>

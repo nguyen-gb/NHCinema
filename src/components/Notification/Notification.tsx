@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useContext } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 
 import Popover from '../Popover'
 import path from 'src/constants/path'
@@ -9,6 +9,7 @@ import userApi from 'src/apis/user.api'
 import { AppContext } from 'src/contexts/app.context'
 import { generateNameId } from 'src/utils/utils'
 import { NotificationType } from 'src/types/user.type'
+import paymentApi from 'src/apis/payment.api'
 
 export default function Notification() {
   const { t } = useTranslation()
@@ -20,6 +21,19 @@ export default function Notification() {
   })
 
   const notifications = data?.data.data
+
+  const createPaymentUrlMutation = useMutation({
+    mutationFn: paymentApi.createPaymentUrl,
+    onSuccess: (res) => {
+      window.location.href = res.data.data
+    }
+  })
+
+  const handlePayment = (bookingId: string) => {
+    createPaymentUrlMutation.mutate({
+      booking_id: bookingId
+    })
+  }
   return (
     <Popover
       renderPopover={
@@ -30,20 +44,31 @@ export default function Notification() {
                 {t('notification')}
               </div>
               <div className='max-h-[500px] overflow-y-auto'>
-                {notifications.map((notification) => (
-                  <Link
-                    key={notification._id}
-                    to={
-                      notification.type === NotificationType.Movie
-                        ? `/movie/${generateNameId({ name: notification.title, id: notification.object_id })}`
-                        : path.historyPurchase
-                    }
-                    className='group block border-b-[1px] border-quaternary/20 p-2 text-[12px] text-quaternary'
-                  >
-                    <b className='transition-all group-hover:text-primary'>{notification.title}</b>
-                    <p className='line-clamp-2'>{notification.description}</p>
-                  </Link>
-                ))}
+                {notifications.map((notification) =>
+                  notification.type === NotificationType.Booking ? (
+                    <button
+                      key={notification._id}
+                      onClick={() => handlePayment(notification.object_id)}
+                      className='group block w-full border-b-[1px] border-quaternary/20 p-2 text-left text-[12px] text-quaternary'
+                    >
+                      <b className='transition-all group-hover:text-primary'>{notification.title}</b>
+                      <p className='line-clamp-2'>{notification.description}</p>
+                    </button>
+                  ) : (
+                    <Link
+                      key={notification._id}
+                      to={
+                        notification.type === NotificationType.Movie
+                          ? `/movie/${generateNameId({ name: notification.title, id: notification.object_id })}`
+                          : path.historyPurchase
+                      }
+                      className='group block border-b-[1px] border-quaternary/20 p-2 text-[12px] text-quaternary'
+                    >
+                      <b className='transition-all group-hover:text-primary'>{notification.title}</b>
+                      <p className='line-clamp-2'>{notification.description}</p>
+                    </Link>
+                  )
+                )}
               </div>
             </div>
           ) : (

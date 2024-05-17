@@ -1,9 +1,8 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 import { useContext, useState } from 'react'
 import moment from 'moment'
-import { useNavigate } from 'react-router-dom'
 
 import userApi from 'src/apis/user.api'
 import { AppContext } from 'src/contexts/app.context'
@@ -11,11 +10,11 @@ import { formatCurrency, formatDateToStringWithTime } from 'src/utils/utils'
 import PurchaseDetail from 'src/pages/User/components/PurchaseDetail'
 import { ConfirmPaymentRes } from 'src/types/payment.type'
 import ReviewPopup from 'src/pages/User/components/ReviewPopup'
+import paymentApi from 'src/apis/payment.api'
 
 export default function HistoryPurchase() {
   const { t } = useTranslation('user')
   const { profile } = useContext(AppContext)
-  const navigate = useNavigate()
 
   const [bookingData, setBookingData] = useState<ConfirmPaymentRes | null>(null)
   const [isOpenPopupDetail, setIsOpenPopupDetail] = useState(false)
@@ -32,8 +31,17 @@ export default function HistoryPurchase() {
 
   const hisBookings = hisBookingsData?.data.data
 
+  const createPaymentUrlMutation = useMutation({
+    mutationFn: paymentApi.createPaymentUrl,
+    onSuccess: (res) => {
+      window.location.href = res.data.data
+    }
+  })
+
   const handlePayment = (bookingId: string) => {
-    navigate(`/payment/${bookingId}`)
+    createPaymentUrlMutation.mutate({
+      booking_id: bookingId
+    })
   }
 
   const isPastTime = (time: string) => {
@@ -145,16 +153,6 @@ export default function HistoryPurchase() {
                             className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
                           >
                             <span>{Number(hisBooking.payment_status) === 1 ? t('paid') : t('unpaid')}</span>
-                            {Number(hisBooking.payment_status) === 0 && (
-                              <p>
-                                <button
-                                  onClick={() => handlePayment(hisBooking._id)}
-                                  className='cursor-pointer text-left text-primary/50 transition-all hover:text-primary'
-                                >
-                                  {`(${t('continue-payment')})`}
-                                </button>
-                              </p>
-                            )}
                           </th>
                           <th
                             scope='col'
@@ -172,6 +170,19 @@ export default function HistoryPurchase() {
                               ) : (
                                 <button>{t('reviewed')}</button>
                               )}
+                            </th>
+                          )}
+                          {Number(hisBooking.payment_status) === 0 && (
+                            <th
+                              scope='col'
+                              className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-primary sm:pl-6'
+                            >
+                              <button
+                                onClick={() => handlePayment(hisBooking._id)}
+                                className='cursor-pointer text-left text-primary transition-all'
+                              >
+                                {t('continue-payment')}
+                              </button>
                             </th>
                           )}
                         </tr>

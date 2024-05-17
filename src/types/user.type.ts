@@ -55,6 +55,7 @@ export interface Notification {
 }
 
 export enum NotificationType {
-  Purchase = 1,
+  Booking = 0,
+  Booked = 1,
   Movie = 2
 }
