@@ -36,5 +36,10 @@ export interface ConfirmPaymentRes {
   format: string
   code: string
   reviewed: number
+  consumption_point: number
+  rating_point: number
+  level: number
   created_at: string
 }
+
+export const userLever = ['member', 'vip', 'diamond']

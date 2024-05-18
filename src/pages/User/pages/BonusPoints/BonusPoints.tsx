@@ -6,7 +6,8 @@ import { useTranslation } from 'react-i18next'
 
 import userApi from 'src/apis/user.api'
 import BonusPointsDetail from 'src/pages/User/components/BonusPointsDetail'
-import { PointHistory } from 'src/types/user.type'
+import { userLever } from 'src/types/payment.type'
+import { BonusPointsRes, PointHistory } from 'src/types/user.type'
 
 export default function BonusPoints() {
   const { t } = useTranslation('user')
@@ -17,7 +18,7 @@ export default function BonusPoints() {
     queryKey: ['bonuspoint'],
     queryFn: () => userApi.getHistoryBonusPoints()
   })
-  const hisBonusPoints = data?.data.data
+  const hisBonusPoints = data?.data.data as BonusPointsRes
 
   const openPopup = (bonusPoints: PointHistory) => {
     setBonusPoints(bonusPoints)
@@ -37,7 +38,25 @@ export default function BonusPoints() {
       </Helmet>
       <div className='container text-white'>
         <div className='my-[40px]'>
-          <div className='mt-10'>
+          <div className='mt-5 flex flex-wrap justify-evenly'>
+            <div>
+              {t('level')}:{' '}
+              <span className='ml-2 rounded-full bg-primary px-6 py-1'>
+                {t(userLever[hisBonusPoints?.level - 1 ?? 0] as any)}
+              </span>
+            </div>
+            <div>
+              {t('total-point')}:{' '}
+              <span className='ml-2 rounded-full bg-primary px-6 py-1'>
+                {(hisBonusPoints?.consumption_point ?? 0) + (hisBonusPoints?.rating_point ?? 0)}
+              </span>
+            </div>
+            <div>
+              {t('exchange-point')}:{' '}
+              <span className='ml-2 rounded-full bg-primary px-6 py-1'>{hisBonusPoints?.consumption_point ?? 0}</span>
+            </div>
+          </div>
+          <div className='mt-5'>
             <div className='mt-4 min-w-full overflow-x-auto ring-1 ring-gray-700 sm:mx-0 sm:rounded-xl'>
               <table className='min-w-full divide-y divide-gray-700'>
                 <thead>

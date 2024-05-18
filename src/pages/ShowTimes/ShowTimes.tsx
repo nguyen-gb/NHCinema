@@ -327,7 +327,7 @@ export default function ShowTimes() {
               </div>
             ))}
           {!isLoading && data && data?.data.data.length <= 0 && (
-            <div className='p-10 text-center text-quaternary'>{t('no-data')}</div>
+            <div className='p-10 text-center text-quaternary'>{`${t('cinema')} ${cinema.name} ${t('no-data')}`}</div>
           )}
         </div>
       </div>

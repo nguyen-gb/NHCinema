@@ -41,5 +41,11 @@
   "detail": "Detail",
   "review": "Review",
   "reviewed": "Reviewed",
-  "send": "Send"
+  "send": "Send",
+  "level": "Level",
+  "total-point": "Total point",
+  "exchange-point": "Exchange point",
+  "member": "Member",
+  "vip": "Vip",
+  "diamond": "Diamond"
 }

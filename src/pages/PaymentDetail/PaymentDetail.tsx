@@ -73,6 +73,8 @@ export default function PaymentDetail() {
                     <p className='mb-1'>{t('seat')}:</p>
                     <p className='mb-1'>Combo:</p>
                     <p className='mb-1'>{t('total')}:</p>
+                    <p className='mb-1'>{t('discount')}:</p>
+                    <p className='mb-1'>{t('payment-fee')}:</p>
                   </div>
                   <div className='col-span-1 flex flex-col text-left'>
                     <strong className='mb-1'>{data.data.data.code}</strong>
@@ -91,6 +93,12 @@ export default function PaymentDetail() {
                     </strong>
                     <strong className='mb-1'>
                       {formatCurrency(data.data.data.total_amount)} {t('vnd')}
+                    </strong>
+                    <strong className='mb-1'>
+                      {formatCurrency(data.data.data?.discount_price ?? 0)} {t('vnd')}
+                    </strong>
+                    <strong className='mb-1'>
+                      {formatCurrency(data.data.data.total_amount - (data.data.data?.discount_price ?? 0))} {t('vnd')}
                     </strong>
                   </div>
                 </div>

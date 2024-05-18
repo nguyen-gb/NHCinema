@@ -34,6 +34,8 @@
   "orderer": "Orderer",
   "room": "Room",
   "total": "Total",
+  "discount": "Discount",
+  "payment-fee": "Payment fee",
   "vnd": "VND",
   "congratulation": "Congratulation!",
   "unfortunate": "Unfortunately, your payment was unsuccessful.",

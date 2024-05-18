@@ -35,7 +35,7 @@ export default function Product({ product }: Props) {
                   </div>
                 </div>
                 <div className='mb-2 text-center text-base font-medium text-tertiary'>
-                  {t('premiere')}: {product.release.split(' ')[0]}
+                  {t('release')}: {product.release}
                 </div>
                 <div className='mb-4 w-full text-[16px] leading-relaxed'>
                   <div className='flex items-center justify-center text-secondary'>

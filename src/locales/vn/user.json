@@ -41,5 +41,11 @@
   "detail": "Chi tiết",
   "review": "Đánh giá",
   "reviewed": "Đã đánh giá",
-  "send": "Gửi"
+  "send": "Gửi",
+  "level": "Cấp độ",
+  "total-point": "Tổng điểm",
+  "exchange-point": "Điểm quy đổi",
+  "member": "Thành viên",
+  "vip": "Vip",
+  "diamond": "Kim cương"
 }

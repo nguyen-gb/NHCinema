@@ -48,7 +48,7 @@ export default function NavHeader() {
             NHCinema
           </div>
         </Link>
-        <form className='col-span-9 hidden md:block' onSubmit={onSubmitSearch1}>
+        <form className='hidden w-[350px] md:block' onSubmit={onSubmitSearch1}>
           <div className='flex rounded-full border-2 border-primary bg-white p-1'>
             <input
               type='text'

@@ -15,5 +15,6 @@
   "minutes": "phút",
   "genre": "Thể loại",
   "director": "Đạo diễn",
-  "no-data": "Không có lịch chiếu"
+  "no-data": "hiện tại không có lịch chiếu",
+  "cinema": "Rạp"
 }

@@ -15,5 +15,6 @@
   "minutes": "minutes",
   "genre": "Genre",
   "director": "Director",
-  "no-data": "There are no showtimes"
+  "no-data": "currently has no showtimes",
+  "cinema": "Cinema"
 }

@@ -62,7 +62,7 @@ export default function Member() {
               <li>{t('member-18')}</li>
             </ul>
           </em>
-          <p>{t('member-19')}</p>
+          {/* <p>{t('member-19')}</p> */}
           <p>{t('member-20')}</p>
           <em>
             <ul className='mt-2 list-disc pl-[20px] font-medium'>
