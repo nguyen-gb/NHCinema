@@ -62,7 +62,7 @@ export default function Member() {
               <li>{t('member-18')}</li>
             </ul>
           </em>
-          {/* <p>{t('member-19')}</p> */}
+          <p>{t('member-19')}</p>
           <p>{t('member-20')}</p>
           <em>
             <ul className='mt-2 list-disc pl-[20px] font-medium'>
@@ -114,7 +114,7 @@ export default function Member() {
           </p>
           <div className='my-2 w-full'>
             <img
-              src='src/assets/images/accumulation_resize.jpg'
+              src='https://i.postimg.cc/BbDgJv80/accumulation.jpg'
               alt='accumulation'
               className='h-full w-full object-cover'
             />
