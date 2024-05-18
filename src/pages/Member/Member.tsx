@@ -113,7 +113,11 @@ export default function Member() {
             </strong>
           </p>
           <div className='my-2 w-full'>
-            <img src='src/assets/images/accumulation.jpg' alt='accumulation' className='h-full w-full object-cover' />
+            <img
+              src='src/assets/images/accumulation_resize.jpg'
+              alt='accumulation'
+              className='h-full w-full object-cover'
+            />
           </div>
           <p className='mb-2'>
             <strong>{t('member-43')}</strong>

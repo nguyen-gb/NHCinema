@@ -71,7 +71,7 @@ export default function TicketPrices() {
             <>
               <div className='mb-4 w-full'>
                 <img
-                  src='src/assets/images/ticket_2D_price.jpg'
+                  src='src/assets/images/ticket_2D_price_resize.jpg'
                   alt='ticket 2D price'
                   className='w-full object-cover'
                 />
@@ -94,7 +94,7 @@ export default function TicketPrices() {
             <>
               <div className='mb-4 w-full'>
                 <img
-                  src='src/assets/images/ticket_3D_price.jpg'
+                  src='src/assets/images/ticket_3D_price_resize.jpg'
                   alt='ticket 3D price'
                   className='w-full object-cover'
                 />
