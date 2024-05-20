@@ -10,13 +10,15 @@ import { SeatExchangePoint, SeatType } from 'src/types/seat.type'
 
 interface Props {
   isOpen: boolean
+  userLevel: number
   bonusPoints: PointHistory
   onClose: () => void
 }
 
-export default function BonusPointsDetail({ isOpen, bonusPoints, onClose }: Props) {
+export default function BonusPointsDetail({ isOpen, userLevel, bonusPoints, onClose }: Props) {
   const { t } = useTranslation('payment')
   const [isReady, setIsReady] = useState(false)
+  const ratio = userLevel === 1 ? 0.0005 : userLevel === 2 ? 0.0007 : 0.001
 
   useEffect(() => {
     setTimeout(() => {
@@ -87,7 +89,7 @@ export default function BonusPointsDetail({ isOpen, bonusPoints, onClose }: Prop
                                       : SeatExchangePoint.double_seat),
                                   0
                                 ) * -1
-                              : bonusPoints.seats.reduce((total, seat) => total + (seat.price ?? 0), 0) / 1000}
+                              : bonusPoints.seats.reduce((total, seat) => total + (seat.price ?? 0), 0) * ratio}
                           </td>
                         </tr>
                       )}
@@ -101,7 +103,7 @@ export default function BonusPointsDetail({ isOpen, bonusPoints, onClose }: Prop
                             <td className='px-3 py-3.5 text-sm'>
                               {bonusPoints.used_point < 0
                                 ? combo.quantity * combo.exchange_point * -1
-                                : (combo.quantity * combo.price) / 1000}
+                                : combo.quantity * combo.price * ratio}
                             </td>
                           </tr>
                         )

@@ -84,7 +84,7 @@ export default function PurchaseDetail({ isOpen, bookingData, onClose }: Props) 
                 <div className='w-1/2'>
                   <p>{t('total-amount')}</p>
                   <p className='font-semibold text-primary'>
-                    {formatCurrency(bookingData?.total_amount)}
+                    {formatCurrency((bookingData?.total_amount ?? 0) - (bookingData?.discount_price ?? 0))}
                     {t('vnd')}
                   </p>
                 </div>
@@ -219,15 +219,13 @@ export default function PurchaseDetail({ isOpen, bookingData, onClose }: Props) 
                 <div className='flex items-center justify-between'>
                   <p>{t('payment')}</p>
                   <p className='font-bold'>
-                    {formatCurrency((bookingData?.total_amount ?? 0) + (bookingData?.discount_price ?? 0))}
-                    {t('vnd')}
+                    {formatCurrency((bookingData?.total_amount ?? 0) / 1.1)} {t('vnd')}
                   </p>
                 </div>
                 <div className='flex items-center justify-between'>
                   <p>VAT (10%)</p>
                   <p className='font-bold'>
-                    {formatCurrency((bookingData?.total_amount ?? 0) * 0.1)}
-                    {t('vnd')}
+                    {formatCurrency((bookingData?.total_amount ?? 0) / 11)} {t('vnd')}
                   </p>
                 </div>
                 <div className='flex items-center justify-between'>
@@ -240,7 +238,7 @@ export default function PurchaseDetail({ isOpen, bookingData, onClose }: Props) 
                 <div className='flex items-center justify-between'>
                   <p>{t('total')}</p>
                   <p className='font-bold'>
-                    {formatCurrency(bookingData?.total_amount ?? 0)}
+                    {formatCurrency((bookingData?.total_amount ?? 0) - (bookingData?.discount_price ?? 0))}
                     {t('vnd')}
                   </p>
                 </div>

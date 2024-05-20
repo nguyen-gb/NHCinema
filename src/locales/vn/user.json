@@ -43,9 +43,10 @@
   "reviewed": "Đã đánh giá",
   "send": "Gửi",
   "level": "Cấp độ",
-  "total-point": "Tổng điểm",
+  "rating-point": "Điểm xếp hạng",
   "exchange-point": "Điểm quy đổi",
   "member": "Thành viên",
   "vip": "Vip",
-  "diamond": "Kim cương"
+  "diamond": "Kim cương",
+  "cinema": "Rạp"
 }

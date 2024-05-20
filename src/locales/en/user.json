@@ -43,9 +43,10 @@
   "reviewed": "Reviewed",
   "send": "Send",
   "level": "Level",
-  "total-point": "Total point",
+  "rating-point": "Rating point",
   "exchange-point": "Exchange point",
   "member": "Member",
   "vip": "Vip",
-  "diamond": "Diamond"
+  "diamond": "Diamond",
+  "cinema": "Cinema"
 }

@@ -46,7 +46,7 @@ export default function BonusPoints() {
               </span>
             </div>
             <div>
-              {t('total-point')}:{' '}
+              {t('rating-point')}:{' '}
               <span className='ml-2 rounded-full bg-primary px-6 py-1'>
                 {(hisBonusPoints?.consumption_point ?? 0) + (hisBonusPoints?.rating_point ?? 0)}
               </span>
@@ -112,7 +112,12 @@ export default function BonusPoints() {
           </div>
         </div>
       </div>
-      <BonusPointsDetail isOpen={isOpen} bonusPoints={bonusPoints as PointHistory} onClose={closePopup} />
+      <BonusPointsDetail
+        isOpen={isOpen}
+        userLevel={hisBonusPoints?.level}
+        bonusPoints={bonusPoints as PointHistory}
+        onClose={closePopup}
+      />
     </div>
   )
 }

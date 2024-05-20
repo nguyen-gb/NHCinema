@@ -25,6 +25,6 @@
   "empty-left-seat-cancel": "Sẽ tạo ghế trống ở bên trái. Quý khách nên hủy ghế lần lượt theo thứ tự.",
   "empty-right-seat-cancel": "Sẽ tạo ghế trống ở bên phải. Quý khách nên hủy ghế lần lượt theo thứ tự.",
   "empty-between-seat-cancel": "Sẽ tạo ghế trống ở giữa hai ghế. Quý khách nên hủy ghế lần lượt theo thứ tự.",
-  "max-seat-warn": "Nếu bạn muốn đặt trên 10 ghế, vui lòng thực hiện giao dịch nhiều lần hoặc liên hệ tại quầy!",
+  "max-seat-warn": "Nếu bạn muốn đặt trên 10 ghế, vui lòng thực hiện giao dịch nhiều lần!",
   "select-different-seats": "Ghế của bạn chọn đã có người đặt. Vui lòng chọn lại ghế khác."
 }

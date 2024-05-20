@@ -91,6 +91,9 @@ export default function HistoryPurchase() {
                       {t('day-trading')}
                     </th>
                     <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
+                      {t('cinema')}
+                    </th>
+                    <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
                       {t('movie-name')}
                     </th>
                     <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
@@ -128,6 +131,12 @@ export default function HistoryPurchase() {
                             scope='col'
                             className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
                           >
+                            {hisBooking.theater_name}
+                          </th>
+                          <th
+                            scope='col'
+                            className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
+                          >
                             {hisBooking.movie_name}
                           </th>
                           <th
@@ -146,7 +155,7 @@ export default function HistoryPurchase() {
                             scope='col'
                             className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
                           >
-                            {`${formatCurrency(hisBooking.total_amount)} ${t('vnd')}`}
+                            {`${formatCurrency(hisBooking.total_amount - hisBooking.discount_price)} ${t('vnd')}`}
                           </th>
                           <th
                             scope='col'
