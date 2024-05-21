@@ -94,7 +94,7 @@ export default function TicketPrices() {
             <>
               <div className='mb-4 w-full'>
                 <img
-                  src='https://i.postimg.cc/QMtJHmBS/ticket-3-D-price.jpg'
+                  src='https://i.postimg.cc/xT9MKvkh/ticket-3-D-price.jpg'
                   alt='ticket 3D price'
                   className='w-full object-cover'
                 />

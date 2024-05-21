@@ -292,7 +292,7 @@ export default function ShowTimes() {
                   <div className='flex flex-wrap text-white'>
                     {product.times.map(({ time, showtime_id }) => {
                       const [hour, minute] = time.split(':').map(Number)
-                      const isPastTime = hour < currentHour || (hour === currentHour && minute < currentMinute - 5)
+                      const isPastTime = hour < currentHour || (hour === currentHour && minute - 5 < currentMinute)
 
                       return (
                         <button

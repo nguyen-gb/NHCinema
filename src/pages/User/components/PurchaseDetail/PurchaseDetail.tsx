@@ -51,7 +51,7 @@ export default function PurchaseDetail({ isOpen, bookingData, onClose }: Props) 
             <div className='space-y-6 rounded-2xl bg-[#1A1D23] p-4 text-sm md:p-6 md:text-base'>
               <h4 className='font-bold'>{t('movie-inf')}</h4>
               <div>
-                <p>Code</p>
+                <p>{t('code')}</p>
                 <p className='font-semibold text-primary'>{bookingData?.code}</p>
               </div>
               <div className='flex items-center gap-10'>

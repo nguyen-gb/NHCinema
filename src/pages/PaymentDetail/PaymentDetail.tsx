@@ -64,7 +64,7 @@ export default function PaymentDetail() {
               <div className='flex w-full items-center justify-center bg-white p-6 text-quaternary'>
                 <div className='grid grid-cols-2 gap-10'>
                   <div className='col-span-1 text-left'>
-                    <p className='mb-1'>Code:</p>
+                    <p className='mb-1'>{t('code')}</p>
                     <p className='mb-1'>{t('orderer')}:</p>
                     <p className='mb-1'>{t('cinema')}:</p>
                     <p className='mb-1'>{t('room')}:</p>

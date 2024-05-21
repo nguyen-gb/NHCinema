@@ -44,7 +44,7 @@ export default function TicketInformation() {
             <h1 className='mb-4 text-center text-3xl font-bold capitalize text-gray-800'>{t('movie-ticket')}</h1>
 
             <div className='mb-4 flex animate-pulse items-start justify-between gap-4'>
-              <h2 className='text-xl font-semibold leading-5 text-gray-800'>Code:</h2>
+              <h2 className='text-xl font-semibold leading-5 text-gray-800'>{t('code')}:</h2>
               <div className='mb-2.5 h-4 w-[200px] rounded-full bg-gray-200 dark:bg-gray-700'></div>
             </div>
 
@@ -94,7 +94,7 @@ export default function TicketInformation() {
             <h1 className='mb-4 text-center text-3xl font-bold capitalize text-gray-800'>{t('movie-ticket')}</h1>
 
             <div className='mb-4 flex items-start justify-between gap-4'>
-              <h2 className='text-xl font-semibold leading-5 text-gray-800'>Code:</h2>
+              <h2 className='text-xl font-semibold leading-5 text-gray-800'>{t('code')}:</h2>
               <p className='text-right leading-5 text-gray-700'>{ticketData.code}</p>
             </div>
 
