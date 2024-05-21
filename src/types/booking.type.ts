@@ -13,6 +13,7 @@ export interface Booking {
 
 export interface BookingDetail {
   _id: string
+  code: string
   theater_name: string
   user_id: string
   user_name: string
@@ -30,6 +31,7 @@ export interface BookingDetail {
   expireAt: string
   combos: Combo[]
   exchange_point: number
+  movie_poster: string
 }
 
 export interface UsePoint {

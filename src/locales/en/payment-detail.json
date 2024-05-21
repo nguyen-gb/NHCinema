@@ -40,5 +40,6 @@
   "congratulation": "Congratulation!",
   "unfortunate": "Unfortunately, your payment was unsuccessful.",
   "congratulation-des": "Your online ticket purchase has been successful. NHCinema sincerely thanks you for choosing us to meet your entertainment needs. Please see the booking information below.",
-  "unfortunate-des": "NHCinema would like to inform you that your transaction cannot be completed. Please check your payment information and try again later. Your ticket order will be cancelled after 5 minutes if not paid. We apologize for any inconvenience this may cause and thank you for your interest in our services."
+  "unfortunate-des": "NHCinema would like to inform you that your transaction cannot be completed. Please check your payment information and try again later. Your ticket order will be cancelled after 5 minutes if not paid. We apologize for any inconvenience this may cause and thank you for your interest in our services.",
+  "movie-ticket": "Movie ticket"
 }

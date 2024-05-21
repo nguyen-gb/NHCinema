@@ -51,8 +51,18 @@ export default function PurchaseDetail({ isOpen, bookingData, onClose }: Props) 
             <div className='space-y-6 rounded-2xl bg-[#1A1D23] p-4 text-sm md:p-6 md:text-base'>
               <h4 className='font-bold'>{t('movie-inf')}</h4>
               <div>
-                <p>{t('movie')}</p>
-                <p className='font-semibold text-primary'>{bookingData?.movie_name}</p>
+                <p>Code</p>
+                <p className='font-semibold text-primary'>{bookingData?.code}</p>
+              </div>
+              <div className='flex items-center gap-10'>
+                <div className='w-1/2'>
+                  <p>{t('movie')}</p>
+                  <p className='font-semibold text-primary'>{bookingData?.movie_name}</p>
+                </div>
+                <div>
+                  <p>{t('cinema')}</p>
+                  <p className='font-semibold text-primary'>{bookingData?.theater_name}</p>
+                </div>
               </div>
               <div className='flex items-center gap-10'>
                 <div className='w-1/2'>
@@ -74,19 +84,6 @@ export default function PurchaseDetail({ isOpen, bookingData, onClose }: Props) 
                 <div className='w-1/2'>
                   <p>{t('format')}</p>
                   <p className='font-semibold text-primary'>{bookingData?.format}</p>
-                </div>
-                <div>
-                  <p>{t('cinema-room')}</p>
-                  <p className='font-semibold text-primary'>{bookingData?.room_number}</p>
-                </div>
-              </div>
-              <div className='flex items-center gap-10'>
-                <div className='w-1/2'>
-                  <p>{t('total-amount')}</p>
-                  <p className='font-semibold text-primary'>
-                    {formatCurrency((bookingData?.total_amount ?? 0) - (bookingData?.discount_price ?? 0))}
-                    {t('vnd')}
-                  </p>
                 </div>
                 <div>
                   <p>{t('cinema-room')}</p>

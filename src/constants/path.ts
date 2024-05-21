@@ -19,7 +19,8 @@ const path = {
   bookTickets: '/book-tickets/:showtimeId',
   payment: '/payment/:bookingId',
   paymentDetail: '/payment-detail',
-  paymentDetailNoLogin: '/payment-detail-no-login'
+  paymentDetailNoLogin: '/payment-detail-no-login',
+  ticketInformation: '/ticket-information/:ticketId'
 } as const
 
 export default path

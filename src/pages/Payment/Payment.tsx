@@ -244,9 +244,15 @@ export default function Payment() {
             <div className='w-full xl:w-2/3'>
               <div className='space-y-6 rounded-2xl bg-[#1A1D23] p-4 text-sm md:p-6 md:text-base'>
                 <h4 className='font-bold'>{t('movie-inf')}</h4>
-                <div>
-                  <p>{t('movie')}</p>
-                  <p className='font-semibold text-primary'>{bookingData?.movie_name}</p>
+                <div className='flex items-center gap-10'>
+                  <div className='w-1/2'>
+                    <p>{t('movie')}</p>
+                    <p className='font-semibold text-primary'>{bookingData?.movie_name}</p>
+                  </div>
+                  <div>
+                    <p>{t('cinema')}</p>
+                    <p className='font-semibold text-primary'>{bookingData?.theater_name}</p>
+                  </div>
                 </div>
                 <div className='flex items-center gap-10'>
                   <div className='w-1/2'>

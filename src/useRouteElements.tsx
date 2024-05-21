@@ -28,6 +28,7 @@ const BookTickets = lazy(() => import('./pages/BookTickets'))
 const Payment = lazy(() => import('./pages/Payment'))
 const PaymentDetail = lazy(() => import('./pages/PaymentDetail'))
 const PaymentDetailNoLogin = lazy(() => import('./pages/PaymentDetailNoLogin'))
+const TicketInformation = lazy(() => import('./pages/TicketInformation'))
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
@@ -112,6 +113,14 @@ export default function useRouteElements() {
           )
         }
       ]
+    },
+    {
+      path: path.ticketInformation,
+      element: (
+        <Suspense>
+          <TicketInformation />
+        </Suspense>
+      )
     },
     {
       path: path.paymentDetailNoLogin,

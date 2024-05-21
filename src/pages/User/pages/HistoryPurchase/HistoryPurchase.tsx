@@ -85,22 +85,16 @@ export default function HistoryPurchase() {
                 <thead>
                   <tr>
                     <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
-                      Code
-                    </th>
-                    <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
                       {t('day-trading')}
-                    </th>
-                    <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
-                      {t('cinema')}
                     </th>
                     <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
                       {t('movie-name')}
                     </th>
                     <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
-                      {t('showtime')}
+                      {t('cinema')}
                     </th>
                     <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
-                      {t('ticket-number')}
+                      {t('showtime')}
                     </th>
                     <th scope='col' className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'>
                       {t('amount-of-money')}
@@ -119,19 +113,7 @@ export default function HistoryPurchase() {
                             scope='col'
                             className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
                           >
-                            {hisBooking.code}
-                          </th>
-                          <th
-                            scope='col'
-                            className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
-                          >
                             {formatDateToStringWithTime(new Date(hisBooking.created_at))}
-                          </th>
-                          <th
-                            scope='col'
-                            className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
-                          >
-                            {hisBooking.theater_name}
                           </th>
                           <th
                             scope='col'
@@ -143,19 +125,19 @@ export default function HistoryPurchase() {
                             scope='col'
                             className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
                           >
+                            {hisBooking.theater_name}
+                          </th>
+                          <th
+                            scope='col'
+                            className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
+                          >
                             {`${hisBooking.showtime} ${hisBooking.time}`}
                           </th>
                           <th
                             scope='col'
                             className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
                           >
-                            {hisBooking.seats.length}
-                          </th>
-                          <th
-                            scope='col'
-                            className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6'
-                          >
-                            {`${formatCurrency(hisBooking.total_amount - hisBooking.discount_price)} ${t('vnd')}`}
+                            {`${formatCurrency(hisBooking.total_amount - hisBooking.discount_price)}${t('vnd')}`}
                           </th>
                           <th
                             scope='col'
