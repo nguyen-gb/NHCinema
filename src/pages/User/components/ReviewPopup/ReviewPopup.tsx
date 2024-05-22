@@ -4,9 +4,10 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AiFillStar, AiOutlineCloseCircle } from 'react-icons/ai'
 import Modal from 'react-modal'
+import { toast } from 'react-toastify'
+
 import userApi from 'src/apis/user.api'
 import Button from 'src/components/Button'
-
 import { ConfirmPaymentRes } from 'src/types/payment.type'
 import { Review } from 'src/types/user.type'
 
@@ -55,6 +56,7 @@ export default function ReviewPopup({ isOpen, bookingData, onClose, onDone }: Pr
     }
     reviewMutation.mutate(body, {
       onSuccess: () => {
+        toast.success(t('review-success'))
         handleClose()
         onDone()
       }
