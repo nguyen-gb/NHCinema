@@ -36,10 +36,14 @@ export default function PurchaseDetail({ isOpen, bookingData, onClose }: Props) 
     }, 800)
   }
   return (
-    <Modal ariaHideApp={false} isOpen={isOpen} className='flex h-full w-full items-center justify-center bg-black/90'>
+    <Modal
+      ariaHideApp={false}
+      isOpen={isOpen}
+      className='flex h-full w-full items-center justify-center overflow-y-auto bg-black/90'
+    >
       <div
         className={classNames(
-          'relative max-h-[95%] transform overflow-y-auto transition-all duration-1000 sm:min-w-[600px] lg:min-w-[800px] xl:overflow-y-visible',
+          'relative max-h-[95%] transform transition-all duration-1000 sm:min-w-[600px] lg:min-w-[800px] xl:overflow-y-visible',
           {
             'translate-y-[-150px] opacity-0': !isReady,
             'translate-y-0 opacity-100': isReady
@@ -132,7 +136,7 @@ export default function PurchaseDetail({ isOpen, bookingData, onClose }: Props) 
               </div>
             </div>
           </div>
-          <div className='w-full flex-1 text-sm md:text-base xl:w-1/3'>
+          <div className='w-full min-w-[300px] flex-1 text-sm md:text-base'>
             <div className='h-full space-y-5 rounded-2xl bg-[#1A1D23] p-4 md:p-6'>
               <h4 className='font-bold'>{t('payment-methods')}</h4>
               <div id='headlessui-radiogroup-:ra:' role='radiogroup'>

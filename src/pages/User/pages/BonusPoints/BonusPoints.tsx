@@ -47,9 +47,7 @@ export default function BonusPoints() {
             </div>
             <div>
               {t('rating-point')}:{' '}
-              <span className='ml-2 rounded-full bg-primary px-6 py-1'>
-                {(hisBonusPoints?.consumption_point ?? 0) + (hisBonusPoints?.rating_point ?? 0)}
-              </span>
+              <span className='ml-2 rounded-full bg-primary px-6 py-1'>{hisBonusPoints?.rating_point ?? 0}</span>
             </div>
             <div>
               {t('exchange-point')}:{' '}
@@ -107,7 +105,9 @@ export default function BonusPoints() {
                     })}
                 </tbody>
               </table>
-              {!isLoading && !data && <div className='py-10 text-center text-sm text-gray-500'>{t('no-data')}</div>}
+              {!isLoading && hisBonusPoints.point_history.length <= 0 && (
+                <div className='py-10 text-center text-sm text-gray-500'>{t('no-data')}</div>
+              )}
             </div>
           </div>
         </div>

@@ -39,17 +39,18 @@ export default function Product({ product }: Props) {
                 </div>
                 <div className='mb-4 w-full text-[16px] leading-relaxed'>
                   <div className='flex items-center justify-center text-secondary'>
-                    <b className='flex-shrink-0 capitalize'>{t('duration')}:</b>
+                    <b className='mr-1 flex-shrink-0 capitalize'>{t('duration')}:</b>
                     <span className='line-clamp-1'>
-                      {product.duration} {t('minutes')}
+                      {product.duration}
+                      {t('minutes')}
                     </span>
                   </div>
                   <div className='flex items-center justify-center text-secondary'>
-                    <b className='flex-shrink-0 capitalize'>{t('category')}:</b>
+                    <b className='mr-1 flex-shrink-0 capitalize'>{t('category')}:</b>
                     <span className='line-clamp-1'>{product.genres}</span>
                   </div>
                   <div className='flex items-center justify-center text-secondary'>
-                    <b className='flex-shrink-0 capitalize'>{t('format')}:</b>
+                    <b className='mr-1 flex-shrink-0 capitalize'>{t('format')}:</b>
                     <span className='line-clamp-1'>{product.format}</span>
                   </div>
                 </div>
