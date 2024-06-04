@@ -35,7 +35,7 @@ export default function ForgotPassConfirm() {
   const onSubmit = handleSubmit((body) => {
     forgotPassMutation.mutate(body, {
       onSuccess: () => {
-        navigate(window.location.href.split('=')[1] ? window.location.href.split('=')[1] : path.home)
+        navigate(`${path.login}${window.location.href.split('?')[1] ? '?' + window.location.href.split('?')[1] : ''}`)
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {
