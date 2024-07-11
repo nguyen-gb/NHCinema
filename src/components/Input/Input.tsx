@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { InputHTMLAttributes, useState } from 'react'
-import { FieldPath, FieldValues, RegisterOptions, UseFormRegister } from 'react-hook-form'
+import { FieldPath, FieldValues, Path, RegisterOptions, UseFormRegister } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 interface Props<TFieldValues extends FieldValues> extends InputHTMLAttributes<HTMLInputElement> {
@@ -11,7 +11,7 @@ interface Props<TFieldValues extends FieldValues> extends InputHTMLAttributes<HT
   classNameError?: string
   classNameEye?: string
   register?: UseFormRegister<TFieldValues>
-  rules?: RegisterOptions
+  rules?: RegisterOptions<TFieldValues, Path<TFieldValues>>
   name: FieldPath<TFieldValues>
 }
 
