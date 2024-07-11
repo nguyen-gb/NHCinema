@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { InputHTMLAttributes, useState } from 'react'
 import { FieldPath, FieldValues, RegisterOptions, UseFormRegister } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 interface Props<TFieldValues extends FieldValues> extends InputHTMLAttributes<HTMLInputElement> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   errorMessage?: string
   autoComplete?: string
   classNameInput?: string
