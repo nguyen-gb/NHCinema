@@ -30,11 +30,7 @@ export const getInitialAppContext: () => AppContextInterface = () => ({
 })
 
 const initialAppContext = getInitialAppContext()
-const initialCinema = {
-  _id: '65203b82210d84d5c627f8b1',
-  name: 'NHCinema Thủ Đức',
-  address: 'Thủ Đức'
-}
+const initialCinema = {}
 
 export const AppContext = createContext<AppContextInterface>(initialAppContext)
 

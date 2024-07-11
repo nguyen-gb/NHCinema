@@ -23,9 +23,16 @@ function App() {
   const language = getLanguageFromLS()
 
   useEffect(() => {
-    setCinemaToLS(cinema || (cinemaData?.data.data[0] as Cinema))
     setLanguageToLS(language || 'vi-VN')
-  })
+  }, [language])
+
+  useEffect(() => {
+    let cinemaExists = false
+    if (cinemaData?.data.data) {
+      cinemaExists = cinemaData?.data.data.some((item) => item._id === cinema?._id)
+    }
+    setCinemaToLS(cinemaExists ? cinema : (cinemaData?.data.data[0] as Cinema) ?? {})
+  }, [cinema, cinemaData])
 
   useEffect(() => {
     localStorageEventTarget.addEventListener('clearLS', reset)
