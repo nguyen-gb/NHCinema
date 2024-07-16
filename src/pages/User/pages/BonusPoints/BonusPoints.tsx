@@ -105,19 +105,21 @@ export default function BonusPoints() {
                     })}
                 </tbody>
               </table>
-              {!isLoading && hisBonusPoints.point_history.length <= 0 && (
+              {!isLoading && (!hisBonusPoints || hisBonusPoints.point_history.length <= 0) && (
                 <div className='py-10 text-center text-sm text-gray-500'>{t('no-data')}</div>
               )}
             </div>
           </div>
         </div>
       </div>
-      <BonusPointsDetail
-        isOpen={isOpen}
-        userLevel={hisBonusPoints?.level}
-        bonusPoints={bonusPoints as PointHistory}
-        onClose={closePopup}
-      />
+      {bonusPoints && (
+        <BonusPointsDetail
+          isOpen={isOpen}
+          userLevel={hisBonusPoints?.level ?? 0}
+          bonusPoints={bonusPoints as PointHistory}
+          onClose={closePopup}
+        />
+      )}
     </div>
   )
 }
